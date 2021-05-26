@@ -3,9 +3,10 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
+import Vuesax from 'vuesax'
 
 Vue.config.productionTip = false
-
+Vue.use(Vuesax, {})
 new Vue({
   router,
   store,
