@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
+    <navbar></navbar>
   </div>
 </template>
 
 <style>
+head,body {
+  background-color:#18191c;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
 }
 
 #nav {
@@ -30,3 +30,12 @@
   color: #42b983;
 }
 </style>
+<script>
+import navbar from './components/navbar.vue'
+export default {
+  name: 'App',
+  components: {
+    navbar
+  }
+}
+</script>
