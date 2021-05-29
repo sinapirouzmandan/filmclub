@@ -34,6 +34,7 @@
     <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
   </vs-button>
   <vs-button
+      to="/profile"
       flat
       icon
       :active="active === 0"
