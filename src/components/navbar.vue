@@ -1,6 +1,7 @@
 <template>
 <nav class="xi-bottom-navbar">
   <vs-button
+    to="/"
     flat
     circle
     icon
@@ -67,6 +68,7 @@ export default {
   width:100%;
   background-color: #1e2023;
   display:flex;
+  z-index: 999999999;
 
 }
 .vs-button{

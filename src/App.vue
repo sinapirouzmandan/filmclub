@@ -8,6 +8,17 @@
 <style>
 head,body {
   background-color:#18191c;
+  user-select: none;
+}
+*{
+  cursor: default;
+}
+img {
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
