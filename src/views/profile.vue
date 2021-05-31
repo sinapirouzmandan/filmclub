@@ -48,7 +48,7 @@ export default {
 
 <style>
 body,html{
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .avatars {
   z-index: 9999;
