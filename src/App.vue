@@ -9,9 +9,22 @@
 head,body {
   background-color:#18191c;
   user-select: none;
+  overflow:auto;
+  overflow:initial;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #34373d;
 }
 *{
   cursor: default;
+  box-sizing: border-box;
+
 }
 img {
   -khtml-user-select: none;

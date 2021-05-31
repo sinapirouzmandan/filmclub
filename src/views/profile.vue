@@ -16,8 +16,6 @@
         style="width:100%;"
         color="rgb(59,89,153)"
         gradient
-        :active="active == 6"
-        @click="active = 6"
     >
       Edit Profile
     </vs-button>
@@ -46,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 body,html{
   overflow-x: hidden;
 }

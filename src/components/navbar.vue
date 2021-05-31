@@ -5,32 +5,32 @@
     flat
     circle
     icon
-    :active="active === 0"
-    @click="active = 0"
+    :active="activeHome === 0"
+    @click="activeHome = 0"
     >
     <i class="iconify" data-icon="bx:bxs-home" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="active === 0"
-      @click="active = 0"
+      :active="activeSearch === 0"
+      @click="activeSearch = 0"
   >
     <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="active === 0"
-      @click="active = 0"
+      :active="activeMovie === 0"
+      @click="activeMovie = 0"
   >
     <i class="iconify" data-icon="bx:bxs-movie" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="active === 0"
-      @click="active = 0"
+      :active="activeBookmark === 0"
+      @click="activeBookmark = 0"
   >
     <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
   </vs-button>
@@ -38,8 +38,8 @@
       to="/profile"
       flat
       icon
-      :active="active === 0"
-      @click="active = 0"
+      :active="activeUser === 0"
+      @click="activeUser = 0"
   >
     <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
   </vs-button>
@@ -51,7 +51,7 @@ export default {
   name: "navbar",
   data(){
     return{
-      active: 0,
+      active: "0",
     }
   }
 }
