@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import profile from '../views/profile'
 
 Vue.use(VueRouter)
 
@@ -14,7 +13,7 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: profile
+    component: () =>  import('../views/profile')
   }
   // {
   //   path: '/about',

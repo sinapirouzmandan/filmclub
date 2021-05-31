@@ -1,5 +1,5 @@
 <template>
-  <vs-col w="12" class="home">
+  <vs-col w="12" class="home" justify="space-around">
     <vs-card>
       <template #title>
         <img src="../../public/img/avatar.jpg" alt="" style="width: 30px; height: 30px; border-radius: 50%; float: left;">
@@ -53,13 +53,11 @@ export default {
 <style scoped>
 .home >>> .vs-card{
   background-color: #1e2023 !important;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  width: 100%;
+  max-width:500px;
+  margin: 20px auto;
 }
-.home >>> .vs-card{
-  margin-right:auto;
-  margin-left:auto;
-}
+
 .home >>> .vs-card__title{
   color:white;
   font-size: 17px;

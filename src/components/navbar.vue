@@ -5,32 +5,32 @@
     flat
     circle
     icon
-    :active="activeHome === 0"
-    @click="activeHome = 0"
+    :active="activeHome == 0"
+    @click="activeHome = 0; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=1"
     >
     <i class="iconify" data-icon="bx:bxs-home" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="activeSearch === 0"
-      @click="activeSearch = 0"
+      :active="activeSearch == 0"
+      @click="activeHome = 1; activeSearch=0; activeMovie=1;activeBookmark=1;activeUser=1"
   >
     <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="activeMovie === 0"
-      @click="activeMovie = 0"
+      :active="activeMovie == 0"
+      @click="activeHome = 1; activeSearch=1; activeMovie=0;activeBookmark=1;activeUser=1"
   >
     <i class="iconify" data-icon="bx:bxs-movie" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat
       icon
-      :active="activeBookmark === 0"
-      @click="activeBookmark = 0"
+      :active="activeBookmark == 0"
+      @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=0;activeUser=1"
   >
     <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
   </vs-button>
@@ -38,8 +38,8 @@
       to="/profile"
       flat
       icon
-      :active="activeUser === 0"
-      @click="activeUser = 0"
+      :active="activeUser == 0"
+      @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=0"
   >
     <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
   </vs-button>
@@ -51,7 +51,11 @@ export default {
   name: "navbar",
   data(){
     return{
-      active: "0",
+      activeSearch: "1",
+      activeBookmark: "1",
+      activeMovie: "1",
+      activeUser: "1",
+      activeHome: "0"
     }
   }
 }
@@ -79,5 +83,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   background-color: transparent !important;
+  color:white;
+}
+.vs-button--active {
+  border-top: 1px solid black;
+}
+.vs-button:checked{
+  background-color: white;
 }
 </style>
