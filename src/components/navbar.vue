@@ -35,11 +35,11 @@
     <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
   </vs-button>
   <vs-button
-      to="/profile"
+      to="profile"
       flat
       icon
       :active="activeUser == 0"
-      @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=0"
+      @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=0;"
   >
     <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
   </vs-button>

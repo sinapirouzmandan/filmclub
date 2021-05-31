@@ -16,7 +16,7 @@
         <h3>Interstellar</h3>
       </template>
       <template #img>
-        <img src="../../public/img/foto5.png" alt="image">
+        <img :src="'https://picsum.photos/id/' + number + '/300/300'" alt="image">
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star"></i>
@@ -46,7 +46,10 @@
 
 <script>
 export default {
-  name: "singlePost"
+  name: "singlePost",
+  methods:{
+  },
+  props:['number']
 }
 </script>
 

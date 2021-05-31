@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="top">
   <vs-row>
     <vs-col w="12">
       <img src="../../public/img/backAvatar.jpg" alt="back" class="backAvatar">

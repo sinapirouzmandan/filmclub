@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <vs-row>
-      <single-post v-for="(post,index)  in (1,20)" :key="index"></single-post>
+      <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
     </vs-row>
     <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
   </div>
@@ -12,7 +12,13 @@
 import singlePost from '../components/singlePost'
 export default {
   name: 'Home',
-  components: {singlePost}
+  components: {singlePost},
+  data() {
+    return{
+      images:[]
+    }
+  },
+
 }
 </script>
 <style scoped>
