@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home bodyMargin">
     <vs-row>
       <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
     </vs-row>

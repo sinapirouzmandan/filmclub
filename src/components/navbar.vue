@@ -14,7 +14,7 @@
       flat
       icon
       :active="activeSearch == 0"
-      @click="activeHome = 1; activeSearch=0; activeMovie=1;activeBookmark=1;activeUser=1"
+      @click="activeHome = 1; activeSearch=0; activeMovie=1;activeBookmark=1;activeUser=1;"
   >
     <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
   </vs-button>
@@ -28,6 +28,7 @@
   </vs-button>
   <vs-button
       flat
+      to="MyList"
       icon
       :active="activeBookmark == 0"
       @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=0;activeUser=1"
@@ -84,9 +85,11 @@ export default {
   justify-content: center;
   background-color: transparent !important;
   color:white;
+  transition: 0.4s;
 }
 .vs-button--active {
-  border-top: 1px solid black;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+  transition: 0.5s;
 }
 .vs-button:checked{
   background-color: white;

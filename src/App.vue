@@ -11,6 +11,10 @@ head,body {
   user-select: none;
   overflow:auto;
   overflow:initial;
+  margin: 0;
+}
+.bodyMargin {
+  margin: 6px;
 }
 ::-webkit-scrollbar {
   width: 4px;

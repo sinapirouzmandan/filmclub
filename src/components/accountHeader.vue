@@ -1,13 +1,9 @@
 <template>
   <div id="top">
-  <vs-row>
-    <vs-col w="12">
       <img src="../../public/img/backAvatar.jpg" alt="back" class="backAvatar">
-    </vs-col>
-  </vs-row>
   <vs-row class="avatars">
     <vs-col w="1">
-      <vs-avatar badge circle badge-color="success" size="90">
+      <vs-avatar circle badge-color="success" size="90">
         <img src="../../public/img/avatar.jpg" alt="avatar">
       </vs-avatar>
     </vs-col>

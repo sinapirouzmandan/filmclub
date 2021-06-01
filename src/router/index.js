@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-
+import Bookmark from "../views/Bookmark";
 Vue.use(VueRouter)
 
 const routes = [
@@ -14,6 +14,11 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () =>  import('../views/profile')
+  },
+  {
+    path: '/MyList',
+    name: 'MyList',
+    component: Bookmark
   }
   // {
   //   path: '/about',

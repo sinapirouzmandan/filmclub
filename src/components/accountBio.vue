@@ -2,7 +2,7 @@
   <vs-row>
     <vs-col w="12">
       <p class="bioText" style="text-align: left;">
-        An idea is like a virus. 👿 <br>
+        An idea is like a virus. 🦠 <br>
         Resilient. Highly contagious. And even the smallest seed of an idea can grow. 🌱
       </p></vs-col>
   </vs-row>

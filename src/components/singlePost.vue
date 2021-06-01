@@ -11,7 +11,7 @@
             icon
             color="rgb(59,89,153)"
         >
-          <i class="iconify" data-icon="bx:bxs-bookmark" data-inline="false"></i>
+          <i class="iconify" data-icon="bx:bxs-bookmark" data-inline="false"></i><p style="color: white;"> Add to watch list</p>
         </vs-button>
         <h3>Interstellar</h3>
       </template>

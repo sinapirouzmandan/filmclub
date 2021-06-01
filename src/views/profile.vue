@@ -1,9 +1,11 @@
 <template>
-<div>
+<div class="bodyMargin">
 <accountHeader/>
   <accountBio/>
   <accountStatus/>
-  <tumb-post/>
+  <keep-alive>
+      <tumb-post cols="3"/>
+  </keep-alive>
 </div>
 </template>
 
@@ -23,4 +25,5 @@ export default {
 body,html{
   overflow-x: hidden;
 }
+
 </style>
