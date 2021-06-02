@@ -10,15 +10,15 @@
   <h2 style="display: inline-block;">watch list</h2>
   </div>
   <hr>
-  <tumbPost cols="6"/>
+  <bookmarkPost/>
 </div>
 </template>
 
 <script>
-import tumbPost from "../components/tumbPost";
+import bookmarkPost from "../components/bookmarkPost";
 export default {
   name: "Bookmark",
-  components: {tumbPost}
+  components: {bookmarkPost}
 }
 </script>
 

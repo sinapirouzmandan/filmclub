@@ -16,7 +16,7 @@
         <h3>Interstellar</h3>
       </template>
       <template #img>
-        <img :src="'https://picsum.photos/id/' + number + '/300/300'" alt="image">
+        <img :src="source" alt="Image Load Error" id="postImage" @error="imageError">
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star"></i>
@@ -47,7 +47,19 @@
 <script>
 export default {
   name: "singlePost",
+  data(){
+    return{
+      notry: 0,
+      source: `https://picsum.photos/id/${this.number}/300/300`
+    }
+  },
   methods:{
+    imageError(event){
+      if(this.notry == 0){
+        event.target.src=`http://www.religare.com.br/app/webroot/img/admin/noimg.png`
+        this.notry = 1;
+      }
+    }
   },
   props:['number']
 }
@@ -84,5 +96,10 @@ export default {
 .home >>> .vs-button__content svg,.home >>> .vs-button__content span{
   color:white;
   font-size: 17px;
+}
+.home >>> #postImage{
+  width: 100%;
+  background-color: black;
+  min-height:200px;
 }
 </style>

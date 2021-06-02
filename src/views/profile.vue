@@ -4,7 +4,7 @@
   <accountBio/>
   <accountStatus/>
   <keep-alive>
-      <tumb-post cols="3"/>
+      <tumb-post/>
   </keep-alive>
 </div>
 </template>
