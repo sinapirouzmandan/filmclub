@@ -1,9 +1,10 @@
 <template>
 <div id="tumber">
   <vs-row class="tumbPostRow" justify="space-between">
-  <vs-col v-for="(tump,index) in (1,16)" :key="index" w="3" class="tumbContainer">
+  <vs-col v-for="(tump,index) in (1,16)" :key="index" w="6" class="tumbContainer" lg="3" xs="6">
     <div class="tumbPost">
       <img :src="'https://picsum.photos/id/' + Math.floor(Math.random(50,90) * 100) + '/100/100'" alt="image">
+      <div class="caption">Movie Name</div>
     </div>
   </vs-col>
   </vs-row>
@@ -30,7 +31,7 @@ export default {
   top: 0;
   right:0;
   left:0;
-  padding:4px;
+  padding:6px;
 
 }
 #tumber >>> .tumbContainer{
@@ -38,5 +39,17 @@ export default {
 }
 .tumbPostRow{
   margin-top: 35px;
+}
+.caption{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left:0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.7));
+  height:60px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 20px 0;
 }
 </style>
