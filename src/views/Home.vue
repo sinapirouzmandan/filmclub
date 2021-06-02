@@ -1,5 +1,6 @@
 <template>
   <div class="home bodyMargin">
+    <switchExplorer/>
     <vs-row>
       <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
     </vs-row>
@@ -10,9 +11,10 @@
 <script>
 // @ is an alias to /src
 import singlePost from '../components/singlePost'
+import switchExplorer from "../components/switchExplorer";
 export default {
   name: 'Home',
-  components: {singlePost},
+  components: {singlePost, switchExplorer},
   data() {
     return{
       images:[]
