@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Bookmark from "../views/Bookmark";
 import search from "../views/search";
+import login from "../views/login";
 Vue.use(VueRouter)
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
     path: '/search',
     name: 'search',
     component: search
+  },
+  {
+    path:'/login',
+    name: 'login',
+    component: login
   }
   // {
   //   path: '/about',

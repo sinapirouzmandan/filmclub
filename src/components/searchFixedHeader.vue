@@ -23,10 +23,15 @@ export default {
 .xi-top-head >>> .vs-input{
   background-color: #171b1d !important;
   width: 100%;
-
+  color:white;
 }
 .xi-top-head >>> .vs-input__icon{
   background-color: #151718 !important;
 }
+.xi-top-head >>>.vs-input__label{
+  position: absolute !important;
+  left:42px !important;
+  width:60%;
 
+}
 </style>

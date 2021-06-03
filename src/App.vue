@@ -14,7 +14,6 @@ head,body {
   user-select: none;
   overflow:auto;
   overflow:initial;
-  overflow-x: hidden;
   margin: 0;
 }
 .bodyMargin {
