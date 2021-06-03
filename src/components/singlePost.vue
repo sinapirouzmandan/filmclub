@@ -26,7 +26,7 @@
           <br>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit ....
         </p>
-        <small style="opacity: 0.5;"><br> 4 hours ago</small>
+        <small style="opacity: 0.3;"><br> 4 hours ago</small>
       </template>
       <template #interactions>
         <vs-button danger icon>
@@ -67,7 +67,7 @@ export default {
 
 <style scoped>
 .home >>> .vs-card{
-  background-color: #1e2023 !important;
+  background-color: #121818 !important;
   width: 100%;
   max-width:500px;
   margin: 20px auto;

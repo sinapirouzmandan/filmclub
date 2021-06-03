@@ -6,11 +6,15 @@
 </template>
 
 <style>
+:root{
+  --vs-gray-3: 0,0,0 !important;
+}
 head,body {
-  background-color:#18191c;
+  background-color: #0a0d0e;
   user-select: none;
   overflow:auto;
   overflow:initial;
+  overflow-x: hidden;
   margin: 0;
 }
 .bodyMargin {

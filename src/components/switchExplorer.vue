@@ -3,10 +3,10 @@
   <div class="center con-switch">
     <vs-switch v-model="active">
       <template #off>
-        Show following and others
+        No filter
       </template>
       <template #on>
-        Just following
+        following
       </template>
     </vs-switch>
   </div>
@@ -19,16 +19,17 @@ export default {
   data:() =>({
     active: false
   }),
-  mounted() {
-    this.$vs.setColor('primary', '#5b3cc4')
+   mounted() {
+     this.$vs.setColor('primary', '#5b3cc4')
   }
 }
 </script>
 
 <style scoped>
 #control >>> .vs-switch{
-  background-color: black !important;
-  height: 40px;
+  background-color: rgb(59,89,153) !important;
+  height: 30px;
+
 }
 #control >>> .vs-switch__circle{
   background-color: #3d3c3c !important;
@@ -36,16 +37,13 @@ export default {
   box-shadow: -3px 0px 20px 0px rgba(0, 0, 0, 0.4) !important;
 }
 .con-switch{
-  width: 200px;
-  margin: 30px auto;
+  width: 100px;
+  position: absolute;
+  right: 10px;
+  top:10px;
 }
-#control >>> .vs-component--primary{
-  background-color: blue;
-}
-:root {
-  --vs-primary: 91, 60, 196 !important
-}
+
 vs-switch__text off{
-  color: white !important;
+  color: black !important;
 }
 </style>

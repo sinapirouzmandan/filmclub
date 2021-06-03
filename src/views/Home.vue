@@ -1,6 +1,6 @@
 <template>
   <div class="home bodyMargin">
-    <switchExplorer/>
+    <fixedHead/>
     <vs-row>
       <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
     </vs-row>
@@ -9,12 +9,11 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import fixedHead from "../components/fixedHead";
 import singlePost from '../components/singlePost'
-import switchExplorer from "../components/switchExplorer";
 export default {
   name: 'Home',
-  components: {singlePost, switchExplorer},
+  components: {singlePost,fixedHead},
   data() {
     return{
       images:[]
@@ -27,7 +26,9 @@ export default {
 .btn-chat{
   background-color: #18191c !important;
 }
-
+.home{
+  margin-top: 1.5rem;
+}
 
 </style>
 <style scoped>

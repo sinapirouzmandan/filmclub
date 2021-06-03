@@ -3,16 +3,18 @@
   <vs-button
     to="/"
     flat
-    circle
     icon
+    dark
     :active="activeHome == 0"
     @click="activeHome = 0; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=1"
     >
     <i class="iconify" data-icon="bx:bxs-home" data-inline="false"></i>
   </vs-button>
   <vs-button
+      to="/search"
       flat
       icon
+      dark
       :active="activeSearch == 0"
       @click="activeHome = 1; activeSearch=0; activeMovie=1;activeBookmark=1;activeUser=1;"
   >
@@ -21,6 +23,7 @@
   <vs-button
       flat
       icon
+      dark
       :active="activeMovie == 0"
       @click="activeHome = 1; activeSearch=1; activeMovie=0;activeBookmark=1;activeUser=1"
   >
@@ -30,6 +33,7 @@
       flat
       to="MyList"
       icon
+      dark
       :active="activeBookmark == 0"
       @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=0;activeUser=1"
   >
@@ -39,6 +43,7 @@
       to="profile"
       flat
       icon
+      dark
       :active="activeUser == 0"
       @click="activeHome = 1; activeSearch=1; activeMovie=1;activeBookmark=1;activeUser=0;"
   >
@@ -87,11 +92,11 @@ export default {
   color:white;
   transition: 0.4s;
 }
+.vs-button--flat.vs-button--dark{
+  color:white !important;
+}
 .vs-button--active {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
   transition: 0.5s;
-}
-.vs-button:checked{
-  background-color: white;
 }
 </style>
