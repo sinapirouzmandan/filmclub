@@ -1,15 +1,15 @@
 <template>
 <div class="container bodyMargin">
-  <div class="user">
+  <div class="user" v-for="(i,index) in (1,20)" :key="index">
     <div class="divider"></div>
-    <vs-avatar>
-    <template #text>
-      Joel
-    </template>
-  </vs-avatar>
-    <span>user X</span>
-    <div class="divider"></div>
+    <div class="avatar">
+    </div>
+    <p>user {{i}}</p>
+    <p class="bio">this is user {{i}} talking  to you about u</p>
+    <div class="divider bottom"></div>
   </div>
+  <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
+
 </div>
 </template>
 
@@ -20,12 +20,9 @@ export default {
 </script>
 
 <style scoped>
-.container{
-  margin-top: 1rem;
-}
 .user{
   width: 100%;
-  height: 20rem;
+  height: 5rem;
   padding:15px;
 
 }
@@ -33,14 +30,30 @@ export default {
   width:100%;
   height:1px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  margin-top: 15px;
+  margin-top: 0.5rem;
 }
-.user >>> .vs-avatar{
-  margin-top: 15px;
+.bottom{
+  margin-top: 4rem;
 }
-.user span{
+.avatar{
+  width: 3rem;
+  height: 3rem;
+  background-color: cornflowerblue;
+  float: left;
+  margin-top:0.5rem;
+  border-radius: 50%;
+}
+
+.user p {
+  float: left;
   position: relative;
-  top: 0;
-  transform: translateY(-50%);
+  bottom: 2%;
+  left:10px;
+}
+.user .bio{
+  font-size: 11px;
+  margin-top: 2.2rem;
+  opacity: 0.7;
+  margin-left: -45px;
 }
 </style>

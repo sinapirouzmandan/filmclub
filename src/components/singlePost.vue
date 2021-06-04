@@ -25,6 +25,12 @@
         <p>
           <br>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit ....
+          <vs-button
+              style="display: inline;"
+              flat
+          >
+            View full post
+          </vs-button>
         </p>
         <small style="opacity: 0.3;"><br> 4 hours ago</small>
       </template>
@@ -32,12 +38,6 @@
         <vs-button danger icon>
           <i class="iconify" data-icon="bx:bx-heart" data-inline="false"></i>
           <span>45</span>
-        </vs-button>
-        <vs-button class="btn-chat" shadow primary>
-          <i class="iconify" data-icon="bx:bx-chat" data-inline="false"></i>
-          <span class="span">
-          54
-        </span>
         </vs-button>
       </template>
     </vs-card>
@@ -101,5 +101,8 @@ export default {
   width: 100%;
   background-color: black;
   min-height:200px;
+}
+.home >>> .vs-card:hover img{
+  transform: scale(1,1) !important;
 }
 </style>
