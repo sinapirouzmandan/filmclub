@@ -5,8 +5,6 @@ import router from './router'
 import store from './store'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
-import axios from "axios";
-Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.use(Vuesax, {
   colors: {

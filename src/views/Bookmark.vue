@@ -11,6 +11,7 @@
   </div>
   <hr>
   <bookmarkPost/>
+  <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
 </div>
 </template>
 
@@ -29,6 +30,5 @@ margin-top: 1.5rem;
 hr {
   border: 0;
   height: 1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
 </style>

@@ -31,7 +31,6 @@ head,body {
 *{
   cursor: default;
   box-sizing: border-box;
-
 }
 img {
   -khtml-user-select: none;

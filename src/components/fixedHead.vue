@@ -25,6 +25,7 @@ export default {
 </script>
 
 <style scoped>
+@import url('http://fonts.cdnfonts.com/css/magic');
 .xi-top-head{
   position: fixed;
   top: 0;
@@ -42,5 +43,4 @@ float: left;
   margin-top:11px;
   font-family:'magic', sans-serif;
 }
-@import url('http://fonts.cdnfonts.com/css/magic');
 </style>

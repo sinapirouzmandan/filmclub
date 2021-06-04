@@ -1,18 +1,18 @@
 <template>
 <div>
   <vs-row>
-    <vs-col w="12" v-for="(tump,index) in (1,16)" :key="index">
+    <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
       <div class="B-movie_card" id="B-bright">
         <div class="B-info_section">
           <div class="B-movie_header">
-            <img class="B-locandina" src="https://movieplayer.net-cdn.it/t/images/2017/12/20/bright_jpg_191x283_crop_q85.jpg" alt="img"/>
-            <h1>Bright</h1>
-            <h4>2017, David Ayer</h4>
-            <span class="B-minutes">117 min</span>
-            <p class="B-type">Action, Crime, Fantasy</p>
+            <img class="B-locandina" :src="post.poster" :alt="moviesList.title"/>
+            <h1>{{ post.title }}</h1>
+            <h4>{{post.year}}, {{getDirector()}}</h4>
+            <span class="B-minutes">{{post.length}}</span>
+            <p class="B-type">{{post.plot}}</p>
             <br>
             <i class="iconify" data-icon="bx:bxl-imdb" style="font-size: 40px; color: rgba(0, 0, 0, 0.5);" data-inline="true"></i>
-            <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">7 / 10</p>
+            <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">{{post.rating}} / 10</p>
           </div>
           <div class="B-movie_social">
             <ul>
@@ -21,13 +21,59 @@
             </ul>
           </div>
         </div>
-        <div class="B-blur_back B-bright_back"></div>
+        <div class="B-blur_back B-bright_back" :style="{background: poster}"></div>
       </div>
     </vs-col>
   </vs-row>
 </div>
 </template>
-
+<script>
+import axios from 'axios'
+export default {
+  name: "bookmarkPost",
+  data (){
+    return{
+      movieIDS: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
+      moviesList: [],
+      poster: []
+    }
+  },
+  methods: {
+    async getMovies(){
+      var self = this;
+      let i = ''
+      for (i in this.movieIDS){
+        const options = {
+          method: 'GET',
+          url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + this.movieIDS[i],
+          headers: {
+            'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
+            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
+          }
+        };
+        await axios.request(options).then(function (response) {
+          self.moviesList.push(response.data);
+          self.poster.push(`url("${response.data['poster']}")`);
+        }).catch(function (error) {
+          console.error(error);
+        });
+      }
+    },
+    getDirector(){
+      try {
+        const last = Object.keys(this.moviesList.cast)[Object.keys(this.moviesList.cast).length - 1];
+        return this.moviesList['cast'][`${last}`]['actor'];
+      }
+      catch{
+        console.log('err')
+      }
+    }
+  },
+  created() {
+    this.getMovies()
+  }
+}
+</script>
 <style>
 .B-movie_card {
   position: relative;
@@ -158,7 +204,6 @@
   }
 }
 .B-bright_back {
-  background: url("https://occ-0-2433-448.1.nflxso.net/art/cd5c9/3e192edf2027c536e25bb5d3b6ac93ced77cd5c9.jpg");
   filter: blur(0.8rem);
 }
 </style>
