@@ -58,6 +58,7 @@ export default {
           console.error(error);
         });
       }
+      this.$emit('endLoad');
     },
     getDirector(){
       try {

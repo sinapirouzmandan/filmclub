@@ -10,8 +10,8 @@
   <h2 style="display: inline-block;">watch list</h2>
   </div>
   <hr>
-  <bookmarkPost/>
-  <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
+  <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
+  <p style="margin-bottom: 5rem; opacity: 0.1; font-size:15px;">{{endOrLoad}}</p>
 </div>
 </template>
 
@@ -19,7 +19,12 @@
 import bookmarkPost from "../components/bookmarkPost";
 export default {
   name: "Bookmark",
-  components: {bookmarkPost}
+  components: {bookmarkPost},
+  data(){
+    return{
+      endOrLoad: 'Loading content ...'
+    }
+  }
 }
 </script>
 
