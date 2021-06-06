@@ -1,9 +1,0 @@
-{
-  "posts": [
-    { "id": 1, "likes": "45", "comments": "54", "user": "madman", "title": "Interstellar", "rate": "7.3 / 10", "text": "" }
-  ],
-  "comments": [
-    { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" }
-}
