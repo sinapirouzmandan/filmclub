@@ -18,8 +18,10 @@ export default {
     return{
       images:[]
     }
+  },
+  created() {
+    this.$store.commit('toggleNavbar',true);
   }
-
 }
 </script>
 <style scoped>

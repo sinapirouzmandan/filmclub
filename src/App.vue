@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <navbar></navbar>
+    <navbar v-if="showNavbar"></navbar>
   </div>
 </template>
 
@@ -61,11 +61,15 @@ img {
 }
 </style>
 <script>
+import {mapState} from 'vuex'
 import navbar from './components/navbar.vue'
 export default {
   name: 'App',
   components: {
     navbar
+  },
+  computed:{
+    ...mapState(['showNavbar'])
   }
 }
 </script>

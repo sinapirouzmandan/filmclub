@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Bookmark from "../views/Bookmark";
 import search from "../views/search";
 import login from "../views/login";
+import NewPost from "../views/NewPost";
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
     path:'/login',
     name: 'login',
     component: login
+  },
+  {
+    path:'/NewPost',
+    name: 'NewPost',
+    component: NewPost
   }
   // {
   //   path: '/about',

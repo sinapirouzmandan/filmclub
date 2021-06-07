@@ -25,6 +25,9 @@ export default {
     return{
     }
   },
+  created() {
+    this.$store.commit('toggleNavbar',true);
+  },
   computed:{
     ...mapState(['endOrLoad'])
   }

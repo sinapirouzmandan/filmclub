@@ -10,7 +10,10 @@ import searchUsers from "../components/searchUsers";
 import searchFixedHeader from "../components/searchFixedHeader";
 export default {
   name: "search.vue",
-  components: {searchFixedHeader, searchUsers}
+  components: {searchFixedHeader, searchUsers},
+  created() {
+    this.$store.commit('toggleNavbar',true);
+  }
 }
 </script>
 

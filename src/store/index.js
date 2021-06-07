@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     watchListMoviesIDs: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
     watchListMoviesList: [],
-    endOrLoad: 'Loading content ...'
+    endOrLoad: 'Loading content ...',
+    showNavbar: true
   },
   getters: {
   },
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     changeEndLoad(state){
       state.endOrLoad = 'End of Content'
+    },
+    toggleNavbar(state,payload){
+      state.showNavbar = payload
     }
   },
   actions: {

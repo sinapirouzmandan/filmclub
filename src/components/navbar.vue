@@ -21,6 +21,7 @@
     <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
   </vs-button>
   <vs-button
+      to="/NewPost"
       flat
       icon
       dark

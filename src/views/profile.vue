@@ -17,6 +17,9 @@ import accountHeader from "../components/accountHeader";
 export default {
   name: "profile",
   components: {tumbPost, accountStatus,accountBio,accountHeader
+  },
+  created() {
+    this.$store.commit('toggleNavbar',true);
   }
 }
 </script>
