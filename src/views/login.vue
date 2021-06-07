@@ -1,24 +1,31 @@
 <template>
   <div>
  <Head/>
-    <mailOrPhone v-if="activeMail" @doneMail="activeMail = false"/>
+    <component v-bind:is="stage" @doneMail="changeStage()"></component>
+
   </div>
 </template>
 
 <script>
 import Head from '../components/login/Head'
 import mailOrPhone from "../components/login/mailOrPhone";
+import userName from "../components/login/userName";
 export default {
   name: "login",
   data(){
     return{
-      activeMail: true
+      stage: mailOrPhone
     }
   },
   created() {
     this.$store.commit('toggleNavbar',false);
   },
-  components: {Head,mailOrPhone}
+  components: {Head,mailOrPhone,userName},
+  methods:{
+    changeStage(){
+      this.stage = userName
+    }
+  }
 }
 </script>
 

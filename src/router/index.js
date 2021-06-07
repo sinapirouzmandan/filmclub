@@ -44,11 +44,6 @@ const routes = [
     name: 'postDetail',
     component: postDetail,
     props: true
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: login
   }
   // {
   //   path: '/about',

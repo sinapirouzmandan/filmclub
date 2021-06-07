@@ -1,18 +1,21 @@
 <template>
   <div class="papa">
     <div class="username">
-      <i class="iconify logoUser" data-icon="mdi:mail"></i>
-      <vs-input placeholder="Email or Phone number">
+      <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
+      <h2>Your username</h2>
+      <vs-input placeholder="">
         <template #icon>
-          <i class='iconify' data-icon="mdi:contacts"></i>
+          <i class='iconify' data-icon="mdi:user"></i>
         </template>
       </vs-input>
       <vs-button
           class="next"
           color="#5b3cc4"
           gradient
+          to="/"
+          @click="login()"
       >
-        <i class="iconify" data-icon="bx:bx-right-arrow-alt"></i> next
+        done <i class="iconify" data-icon="mdi:send-circle"></i>
       </vs-button>
     </div>
   </div>
@@ -20,7 +23,12 @@
 
 <script>
 export default {
-  name: "userName"
+  name: "userName",
+  methods:{
+    login(){
+      this.$store.commit('login');
+    }
+  }
 }
 </script>
 
@@ -39,7 +47,7 @@ export default {
   align-items: center;
 }
 .username{
-  margin-top: 12rem;
+  margin-top: 9rem;
 
 }
 .papa >>> .vs-input-parent{
@@ -54,7 +62,7 @@ export default {
 }
 .logoUser{
   font-size: 70px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 .next{
   margin: 2.5rem auto 0;
@@ -62,5 +70,11 @@ export default {
 .papa >>> .vs-button{
   width:80%;
   max-width: 500px;
+}
+.signIn{
+  margin-top: 2rem;
+}
+h2{
+  margin-bottom: 1.5rem;
 }
 </style>

@@ -65,11 +65,21 @@ import {mapState} from 'vuex'
 import navbar from './components/navbar.vue'
 export default {
   name: 'App',
+  data(){
+    return{
+    }
+  },
   components: {
     navbar
   },
   computed:{
-    ...mapState(['showNavbar'])
+    ...mapState(['showNavbar','isLoggedIn'])
+  },
+  created() {
+    // eslint-disable-next-line no-constant-condition
+    if (!this.isLoggedIn){
+      this.$router.push('/login')
+    }
   }
 }
 </script>
