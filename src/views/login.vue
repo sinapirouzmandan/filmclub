@@ -2,7 +2,6 @@
   <div>
  <Head/>
     <component v-bind:is="stage" @doneMail="changeStage()"></component>
-
   </div>
 </template>
 

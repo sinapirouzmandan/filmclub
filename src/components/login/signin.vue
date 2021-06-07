@@ -1,29 +1,37 @@
 <template>
   <div class="papa">
+    <Head/>
     <div class="username">
-      <i class="iconify logoUser" data-icon="mdi:mail"></i>
-      <h2>Create a new acount</h2>
-      <vs-input placeholder="Email or Phone number">
+      <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
+      <h2>Login</h2>
+      <vs-input placeholder="">
         <template #icon>
-          <i class='iconify' data-icon="mdi:contacts"></i>
+          <i class='iconify' data-icon="bx:bx-user"></i>
+        </template>
+      </vs-input>
+      <vs-input placeholder="" class="password">
+        <template #icon>
+          <i class='iconify' data-icon="bx:bx-key"></i>
         </template>
       </vs-input>
       <vs-button
           class="next"
           color="#5b3cc4"
           gradient
-          @click="$emit('doneMail')"
+          to="/"
       >
-        <i class="iconify" data-icon="bx:bx-right-arrow-alt"></i> next
+        <i class="iconify" data-icon="bx:bx-log-in"></i> signin
       </vs-button>
     </div>
-     <router-link to="/signin" tag="a" style="text-decoration: none;"><p class="signIn">I already have an account . sign in</p></router-link>
+    <router-link to="/login" tag="a" style="text-decoration: none;"><p class="signIn">Create a new account</p></router-link>
   </div>
 </template>
 
 <script>
+import Head from "./Head";
 export default {
-  name: "mailOrPhone"
+  name: "signin",
+  components: {Head}
 }
 </script>
 
@@ -67,9 +75,12 @@ export default {
   max-width: 500px;
 }
 .signIn{
-margin-top: 2rem;
+  margin-top: 2rem;
 }
 h2{
   margin-bottom: 1.5rem;
+}
+.password{
+  margin-top: 1rem;
 }
 </style>

@@ -6,6 +6,7 @@ import search from "../views/search";
 import login from "../views/login";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
+import signin from "../components/login/signin";
 Vue.use(VueRouter)
 
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
     name: 'postDetail',
     component: postDetail,
     props: true
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: signin
   }
   // {
   //   path: '/about',
