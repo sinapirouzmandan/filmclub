@@ -28,7 +28,7 @@
       :active="activeMovie"
       @click="activeHome = false; activeSearch=false; activeMovie=true;activeBookmark=false;activeUser=false"
   >
-    <i class="iconify" data-icon="bx:bxs-movie" data-inline="false"></i>
+    <i class="iconify" data-icon="mdi:movie-open-plus" data-inline="false"></i>
   </vs-button>
   <vs-button
       flat

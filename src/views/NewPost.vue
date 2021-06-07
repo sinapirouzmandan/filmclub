@@ -1,17 +1,17 @@
 <template>
 <div>
-<newPostTools/>
+  <movieName/>
 </div>
 </template>
 
 <script>
-import newPostTools from "../components/newPostTools";
+import movieName from "../components/movieName";
 export default {
   name: "NewPost",
   created() {
     this.$store.commit('toggleNavbar',false);
   },
-  components:{newPostTools}
+  components:{movieName}
 }
 </script>
 
