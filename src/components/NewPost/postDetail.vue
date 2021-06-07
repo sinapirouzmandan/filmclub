@@ -13,6 +13,7 @@ export default {
     if (this.id == undefined || this.title == undefined){
       this.$router.push({name: 'NewPost'})
     }
+    this.$store.commit('toggleNavbar',false);
   }
 }
 </script>
