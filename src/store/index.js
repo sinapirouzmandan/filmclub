@@ -10,9 +10,13 @@ export default new Vuex.Store({
     watchListMoviesList: [],
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
-    showNavbar: true
+    showNavbar: true,
   },
   getters: {
+    watchListLengthCalc(state){
+      let len = Object.keys(state.watchListMoviesIDs).length
+      return Number(len)
+    }
   },
   mutations: {
     fetchWatchListMovies(state,payload) {
@@ -21,8 +25,8 @@ export default new Vuex.Store({
     fetchSearchListMovies(state,payload) {
       state.searchListMoviesList = payload;
     },
-    changeEndLoad(state){
-      state.endOrLoad = 'End of Content'
+    changeEndLoad(state,payload = 'End of Content'){
+      state.endOrLoad = payload
     },
     toggleNavbar(state,payload){
       state.showNavbar = payload
@@ -48,10 +52,14 @@ export default new Vuex.Store({
         });
         commit('fetchWatchListMovies', watchListPosts)
       }
-    commit('changeEndLoad')
+      if (Object.keys(watchListPosts).length <= 0) {
+        commit('changeEndLoad', 'Error loading, maybe the name is wrong')
+      }
+      else{
+        commit('changeEndLoad')
+      }
     },
     async getSearchList({commit}, search){
-      console.log(search)
       let searchListPosts = []
       const options = {
         method: 'GET',
@@ -73,7 +81,12 @@ export default new Vuex.Store({
         console.error(error);
       });
       commit('fetchSearchListMovies', searchListPosts)
-      commit('changeEndLoad')
+      if (Object.keys(searchListPosts).length <= 0) {
+        commit('changeEndLoad', 'Error loading, maybe the name is wrong')
+      }
+      else{
+        commit('changeEndLoad')
+      }
     }
   },
   modules: {

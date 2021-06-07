@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import fixedHead from "../components/fixedHead";
-import singlePost from '../components/singlePost'
+import fixedHead from "../components/Home/fixedHead";
+import singlePost from '../components/Home/singlePost'
 export default {
   name: 'Home',
   components: {singlePost,fixedHead},

@@ -1,10 +1,10 @@
 <template>
   <div id="top">
-      <img src="../../public/img/backAvatar.jpg" alt="back" class="backAvatar">
+      <img src="../../../public/img/backAvatar.jpg" alt="back" class="backAvatar">
   <vs-row class="avatars">
     <vs-col w="1">
       <vs-avatar circle badge-color="success" size="90">
-        <img src="../../public/img/avatar.jpg" alt="avatar">
+        <img src="../../../public/img/avatar.jpg" alt="avatar">
       </vs-avatar>
     </vs-col>
     <vs-col w="3" class="editProfile" offset="7">

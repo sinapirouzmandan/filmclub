@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import movieName from "../components/movieName";
+import movieName from "../components/NewPost/movieName";
 export default {
   name: "NewPost",
   created() {

@@ -9,7 +9,7 @@
                 loading
                 color="#7d33ff"
                 v-model="searchMov"
-                placeholder="Movie name ( ex Interstellar )" />
+                placeholder="Movie or series name" />
             <vs-button
                 @click="active = !active; getSearch()"
                 circle
@@ -20,7 +20,7 @@
           </div>
       </vs-col>
     </vs-row>
-    <vs-dialog v-model="active">
+    <vs-dialog v-model="active" blur>
       <template #header>
         <h4 class="not-margin">
           Select the Movie
@@ -28,12 +28,12 @@
       </template>
 <vs-row>
   <vs-col w="4" class="chooseMov" v-for="(option,index) in searchListMoviesList['0']" :key="index">
-    <img :src="option.Poster" :alt="option.Title">
+    <img :src="option.Poster" :alt="option.Title" @click="nextPage(option)">
   </vs-col>
 </vs-row>
       <template #footer>
         <div class="con-footer">
-          <p style="margin-bottom: 5rem; opacity: 0.6; font-size:15px;">{{endOrLoad}}</p>
+          <p style="margin-bottom: 5rem; opacity: 1; font-size:15px;">{{endOrLoad}}</p>
         </div>
       </template>
     </vs-dialog>
@@ -53,6 +53,9 @@ export default {
   methods:{
     getSearch(){
       this.$store.dispatch('getSearchList',this.searchMov)
+    },
+    nextPage(movie){
+      this.$router.push({name: 'postDetail', params: {id: movie.imdbID, title: movie.Title}})
     }
   },
   computed:{
@@ -116,7 +119,7 @@ export default {
   width: 100%;
   height: 200px;
 }
-.vs-dialog{
-  background-color: #0090ff !important;
+h4{
+  color: #c4baba;
 }
 </style>

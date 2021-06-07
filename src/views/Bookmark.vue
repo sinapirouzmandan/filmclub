@@ -4,20 +4,20 @@
     <vs-avatar badge badge-color="success" size="70" style="margin: 0 auto;">
       <img src="../../public/img/avatar.jpg" alt="">
       <template #badge>
-        28
+        {{watchListLengthCalc}}
       </template>
     </vs-avatar>
   <h2 style="display: inline-block;">watch list</h2>
   </div>
   <hr>
   <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
-  <p style="margin-bottom: 5rem; opacity: 0.2; font-size:15px;">{{endOrLoad}}</p>
+  <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{endOrLoad}}</p>
 </div>
 </template>
 
 <script>
-import  {mapState} from 'vuex'
-import bookmarkPost from "../components/bookmarkPost";
+import  {mapState,mapGetters} from 'vuex'
+import bookmarkPost from "../components/Bookmark/bookmarkPost";
 export default {
   name: "Bookmark",
   components: {bookmarkPost},
@@ -29,7 +29,8 @@ export default {
     this.$store.commit('toggleNavbar',true);
   },
   computed:{
-    ...mapState(['endOrLoad'])
+    ...mapState(['endOrLoad','watchListLength']),
+    ...mapGetters(['watchListLengthCalc'])
   }
 }
 </script>

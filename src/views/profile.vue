@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import tumbPost from '../components/tumbPost';
-import accountStatus from "../components/accountStatus";
-import accountBio from "../components/accountBio";
-import accountHeader from "../components/accountHeader";
+import tumbPost from '../components/profile/tumbPost';
+import accountStatus from "../components/profile/accountStatus";
+import accountBio from "../components/profile/accountBio";
+import accountHeader from "../components/profile/accountHeader";
 export default {
   name: "profile",
   components: {tumbPost, accountStatus,accountBio,accountHeader

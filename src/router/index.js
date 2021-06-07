@@ -5,6 +5,7 @@ import Bookmark from "../views/Bookmark";
 import search from "../views/search";
 import login from "../views/login";
 import NewPost from "../views/NewPost";
+import postDetail from "../components/NewPost/postDetail";
 Vue.use(VueRouter)
 
 const routes = [
@@ -37,6 +38,12 @@ const routes = [
     path:'/NewPost',
     name: 'NewPost',
     component: NewPost
+  },
+  {
+    path:'/NewPost/detail',
+    name: 'postDetail',
+    component: postDetail,
+    props: true
   }
   // {
   //   path: '/about',

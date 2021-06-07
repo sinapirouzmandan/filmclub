@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import searchUsers from "../components/searchUsers";
-import searchFixedHeader from "../components/searchFixedHeader";
+import searchUsers from "../components/search/searchUsers";
+import searchFixedHeader from "../components/search/searchFixedHeader";
 export default {
   name: "search.vue",
   components: {searchFixedHeader, searchUsers},

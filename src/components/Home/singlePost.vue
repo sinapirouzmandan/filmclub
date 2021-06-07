@@ -2,7 +2,7 @@
   <vs-col w="12" class="home" justify="space-around">
     <vs-card>
       <template #title>
-        <img src="../../public/img/avatar.jpg" alt="" style="width: 30px; height: 30px; border-radius: 50%; float: left;">
+        <img src="../../../public/img/avatar.jpg" alt="" style="width: 30px; height: 30px; border-radius: 50%; float: left;">
         <p class="userId">madman</p>
         <vs-button
             style="display: inline-block; float: right; margin-top: 0;"
