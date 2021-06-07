@@ -11,19 +11,22 @@
   </div>
   <hr>
   <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
-  <p style="margin-bottom: 5rem; opacity: 0.1; font-size:15px;">{{endOrLoad}}</p>
+  <p style="margin-bottom: 5rem; opacity: 0.2; font-size:15px;">{{endOrLoad}}</p>
 </div>
 </template>
 
 <script>
+import  {mapState} from 'vuex'
 import bookmarkPost from "../components/bookmarkPost";
 export default {
   name: "Bookmark",
   components: {bookmarkPost},
   data(){
     return{
-      endOrLoad: 'Loading content ...'
     }
+  },
+  computed:{
+    ...mapState(['endOrLoad'])
   }
 }
 </script>

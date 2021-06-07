@@ -7,7 +7,6 @@
           <div class="B-movie_header">
             <img class="B-locandina" :src="post.poster" :alt="moviesList.title"/>
             <h1>{{ post.title }}</h1>
-            <h4>{{post.year}}, {{getDirector()}}</h4>
             <span class="B-minutes">{{post.length}}</span>
             <p class="B-type">{{post.plot}}</p>
             <br>
@@ -21,57 +20,30 @@
             </ul>
           </div>
         </div>
-        <div class="B-blur_back B-bright_back" :style="{background: poster}"></div>
+        <div class="B-blur_back B-bright_back" :style="{background: `url(${post.poster})`}"></div>
       </div>
     </vs-col>
   </vs-row>
 </div>
 </template>
 <script>
-import axios from 'axios'
+import  {mapState,mapActions} from 'vuex'
 export default {
   name: "bookmarkPost",
   data (){
     return{
-      movieIDS: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
-      moviesList: [],
-      poster: []
     }
   },
   methods: {
-    async getMovies(){
-      var self = this;
-      let i = ''
-      for (i in this.movieIDS){
-        const options = {
-          method: 'GET',
-          url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + this.movieIDS[i],
-          headers: {
-            'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
-            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
-          }
-        };
-        await axios.request(options).then(function (response) {
-          self.moviesList.push(response.data);
-          self.poster.push(`url("${response.data['poster']}")`);
-        }).catch(function (error) {
-          console.error(error);
-        });
-      }
-      this.$emit('endLoad');
-    },
-    getDirector(){
-      try {
-        const last = Object.keys(this.moviesList.cast)[Object.keys(this.moviesList.cast).length - 1];
-        return this.moviesList['cast'][`${last}`]['actor'];
-      }
-      catch{
-        console.log('err')
-      }
-    }
+    ...mapActions(['getMoviesList'])
   },
   created() {
-    this.getMovies()
+  this.getMoviesList();
+  },
+  computed:{
+    ...mapState({
+      moviesList: 'watchListMoviesList'
+    }),
   }
 }
 </script>
@@ -116,7 +88,8 @@ export default {
 }
 .B-movie_card .B-info_section .B-movie_header .B-minutes {
   display: inline-block;
-  margin-top: 15px;
+  margin-top: 0;
+  margin-right: 1rem;
   color: #474747;
   padding: 5px;
   border-radius: 5px;
