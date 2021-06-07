@@ -11,7 +11,7 @@ export default new Vuex.Store({
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
     showNavbar: true,
-    isLoggedIn: true
+    isLoggedIn: false
   },
   getters: {
     watchListLengthCalc(state){
