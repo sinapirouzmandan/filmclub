@@ -3,7 +3,7 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
-      <vs-input placeholder="Email or Phone number">
+      <vs-input placeholder="Email or Phone number" v-model="emailOrPhone">
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
         </template>
@@ -23,7 +23,12 @@
 
 <script>
 export default {
-  name: "mailOrPhone"
+  name: "mailOrPhone",
+  data(){
+    return{
+      emailOrPhone: ''
+    }
+  }
 }
 </script>
 

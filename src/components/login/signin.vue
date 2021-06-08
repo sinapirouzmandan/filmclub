@@ -4,12 +4,13 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
       <h2>Login</h2>
-      <vs-input placeholder="">
+      <form @submit.prevent="login">
+      <vs-input placeholder="" v-model="user.userName">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-user"></i>
         </template>
       </vs-input>
-      <vs-input placeholder="" class="password">
+      <vs-input placeholder="" class="password" v-model="user.password">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-key"></i>
         </template>
@@ -18,10 +19,11 @@
           class="next"
           color="#5b3cc4"
           gradient
-          to="/"
+          type="submit"
       >
         <i class="iconify" data-icon="bx:bx-log-in"></i> signin
       </vs-button>
+      </form>
     </div>
     <router-link to="/login" tag="a" style="text-decoration: none;"><p class="signIn">Create a new account</p></router-link>
   </div>
@@ -29,9 +31,21 @@
 
 <script>
 import Head from "./Head";
+import {mapActions} from 'vuex'
 export default {
   name: "signin",
-  components: {Head}
+  components: {Head},
+  data(){
+    return{
+      user:{userName: '', password: ''}
+    }
+  },
+  methods:{
+    ...mapActions(['signin']),
+    login(){
+      this.signin(this.user)
+    }
+  }
 }
 </script>
 

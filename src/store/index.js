@@ -91,6 +91,23 @@ export default new Vuex.Store({
       else{
         commit('changeEndLoad')
       }
+    },
+    async signin({commit}, user){
+      const options = {
+        method: 'POST',
+        url: 'http://localhost:3000/users/login',
+        params: {login: user.userName,  password:user.password},
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      };
+
+      await axios.request(options).then(function (response) {
+        console.log(response.data)
+      }).catch(function (error) {
+        console.error(error);
+      });
+      commit('login')
     }
   },
   modules: {

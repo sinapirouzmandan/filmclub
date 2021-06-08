@@ -1,9 +1,12 @@
 <template>
   <div class="papa">
+    <div @click="$emit('back')">
+    <i class="iconify back"  data-icon="mdi:keyboard-backspace"></i>
+    </div>
     <div class="username">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
       <h2>Your username</h2>
-      <vs-input placeholder="">
+      <vs-input placeholder="" v-model="userName">
         <template #icon>
           <i class='iconify' data-icon="mdi:user"></i>
         </template>
@@ -27,6 +30,11 @@ export default {
   methods:{
     login(){
       this.$store.commit('login');
+    },
+    data(){
+      return{
+        userName: ''
+      }
     }
   }
 }
@@ -76,5 +84,11 @@ export default {
 }
 h2{
   margin-bottom: 1.5rem;
+}
+.back{
+  font-size: 25px;
+  position: absolute;
+  top:9rem;
+  left:20%;
 }
 </style>

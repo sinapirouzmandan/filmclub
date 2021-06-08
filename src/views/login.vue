@@ -1,7 +1,9 @@
 <template>
   <div>
  <Head/>
-    <component v-bind:is="stage" @doneMail="changeStage()"></component>
+    <keep-alive>
+    <component v-bind:is="stage" @doneMail="changeStage()" @back='startOver()'></component>
+    </keep-alive>
   </div>
 </template>
 
@@ -23,6 +25,9 @@ export default {
   methods:{
     changeStage(){
       this.stage = userName
+    },
+    startOver(){
+      this.stage = mailOrPhone
     }
   }
 }
