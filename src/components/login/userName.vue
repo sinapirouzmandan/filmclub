@@ -5,10 +5,15 @@
     </div>
     <div class="username">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
-      <h2>Your username</h2>
-      <vs-input placeholder="" v-model="userName">
+      <h2>username & password</h2>
+      <vs-input placeholder="username" v-model="user.username">
         <template #icon>
           <i class='iconify' data-icon="mdi:user"></i>
+        </template>
+      </vs-input>
+      <vs-input placeholder="password" v-model="user.password" style="margin-top: 1rem;">
+        <template #icon>
+          <i class='iconify' data-icon="mdi:password"></i>
         </template>
       </vs-input>
       <vs-button
@@ -25,18 +30,26 @@
 </template>
 
 <script>
+import {mapMutations,mapActions} from 'vuex'
 export default {
   name: "userName",
-  methods:{
-    login(){
-      this.$store.commit('login');
-    },
-    data(){
-      return{
-        userName: ''
+  data(){
+    return{
+      user: {
+        username: '',
+        password: ''
       }
     }
-  }
+  },
+  methods:{
+    ...mapMutations(['setUserName']),
+    ...mapActions(['signup']),
+    login(){
+      this.setUserName(this.user)
+      this.signup()
+      this.$store.commit('login');
+    },
+  },
 }
 </script>
 

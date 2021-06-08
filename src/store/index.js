@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
+import qs from 'querystring'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,9 @@ export default new Vuex.Store({
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
     showNavbar: true,
-    isLoggedIn: false
+    isLoggedIn: false,
+    token: null,
+    userInfo: []
   },
   getters: {
     watchListLengthCalc(state){
@@ -34,6 +37,20 @@ export default new Vuex.Store({
     },
     login(state){
       state.isLoggedIn = true
+    },
+    setToken(state,payload){
+      state.token = payload
+      localStorage.setItem('token', payload)
+    },
+    setUserMail(state,user){
+    state.userInfo.email = user.email
+      state.userInfo.name= user.name
+    },
+    setUserName(state,user){
+      state.userInfo.username = user.username
+      state.userInfo.password = user.password
+      state.userInfo.password_confirm = user.password
+      console.log(state.userInfo)
     }
   },
   actions: {
@@ -93,21 +110,38 @@ export default new Vuex.Store({
       }
     },
     async signin({commit}, user){
+      let token = null
       const options = {
         method: 'POST',
         url: 'http://localhost:3000/users/login',
-        params: {login: user.userName,  password:user.password},
+        data: qs.stringify({login: user.userName,  password:user.password}),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
       };
-
       await axios.request(options).then(function (response) {
-        console.log(response.data)
+        token = response.data.token
       }).catch(function (error) {
         console.error(error);
       });
-      commit('login')
+      commit('setToken', token)
+    },
+    async signup({commit, state}){
+      let token = null
+      const options = {
+        method: 'POST',
+        url: 'http://localhost:3000/users/',
+        data: qs.stringify({email: state.userInfo.email,  username:state.userInfo.username,name: state.userInfo.name,password: state.userInfo.password,password_confirm:state.userInfo.password_confirm}),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      };
+      await axios.request(options).then(function (response) {
+        token = response.data.token
+      }).catch(function (error) {
+        console.error(error);
+      });
+      commit('setToken', token)
     }
   },
   modules: {

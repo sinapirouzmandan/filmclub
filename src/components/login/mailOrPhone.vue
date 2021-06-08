@@ -3,16 +3,21 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
-      <vs-input placeholder="Email or Phone number" v-model="emailOrPhone">
+      <vs-input placeholder="Email or Phone number" v-model="user.email">
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
+        </template>
+      </vs-input>
+      <vs-input placeholder="Full name" v-model="user.name" style="margin-top: 1rem;">
+        <template #icon>
+          <i class='iconify' data-icon="mdi:identifier"></i>
         </template>
       </vs-input>
       <vs-button
           class="next"
           color="#5b3cc4"
           gradient
-          @click="$emit('doneMail')"
+          @click="sendInfo()"
       >
         <i class="iconify" data-icon="bx:bx-right-arrow-alt"></i> next
       </vs-button>
@@ -22,11 +27,22 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
 export default {
   name: "mailOrPhone",
   data(){
     return{
-      emailOrPhone: ''
+      user: {
+        email: '',
+        name: ''
+      }
+    }
+  },
+  methods:{
+    ...mapMutations(['setUserMail']),
+    sendInfo(){
+      this.setUserMail(this.user)
+      this.$emit('doneMail')
     }
   }
 }
