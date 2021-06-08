@@ -47,7 +47,6 @@ export default {
     login(){
       this.setUserName(this.user)
       this.signup()
-      this.$store.commit('login');
     },
   },
 }

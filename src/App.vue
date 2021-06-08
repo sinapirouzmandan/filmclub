@@ -73,13 +73,7 @@ export default {
     navbar
   },
   computed:{
-    ...mapState(['showNavbar','isLoggedIn'])
-  },
-  created() {
-    // eslint-disable-next-line no-constant-condition
-    if (!this.isLoggedIn){
-      this.$router.push('/login')
-    }
+    ...mapState(['showNavbar'])
   }
 }
 </script>

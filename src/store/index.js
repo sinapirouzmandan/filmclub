@@ -12,7 +12,6 @@ export default new Vuex.Store({
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
     showNavbar: true,
-    isLoggedIn: false,
     token: null,
     userInfo: []
   },
@@ -34,9 +33,6 @@ export default new Vuex.Store({
     },
     toggleNavbar(state,payload){
       state.showNavbar = payload
-    },
-    login(state){
-      state.isLoggedIn = true
     },
     setToken(state,payload){
       state.token = payload
