@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    baseURl: 'http://192.168.1.34:3000',
     watchListMoviesIDs: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
     watchListMoviesList: [],
     searchListMoviesList: [],
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     userInfo: [],
     isMailAvailable: false,
     isUserNameAvailable: false,
-    errMassage:''
+    errMassage:'err',
+    userProfile: ''
   },
   getters: {
     watchListLengthCalc(state){
@@ -60,7 +62,17 @@ export default new Vuex.Store({
     },
     changeErrMsg(state,payload){
       state.errMassage = payload
-    }
+    },
+    fetchProfile(state,payload){
+      state.userProfile =  payload
+    },
+      getTokenFromLocal(state){
+        if (state.token == null){
+            if(localStorage.getItem('token') !== null || localStorage.getItem('token') !== 'null'){
+                state.token = localStorage.getItem('token')
+            }
+        }
+      }
   },
   actions: {
     async getMoviesList({commit,state}){
@@ -118,11 +130,11 @@ export default new Vuex.Store({
         commit('changeEndLoad')
       }
     },
-    async signin({commit}, user){
+    async signin({commit,state}, user){
       let token = null
       const options = {
         method: 'POST',
-        url: 'http://localhost:3000/users/login',
+        url: `${state.baseURl}/users/login`,
         data: qs.stringify({login: user.userName,  password:user.password, r: 'json'}),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -140,7 +152,7 @@ export default new Vuex.Store({
       let token = null
       const options = {
         method: 'POST',
-        url: 'http://localhost:3000/users/',
+        url: `${state.baseURl}/users/`,
         data: qs.stringify({email: state.userInfo.email,  username:state.userInfo.username,name: state.userInfo.name,password: state.userInfo.password,password_confirm:state.userInfo.password_confirm}),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -154,10 +166,10 @@ export default new Vuex.Store({
       });
       commit('setToken', token)
     },
-    async checkMailAvailable({commit},user){
+    async checkMailAvailable({commit,state},user){
       const options = {
         method: 'GET',
-        url: `http://localhost:3000/users//is_email_available/${user.email}`,
+        url: `${state.baseURl}/users//is_email_available/${user.email}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -175,10 +187,10 @@ export default new Vuex.Store({
         commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
     },
-    async checkUserNameAvailable({commit,dispatch},user){
+    async checkUserNameAvailable({commit,dispatch,state},user){
       const options = {
         method: 'GET',
-        url: `http://localhost:3000/users//is_username_available/${user.username}`,
+        url: `${state.baseURl}/users//is_username_available/${user.username}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -196,6 +208,22 @@ export default new Vuex.Store({
       }).catch(function (error) {
         commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
+    },
+    async getUserProfile({commit,state}){
+      let userInf = []
+        const options = {
+          method: 'GET',
+          url: `${state.baseURl}/users/me/`,
+          headers: {
+            'authorization':`Bearer ${state.token}`
+          }
+        };
+        await axios.request(options).then(function (response) {
+          userInf = response.data
+        }).catch(function (error) {
+          console.error(error);
+        });
+        commit('fetchProfile', userInf)
     }
   },
   modules: {

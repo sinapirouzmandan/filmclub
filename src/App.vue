@@ -74,6 +74,9 @@ export default {
   },
   computed:{
     ...mapState(['showNavbar'])
+  },
+  created() {
+    this.$store.commit('getTokenFromLocal')
   }
 }
 </script>

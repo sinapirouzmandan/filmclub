@@ -75,6 +75,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if ((to.name !== 'login' && to.name !== 'signin') && token) next({ name: 'login' })
       else if((to.name === 'login') && !token){ next({ name: 'Home' })}
+  else if((to.name === 'signin') && !token){ next({ name: 'Home' })}
   else next()
 })
 export default router

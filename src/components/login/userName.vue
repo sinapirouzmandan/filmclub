@@ -6,12 +6,12 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
       <h2>username & password</h2>
-      <vs-input placeholder="username" v-model="user.username">
+      <vs-input label-placeholder="username" v-model="user.username">
         <template #icon>
           <i class='iconify' data-icon="mdi:user"></i>
         </template>
       </vs-input>
-      <vs-input placeholder="password" v-model="user.password" style="margin-top: 1rem;">
+      <vs-input label-placeholder="password" v-model="user.password" style="margin-top: 1.5rem;">
         <template #icon>
           <i class='iconify' data-icon="mdi:password"></i>
         </template>

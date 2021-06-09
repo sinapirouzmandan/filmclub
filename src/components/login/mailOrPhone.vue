@@ -3,12 +3,12 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
-      <vs-input placeholder="Email Address" border v-model="user.email" required>
+      <vs-input label-placeholder="Email Address" border v-model="user.email" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
         </template>
       </vs-input>
-      <vs-input placeholder="Full name" v-model="user.name" style="margin-top: 1rem;" required>
+      <vs-input label-placeholder="Full name" v-model="user.name" style="margin-top: 1.5rem;" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:identifier"></i>
         </template>
@@ -115,6 +115,7 @@ export default {
 .papa >>> .vs-input-content{
   width: 80%;
   max-width: 500px;
+  text-align: left;
 }
 .papa >>> .vs-input__icon{
   background-color: #151718 !important;
