@@ -4,7 +4,6 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
       <h2>Login</h2>
-      <form @submit.prevent="login">
       <vs-input placeholder="" v-model="user.userName">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-user"></i>
@@ -19,11 +18,10 @@
           class="next"
           color="#5b3cc4"
           gradient
-          type="submit"
+          @click="login"
       >
         <i class="iconify" data-icon="bx:bx-log-in"></i> signin
       </vs-button>
-      </form>
     </div>
     <router-link to="/login" tag="a" style="text-decoration: none;"><p class="signIn">Create a new account</p></router-link>
   </div>
@@ -31,7 +29,7 @@
 
 <script>
 import Head from "./Head";
-import {mapActions} from 'vuex'
+import {mapActions,mapState} from 'vuex'
 export default {
   name: "signin",
   components: {Head},
@@ -40,10 +38,24 @@ export default {
       user:{userName: '', password: ''}
     }
   },
+  computed:{
+    ...mapState(['errMassage'])
+  },
   methods:{
     ...mapActions(['signin']),
     login(){
-      this.signin(this.user)
+      this.signin(this.user).then(()=>{
+        console.log('logged in')
+      }).catch(()=>{
+        this.$vs.notification({
+          duration: 4000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#5b3cc4',
+          title: this.errMassage,
+        })
+      })
     }
   }
 }

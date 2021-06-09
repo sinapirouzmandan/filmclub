@@ -14,7 +14,9 @@ export default new Vuex.Store({
     showNavbar: true,
     token: null,
     userInfo: [],
-    isMailAvailable: false
+    isMailAvailable: false,
+    isUserNameAvailable: false,
+    errMassage:''
   },
   getters: {
     watchListLengthCalc(state){
@@ -47,10 +49,15 @@ export default new Vuex.Store({
       state.userInfo.username = user.username
       state.userInfo.password = user.password
       state.userInfo.password_confirm = user.password
-      console.log(state.userInfo)
     },
     mailAvailability(state,payload){
       state.isMailAvailable = payload
+    },
+    usernameAvailability(state,payload){
+      state.isUserName = payload
+    },
+    changeErrMsg(state,payload){
+      state.errMassage = payload
     }
   },
   actions: {
@@ -114,7 +121,7 @@ export default new Vuex.Store({
       const options = {
         method: 'POST',
         url: 'http://localhost:3000/users/login',
-        data: qs.stringify({login: user.userName,  password:user.password}),
+        data: qs.stringify({login: user.userName,  password:user.password, r: 'json'}),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -122,7 +129,7 @@ export default new Vuex.Store({
       await axios.request(options).then(function (response) {
         token = response.data.token
       }).catch(function (error) {
-        console.error(error);
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
       commit('setToken', token)
     },
@@ -137,9 +144,10 @@ export default new Vuex.Store({
         }
       };
       await axios.request(options).then(function (response) {
+        commit('setToken', null)
         token = response.data.token
       }).catch(function (error) {
-        console.error(error);
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
       commit('setToken', token)
     },
@@ -157,10 +165,33 @@ export default new Vuex.Store({
           commit('setUserMail', user)
         }
         else if(response.data.availability === false){
+          commit('changeErrMsg', response.data.message)
           commit('mailAvailability', false)
         }
       }).catch(function (error) {
-        console.error(error);
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+      });
+    },
+    async checkUserNameAvailable({commit,dispatch},user){
+      const options = {
+        method: 'GET',
+        url: `http://localhost:3000/users//is_username_available/${user.username}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      };
+      await axios.request(options).then(function (response) {
+        if (response.data.availability === true){
+          commit('usernameAvailability', true)
+          commit('setUserName', user)
+          dispatch('signup')
+        }
+        else if(response.data.availability === false){
+          commit('changeErrMsg', response.data.message)
+          commit('usernameAvailability', false)
+        }
+      }).catch(function (error) {
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
     }
   },

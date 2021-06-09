@@ -42,7 +42,7 @@ export default {
     }
   },
   computed:{
-    ...mapState(['isMailAvailable'])
+    ...mapState(['isMailAvailable', 'errMassage'])
   },
   methods:{
     ...mapActions(['checkMailAvailable']),
@@ -76,14 +76,13 @@ export default {
           this.$emit('doneMail')
         }
         else{
-          this.errMsg = 'This Email is already in use'
           this.$vs.notification({
             duration: 4000,
             progress: 'auto',
             border: null,
             position:'bottom-center',
             color: '#5b3cc4',
-            title: this.errMsg,
+            title: this.errMassage,
           })
         }
       })

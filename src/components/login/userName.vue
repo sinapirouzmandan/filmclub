@@ -17,11 +17,11 @@
         </template>
       </vs-input>
       <vs-button
+          :loading="isLoading"
           class="next"
           color="#5b3cc4"
           gradient
-          to="/"
-          @click="login()"
+          @click="sendInfo"
       >
         done <i class="iconify" data-icon="mdi:send-circle"></i>
       </vs-button>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {mapMutations,mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 export default {
   name: "userName",
   data(){
@@ -38,17 +38,53 @@ export default {
       user: {
         username: '',
         password: ''
-      }
+      },
+      isLoading: false,
+      errMsg: ''
     }
   },
-  methods:{
-    ...mapMutations(['setUserName']),
-    ...mapActions(['signup']),
-    login(){
-      this.setUserName(this.user)
-      this.signup()
-    },
+  computed:{
+    ...mapState(['isUserNameAvailable', 'errMassage'])
   },
+  methods:{
+    ...mapActions(['checkUserNameAvailable', 'signup']),
+    validUsername() {
+      if (this.user.username === '' || this.user.password === ''){
+        this.errMsg = 'Please  fill both fields'
+        return true
+      }
+    },
+    sendInfo(){
+      if(this.validUsername()){
+        this.$vs.notification({
+          duration: 4000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#5b3cc4',
+          title: this.errMsg,
+        })
+        return
+      }
+      this.isLoading = true
+      this.checkUserNameAvailable(this.user).then(()=>{
+        this.isLoading = false
+        if(this.isUserNameAvailable){
+          console.log('user Available')
+        }
+        else{
+          this.$vs.notification({
+            duration: 4000,
+            progress: 'auto',
+            border: null,
+            position:'bottom-center',
+            color: '#5b3cc4',
+            title: this.errMassage,
+          })
+        }
+      })
+    }
+  }
 }
 </script>
 
