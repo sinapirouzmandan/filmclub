@@ -3,17 +3,18 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
-      <vs-input placeholder="Email or Phone number" v-model="user.email">
+      <vs-input placeholder="Email Address" border v-model="user.email" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
         </template>
       </vs-input>
-      <vs-input placeholder="Full name" v-model="user.name" style="margin-top: 1rem;">
+      <vs-input placeholder="Full name" v-model="user.name" style="margin-top: 1rem;" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:identifier"></i>
         </template>
       </vs-input>
       <vs-button
+          :loading="isLoading"
           class="next"
           color="#5b3cc4"
           gradient
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapActions,mapState} from 'vuex'
 export default {
   name: "mailOrPhone",
   data(){
@@ -35,14 +36,57 @@ export default {
       user: {
         email: '',
         name: ''
-      }
+      },
+      isLoading: false,
+      errMsg: ''
     }
   },
+  computed:{
+    ...mapState(['isMailAvailable'])
+  },
   methods:{
-    ...mapMutations(['setUserMail']),
+    ...mapActions(['checkMailAvailable']),
+    validEmail() {
+      if (this.user.email === '' || this.user.name === ''){
+        this.errMsg = 'Please  fill both fields'
+        return false
+      }
+      this.user.email = this.user.email.replace(/\s/g, '');
+      //eslint-disable-next-line
+      const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      this.errMsg = 'This Email is not valid'
+       return re.test(this.user.email)
+    },
     sendInfo(){
-      this.setUserMail(this.user)
-      this.$emit('doneMail')
+      if(!this.validEmail()){
+        this.$vs.notification({
+          duration: 4000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#5b3cc4',
+          title: this.errMsg,
+        })
+        return
+      }
+      this.isLoading = true
+      this.checkMailAvailable(this.user).then(()=>{
+        this.isLoading = false
+        if(this.isMailAvailable){
+          this.$emit('doneMail')
+        }
+        else{
+          this.errMsg = 'This Email is already in use'
+          this.$vs.notification({
+            duration: 4000,
+            progress: 'auto',
+            border: null,
+            position:'bottom-center',
+            color: '#5b3cc4',
+            title: this.errMsg,
+          })
+        }
+      })
     }
   }
 }

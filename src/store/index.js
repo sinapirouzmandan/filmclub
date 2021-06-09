@@ -13,7 +13,8 @@ export default new Vuex.Store({
     endOrLoad: 'Loading content ...',
     showNavbar: true,
     token: null,
-    userInfo: []
+    userInfo: [],
+    isMailAvailable: false
   },
   getters: {
     watchListLengthCalc(state){
@@ -47,6 +48,9 @@ export default new Vuex.Store({
       state.userInfo.password = user.password
       state.userInfo.password_confirm = user.password
       console.log(state.userInfo)
+    },
+    mailAvailability(state,payload){
+      state.isMailAvailable = payload
     }
   },
   actions: {
@@ -138,6 +142,26 @@ export default new Vuex.Store({
         console.error(error);
       });
       commit('setToken', token)
+    },
+    async checkMailAvailable({commit},user){
+      const options = {
+        method: 'GET',
+        url: `http://localhost:3000/users//is_email_available/${user.email}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      };
+      await axios.request(options).then(function (response) {
+        if (response.data.availability === true){
+          commit('mailAvailability', true)
+          commit('setUserMail', user)
+        }
+        else if(response.data.availability === false){
+          commit('mailAvailability', false)
+        }
+      }).catch(function (error) {
+        console.error(error);
+      });
     }
   },
   modules: {
