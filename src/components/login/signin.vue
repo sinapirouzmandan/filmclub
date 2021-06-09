@@ -41,11 +41,21 @@ export default {
   computed:{
     ...mapState(['errMassage'])
   },
+created() {
+  this.$store.commit('toggleNavbar',false);
+},
   methods:{
     ...mapActions(['signin']),
     login(){
       this.signin(this.user).then(()=>{
-        console.log('logged in')
+        this.$vs.notification({
+          duration: 4000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#5b3cc4',
+          title: this.errMassage,
+        })
       }).catch(()=>{
         this.$vs.notification({
           duration: 4000,

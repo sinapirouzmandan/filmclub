@@ -128,8 +128,9 @@ export default new Vuex.Store({
       };
       await axios.request(options).then(function (response) {
         token = response.data.token
+        commit('changeErrMsg', null)
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        commit('changeErrMsg', error.response.data.errors['1']['msg'])
       });
       commit('setToken', token)
     },
