@@ -8,7 +8,7 @@ import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
 import signin from "../components/login/signin";
 Vue.use(VueRouter)
-let token = localStorage.getItem('token') === null
+let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
 const routes = [
   {
     path: '/',
@@ -74,6 +74,7 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   if ((to.name !== 'login' && to.name !== 'signin') && token) next({ name: 'login' })
+      else if((to.name === 'login') && !token){ next({ name: 'Home' })}
   else next()
 })
 export default router

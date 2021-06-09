@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
 import qs from 'querystring'
+import router from "../router";
 
 Vue.use(Vuex)
 
@@ -40,6 +41,7 @@ export default new Vuex.Store({
     setToken(state,payload){
       state.token = payload
       localStorage.setItem('token', payload)
+      router.go()
     },
     setUserMail(state,user){
     state.userInfo.email = user.email

@@ -70,7 +70,7 @@ export default {
       this.checkUserNameAvailable(this.user).then(()=>{
         this.isLoading = false
         if(this.isUserNameAvailable){
-          console.log('user Available')
+          console.log('logged in')
         }
         else{
           this.$vs.notification({
