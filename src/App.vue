@@ -59,6 +59,9 @@ img {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+img{
+  color: rgba(0, 0, 0, 0) !important;
+}
 </style>
 <script>
 import {mapState} from 'vuex'

@@ -43,7 +43,9 @@ export default new Vuex.Store({
     setToken(state,payload){
       state.token = payload
       localStorage.setItem('token', payload)
-      router.go()
+      if (payload != null){
+        router.go()
+      }
     },
     setUserMail(state,user){
     state.userInfo.email = user.email
@@ -142,9 +144,9 @@ export default new Vuex.Store({
       };
       await axios.request(options).then(function (response) {
         token = response.data.token
-        commit('changeErrMsg', null)
+        commit('changeErrMsg', 'Please wait to redirect')
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['1']['msg'])
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
       commit('setToken', token)
     },
@@ -161,6 +163,7 @@ export default new Vuex.Store({
       await axios.request(options).then(function (response) {
         commit('setToken', null)
         token = response.data.token
+        commit('changeErrMsg', 'Please wait to redirect')
       }).catch(function (error) {
         commit('changeErrMsg', error.response.data.errors['0']['msg'])
       });
@@ -224,6 +227,44 @@ export default new Vuex.Store({
           console.error(error);
         });
         commit('fetchProfile', userInf)
+    },
+    updateName({state,commit},name){
+      const options = {
+        method: 'PUT',
+        url: `${state.baseURl}/users/update/name`,
+        headers: {
+          'authorization':`Bearer ${state.token}`
+        },
+        data: qs.stringify({
+          name: name
+        })
+      };
+      axios.request(options).then(function (response) {
+        commit('changeErrMsg', response.data.message)
+        console.log(state.errMassage)
+      }).catch(function (error) {
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        console.error(error);
+      });
+    },
+    updateBio({state,commit},bio){
+      const options = {
+        method: 'PUT',
+        url: `${state.baseURl}/users/update/bio`,
+        headers: {
+          'authorization':`Bearer ${state.token}`
+        },
+        data: qs.stringify({
+          bio: bio
+        })
+      };
+      axios.request(options).then(function (response) {
+        commit('changeErrMsg', response.data.message)
+        console.log(state.errMassage)
+      }).catch(function (error) {
+        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        console.error(error);
+      });
     }
   },
   modules: {

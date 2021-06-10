@@ -25,7 +25,7 @@
         <h3>Interstellar</h3>
       </template>
       <template #img>
-        <img :src="source" alt="Image Load Error" id="postImage" @error="imageError">
+        <img v-lazy="source" alt="Image Load Error" id="postImage">
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star"></i>
@@ -53,16 +53,7 @@ export default {
   name: "singlePost",
   data(){
     return{
-      notry: 0,
-      source: `https://picsum.photos/id/${this.number}/300/300`
-    }
-  },
-  methods:{
-    imageError(event){
-      if(this.notry == 0){
-        event.target.src=`http://www.religare.com.br/app/webroot/img/admin/noimg.png`
-        this.notry = 1;
-      }
+      source: `https://picsum.photos/id/${this.number}/1000/1000`
     }
   },
   props:['number']

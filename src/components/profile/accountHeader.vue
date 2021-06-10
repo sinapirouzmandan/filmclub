@@ -1,6 +1,6 @@
 <template>
   <div id="top" class="topHeader">
-      <img :src="userProfile.header" :alt="'photo posted by' + userProfile.userName" class="backAvatar">
+      <img :src="userProfile.header" :alt="'header photo posted by ' + userProfile.username" class="backAvatar">
   <vs-row class="avatars">
     <vs-col w="4">
       <vs-avatar circle badge-color="success" size="90">
@@ -32,12 +32,15 @@
 
 
       <div class="con-form">
-        <vs-input v-model="userProfile.name" label-placeholder="Full name" color="#5b3cc4" class="input-field">
+        <vs-input v-model="userProfile.name" label-placeholder="Full name" color="#5b3cc4" class="input-field" @change="changedName = true">
+          <template #message-danger v-if="isNameEmpty">
+            Required
+          </template>
           <template #icon>
             <i class="iconify" data-icon="bx:bxs-user"></i>
           </template>
         </vs-input>
-        <vs-input v-model="userProfile.biography" label-placeholder="Biographi" class="input-field bioEdit"  color="#5b3cc4" style="margin-top: 2rem;">
+        <vs-input v-model="userProfile.biography" label-placeholder="Biographi" class="input-field bioEdit"  color="#5b3cc4" style="margin-top: 2rem;" @change="changedBio = true">
           <template #icon>
             <i class='iconify' data-icon="bx:bxs-info-circle"></i>
           </template>
@@ -46,7 +49,7 @@
 
       <template #footer>
         <div class="footer-dialog">
-          <vs-button block>
+          <vs-button block @click="sendReq()" :loading="isLoading">
             submit
           </vs-button>
         </div>
@@ -62,11 +65,57 @@ export default {
   name: "accountHeader",
   data(){
     return{
-      editPro: false
+      editPro: false,
+      changedName: false,
+      changedBio: false,
+      isLoading: false,
+      isNameEmpty: false
     }
   },
   computed:{
-    ...mapState(['userProfile'])
+    ...mapState(['userProfile', 'errMassage'])
+  },
+  methods:{
+    validName() {
+      if (this.userProfile.name === ''){
+        this.isNameEmpty = true
+        return true
+      }
+      else{
+        this.isNameEmpty = false
+      }
+    },
+    getNotif(){
+      setTimeout(()=>{
+        this.$vs.notification({
+          duration: 3000,
+          progress: 'auto',
+          border: null,
+          position:'top-center',
+          color: '#296186',
+          title: this.errMassage,
+        })
+        this.isLoading= false
+      },500)
+    },
+    sendReq(){
+    this.validName()
+      if (!(this.isNameEmpty)){
+        if(this.changedName){
+          this.isLoading = true
+          this.$store.dispatch('updateName', this.userProfile.name);
+          this.getNotif()
+          this.changedName = false
+        }
+        if(this.changedBio){
+          this.isLoading = true
+          this.$store.dispatch('updateBio', this.userProfile.biography);
+          this.getNotif()
+          this.changedBio = false
+        }
+        else if(!(this.changedBio || this.changedName)){this.editPro=false}
+      }
+    }
   }
 }
 </script>
@@ -76,13 +125,13 @@ export default {
   z-index: 9999;
   margin-top: 80px;
 }
-.backAvatar{
+.backAvatar {
   width: 100%;
   position: absolute;
-  top:0;
-  right:0;
-  left:0;
-  height:120px;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 120px;
   z-index: -4;
   background-color: #0a0d0e;
 }

@@ -3,7 +3,7 @@
   <vs-row class="tumbPostRow" justify="space-between">
   <vs-col v-for="(tump,index) in (1,16)" :key="index" w="6" class="tumbContainer" lg="3" xs="6">
     <div class="tumbPost">
-      <img :src="'https://picsum.photos/id/' + Math.floor(Math.random(50,90) * 100) + '/100/100'" alt="image">
+      <img v-lazy="'https://picsum.photos/id/' + Math.floor(Math.random(50,90) * 100) + '/1000/1000'" alt="image">
       <div class="caption">Movie Name</div>
     </div>
   </vs-col>
@@ -32,6 +32,7 @@ export default {
   right:0;
   left:0;
   padding:6px;
+  background-color: #1e2023;
 
 }
 #tumber >>> .tumbContainer{

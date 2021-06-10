@@ -15,6 +15,7 @@
         </template>
       </vs-input>
       <vs-button
+          :loading="isLoading"
           class="next"
           color="#5b3cc4"
           gradient
@@ -35,7 +36,8 @@ export default {
   components: {Head},
   data(){
     return{
-      user:{userName: '', password: ''}
+      user:{userName: '', password: ''},
+      isLoading: false
     }
   },
   computed:{
@@ -46,25 +48,35 @@ created() {
 },
   methods:{
     ...mapActions(['signin']),
+    getNotif(){
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position:'bottom-center',
+            color: '#296186',
+            title: this.errMassage,
+          })
+          this.isLoading=false
+    },
     login(){
+      this.isLoading = true
+      if (this.user.password.length < 6){
+        this.$vs.notification({
+          duration: 3000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#296186',
+          title: 'Password should be at list 6 characters',
+        })
+        this.isLoading = false
+        return
+      }
       this.signin(this.user).then(()=>{
-        this.$vs.notification({
-          duration: 4000,
-          progress: 'auto',
-          border: null,
-          position:'bottom-center',
-          color: '#5b3cc4',
-          title: this.errMassage,
-        })
+        this.getNotif()
       }).catch(()=>{
-        this.$vs.notification({
-          duration: 4000,
-          progress: 'auto',
-          border: null,
-          position:'bottom-center',
-          color: '#5b3cc4',
-          title: this.errMassage,
-        })
+        this.getNotif()
       })
     }
   }

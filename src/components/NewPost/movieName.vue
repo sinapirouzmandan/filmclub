@@ -28,7 +28,7 @@
       </template>
 <vs-row>
   <vs-col w="4" class="chooseMov" v-for="(option,index) in searchListMoviesList['0']" :key="index">
-    <img :src="option.Poster" :alt="option.Title" @click="nextPage(option)">
+    <img v-lazy="option.Poster" :alt="option.Title" @click="nextPage(option)">
   </vs-col>
 </vs-row>
       <template #footer>
@@ -95,8 +95,8 @@ export default {
   width: 60%;
 }
 .search{
-  position: absolute;
-  top: 25%;
+  position: fixed;
+  top:9rem;
   font-size: 70px;
 }
 .iconify{

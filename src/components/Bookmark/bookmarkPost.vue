@@ -5,7 +5,7 @@
       <div class="B-movie_card" id="B-bright">
         <div class="B-info_section">
           <div class="B-movie_header">
-            <img class="B-locandina" :src="post.poster" :alt="moviesList.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
             <h1>{{ post.title }}</h1>
             <span class="B-minutes">{{post.length}}</span>
             <p class="B-type">{{post.plot}}</p>

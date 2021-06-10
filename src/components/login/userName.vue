@@ -11,7 +11,7 @@
           <i class='iconify' data-icon="mdi:user"></i>
         </template>
       </vs-input>
-      <vs-input label-placeholder="password" v-model="user.password" style="margin-top: 1.5rem;">
+      <vs-input :progress="getProgress" label-placeholder="password" v-model="user.password" style="margin-top: 1.5rem;">
         <template #icon>
           <i class='iconify' data-icon="mdi:password"></i>
         </template>
@@ -44,7 +44,35 @@ export default {
     }
   },
   computed:{
-    ...mapState(['isUserNameAvailable', 'errMassage'])
+    ...mapState(['isUserNameAvailable', 'errMassage']),
+    getProgress() {
+      let progress = 0
+
+      // at least one number
+
+      if (/\d/.test(this.user.password)) {
+        progress += 10
+      }
+
+      // at least one capital letter
+
+      if (/(.*[A-Z].*)/.test(this.user.password)) {
+        progress += 15
+      }
+
+      // at menons a lowercase
+
+      if (/(.*[a-z].*)/.test(this.user.password)) {
+        progress += 15
+      }
+
+      // more than 5 digits
+
+      if (this.user.password.length >= 6) {
+        progress += 60
+      }
+      return progress
+    }
   },
   methods:{
     ...mapActions(['checkUserNameAvailable', 'signup']),
@@ -55,6 +83,18 @@ export default {
       }
     },
     sendInfo(){
+      if (this.user.password.length < 6){
+        this.$vs.notification({
+          duration: 3000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#296186',
+          title: 'Password should be at list 6 characters',
+        })
+        this.isLoading = false
+        return
+      }
       if(this.validUsername()){
         this.$vs.notification({
           duration: 4000,
@@ -138,5 +178,11 @@ h2{
   position: absolute;
   top:9rem;
   left:20%;
+}
+.papa >>> .vs-input__progress{
+  position: absolute;
+  bottom: 0;
+  margin-left: 3rem;
+  width: 75%;
 }
 </style>
