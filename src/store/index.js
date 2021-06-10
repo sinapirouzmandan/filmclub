@@ -146,7 +146,7 @@ export default new Vuex.Store({
         token = response.data.token
         commit('changeErrMsg', 'Please wait to redirect')
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        commit('changeErrMsg', error.response.data.message)
       });
       commit('setToken', token)
     },

@@ -17,10 +17,11 @@
 
 <script>
 import  {mapState,mapGetters} from 'vuex'
-import bookmarkPost from "../components/Bookmark/bookmarkPost";
 export default {
   name: "Bookmark",
-  components: {bookmarkPost},
+  components: {
+    bookmarkPost: () => import(/* webpackPrefetch: true */ '../components/Bookmark/bookmarkPost')
+  },
   data(){
     return{
     }

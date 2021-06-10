@@ -3,10 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Bookmark from "../views/Bookmark";
 import search from "../views/search";
-import login from "../views/login";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
-import signin from "../components/login/signin";
+import profile from "../views/profile";
 Vue.use(VueRouter)
 let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
 const routes = [
@@ -18,7 +17,7 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: () =>  import('../views/profile')
+    component:profile
   },
   {
     path: '/MyList',
@@ -33,7 +32,7 @@ const routes = [
   {
     path:'/login',
     name: 'login',
-    component: login
+    component: () =>  import('../views/login')
   },
   {
     path:'/NewPost',
@@ -49,7 +48,7 @@ const routes = [
   {
     path: '/signin',
     name: 'signin',
-    component: signin
+    component: () =>  import('../components/login/signin')
   }
   // {
   //   path: '/about',

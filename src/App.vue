@@ -65,7 +65,6 @@ img{
 </style>
 <script>
 import {mapState} from 'vuex'
-import navbar from './components/navbar.vue'
 export default {
   name: 'App',
   data(){
@@ -73,7 +72,7 @@ export default {
     }
   },
   components: {
-    navbar
+    navbar: () => import(/* webpackPrefetch: true */ './components/navbar')
   },
   computed:{
     ...mapState(['showNavbar'])

@@ -6,11 +6,12 @@
 </template>
 
 <script>
-import searchUsers from "../components/search/searchUsers";
-import searchFixedHeader from "../components/search/searchFixedHeader";
 export default {
   name: "search.vue",
-  components: {searchFixedHeader, searchUsers},
+  components: {
+    searchFixedHeader: () => import(/* webpackPrefetch: true */ '../components/search/searchFixedHeader')
+    , searchUsers: () => import(/* webpackPrefetch: true */ '../components/search/searchUsers')
+  },
   created() {
     this.$store.commit('toggleNavbar',true);
   }
