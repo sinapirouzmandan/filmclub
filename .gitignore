@@ -172,5 +172,11 @@ node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-
+ 
+desktop.ini
+src/components/desktop.ini
+src/desktop.ini
+src/router/desktop.ini
+src/store/desktop.ini
+src/views/desktop.ini
 # End of https://www.toptal.com/developers/gitignore/api/vue,vuejs,git,visualstudiocode,phpstorm
