@@ -40,7 +40,7 @@ export default {
 .logo h1{
 float: left;
   margin-left: 30px;
-  margin-top:11px;
+  margin-top:17px;
   font-family:'magic', sans-serif;
 }
 </style>

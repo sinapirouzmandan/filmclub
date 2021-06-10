@@ -18,7 +18,7 @@ export default new Vuex.Store({
     userInfo: [],
     isMailAvailable: false,
     isUserNameAvailable: false,
-    errMassage:'err',
+    errMassage:'Redirecting ...',
     userProfile: ''
   },
   getters: {
@@ -224,6 +224,8 @@ export default new Vuex.Store({
         await axios.request(options).then(function (response) {
           userInf = response.data
         }).catch(function (error) {
+          commit('setToken', null)
+          router.go("/signin")
           console.error(error);
         });
         commit('fetchProfile', userInf)

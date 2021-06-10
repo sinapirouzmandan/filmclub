@@ -13,7 +13,4 @@ export default {
 </script>
 
 <style scoped>
-.statusBar{
-  margin-top: 15px;
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="top" class="topHeader">
-      <img :src="userProfile.header" :alt="'header photo posted by ' + userProfile.username" class="backAvatar">
+      <img :src="userProfile.header" :alt="'header photo posted by ' + userProfile.username" class="backAvatar" @error="userProfile.header = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw6dWCVifqh42ha6sxuoGCnKGU2lcJiyISMndReOdYKaDQsckEe4A8mr-MxsCZAsCxpg&usqp=CAU'">
   <vs-row class="avatars">
     <vs-col w="4">
       <vs-avatar circle badge-color="success" size="90">
@@ -123,7 +123,7 @@ export default {
 <style scoped>
 .avatars {
   z-index: 9999;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 .backAvatar {
   width: 100%;
@@ -131,7 +131,7 @@ export default {
   top: 0;
   right: 0;
   left: 0;
-  height: 120px;
+  height: 100px;
   z-index: -4;
   background-color: #0a0d0e;
 }
