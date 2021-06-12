@@ -23,6 +23,8 @@ export default {
 #tumber >>> .tumbPost{
   width:100%;
   padding-top: 100%;
+  background-color: transparent;
+
 }
 #tumber >>> .tumbPost img{
   width: 100%;

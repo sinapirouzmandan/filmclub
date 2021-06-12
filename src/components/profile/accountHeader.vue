@@ -8,7 +8,7 @@
       </vs-avatar>
       <div class="username">
         <p>{{userProfile.name}}</p>
-        <i>@{{userProfile.username}}</i>
+        <i v-if="userProfile.username">@{{userProfile.username}}</i>
       </div>
     </vs-col>
     <vs-col w="4" class="editProfile" offset="3">
@@ -40,11 +40,11 @@
             <i class="iconify" data-icon="bx:bxs-user"></i>
           </template>
         </vs-input>
-        <vs-input v-model="userProfile.biography" label-placeholder="Biographi" class="input-field bioEdit"  color="#5b3cc4" style="margin-top: 2rem;" @change="changedBio = true">
-          <template #icon>
-            <i class='iconify' data-icon="bx:bxs-info-circle"></i>
-          </template>
-        </vs-input>
+        <vs-avatar class="bioIcon">
+        <i class="iconify" data-icon="bx:bxs-info-circle"></i>
+        </vs-avatar>
+          <textarea id="bio" class="vs-input text-input bioEdit" rows="5" v-model="userProfile.biography" placeholder="Biographi"  @change="changedBio = true">
+        </textarea>
       </div>
 
       <template #footer>
@@ -154,6 +154,24 @@ export default {
   color: #d5cccc;
 }
 .bioEdit{
-  height: 4rem;
+  background-color:#171b1d;
+  float: left;
+  margin-top: 1.5rem;
+  color: #d5cccc;
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+  width: 80%;
+}
+.bioEdit:focus{
+  background-color:#171b1d;
+  border-bottom:2px solid #5b3cc4;
+
+}
+.bioIcon{
+  margin-top: 2rem;
+  position: absolute;
+  top:2rem;
+  width: 40px;
+  height: 40px;
 }
 </style>

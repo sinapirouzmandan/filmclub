@@ -53,7 +53,7 @@ export default {
   name: "singlePost",
   data(){
     return{
-      source: `https://picsum.photos/id/${this.number}/1000/1000`
+      source: `https://picsum.photos/id/${this.number}/500/500`
     }
   },
   props:['number']

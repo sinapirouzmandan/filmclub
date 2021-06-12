@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    baseURl: 'http://192.168.1.34:3000',
+    baseURl: 'http://192.168.1.35:3000',
     watchListMoviesIDs: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
     watchListMoviesList: [],
     searchListMoviesList: [],
@@ -146,7 +146,11 @@ export default new Vuex.Store({
         token = response.data.token
         commit('changeErrMsg', 'Please wait to redirect')
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.message)
+        if (!error.response) {
+          commit('changeErrMsg', "Can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.message)
+        }
       });
       commit('setToken', token)
     },
@@ -165,7 +169,11 @@ export default new Vuex.Store({
         token = response.data.token
         commit('changeErrMsg', 'Please wait to redirect')
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        if (!error.response) {
+          commit('changeErrMsg', "Can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        }
       });
       commit('setToken', token)
     },
@@ -187,7 +195,11 @@ export default new Vuex.Store({
           commit('mailAvailability', false)
         }
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        if (!error.response) {
+          commit('changeErrMsg', "Can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        }
       });
     },
     async checkUserNameAvailable({commit,dispatch,state},user){
@@ -209,7 +221,11 @@ export default new Vuex.Store({
           commit('usernameAvailability', false)
         }
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        if (!error.response) {
+          commit('changeErrMsg', "Can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+        }
       });
     },
     async getUserProfile({commit,state}){
@@ -224,9 +240,13 @@ export default new Vuex.Store({
         await axios.request(options).then(function (response) {
           userInf = response.data
         }).catch(function (error) {
-          commit('setToken', null)
-          router.go("/signin")
-          console.error(error);
+          if (!error.response) {
+            alert("Can't connect to server, check your internet connection")
+          } else {
+            commit('setToken', null)
+            router.go("/signin")
+            console.error(error);
+          }
         });
         commit('fetchProfile', userInf)
     },
@@ -245,8 +265,12 @@ export default new Vuex.Store({
         commit('changeErrMsg', response.data.message)
         console.log(state.errMassage)
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
-        console.error(error);
+        if (!error.response) {
+          commit('changeErrMsg', "can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+          console.error(error);
+        }
       });
     },
     updateBio({state,commit},bio){
@@ -264,8 +288,12 @@ export default new Vuex.Store({
         commit('changeErrMsg', response.data.message)
         console.log(state.errMassage)
       }).catch(function (error) {
-        commit('changeErrMsg', error.response.data.errors['0']['msg'])
-        console.error(error);
+        if (!error.response) {
+          commit('changeErrMsg', "can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+          console.error(error);
+        }
       });
     }
   },
