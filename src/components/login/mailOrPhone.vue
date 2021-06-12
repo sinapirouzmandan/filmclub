@@ -3,11 +3,13 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
+      <!-- -----------------        Email        --------------------- -->
       <vs-input label-placeholder="Email Address" border v-model="user.email" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
         </template>
       </vs-input>
+      <!-- -----------------        full name        --------------------- -->
       <vs-input label-placeholder="Full name" v-model="user.name" style="margin-top: 1.5rem;" required>
         <template #icon>
           <i class='iconify' data-icon="mdi:identifier"></i>
@@ -23,6 +25,7 @@
         <i class="iconify" data-icon="bx:bx-right-arrow-alt"></i> next
       </vs-button>
     </div>
+
      <router-link to="/signin" tag="a" style="text-decoration: none;"><p class="signIn">I already have an account . sign in</p></router-link>
   </div>
 </template>
@@ -47,10 +50,12 @@ export default {
   methods:{
     ...mapActions(['checkMailAvailable']),
     validEmail() {
+      // check if inputs are empty
       if (this.user.email === '' || this.user.name === ''){
         this.errMsg = 'Please  fill both fields'
         return false
       }
+      // check if email is real
       this.user.email = this.user.email.replace(/\s/g, '');
       //eslint-disable-next-line
       const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -70,9 +75,11 @@ export default {
         return
       }
       this.isLoading = true
+      // server side email check
       this.checkMailAvailable(this.user).then(()=>{
         this.isLoading = false
         if(this.isMailAvailable){
+          // go next level
           this.$emit('doneMail')
         }
         else{

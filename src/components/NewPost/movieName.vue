@@ -2,7 +2,8 @@
   <div class="father">
     <vs-row>
       <vs-col w="12">
-        <div class="postInfo">
+        <div class="postInfo"></div>
+        <div class="postReal">
           <div class="search">
           <i class="iconify" data-icon="mdi:movie-search"></i>
             <vs-input
@@ -52,6 +53,7 @@ export default {
   },
   methods:{
     getSearch(){
+      this.searchMov = this.searchMov.replace(/\s/g, '');
       this.$store.dispatch('getSearchList',this.searchMov)
     },
     nextPage(movie){
@@ -61,8 +63,10 @@ export default {
   computed:{
     ...mapState(['searchListMoviesList','endOrLoad']),
 
+  },
+  created() {
+    this.$store.commit('toggleNavbar',true);
   }
-
 }
 </script>
 
@@ -71,8 +75,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  top:0;
   height:100%;
   width: 100%;
 }
@@ -81,22 +83,26 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.56);
-  padding-top: 100%;
+  position: absolute;
+  padding-top:100%;
   border-radius: 50%;
-
 }
-.postInfo >>> .vs-input{
+.postReal{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.postReal >>> .vs-input{
   background-color: #171b1d !important;
   width: 300px;
   color:white;
 }
-.postInfo >>> .vs-input__label{
+.postReal >>> .vs-input__label{
   width: 60%;
 }
 .search{
-  position: fixed;
-  top:9rem;
+  margin-top: 5rem;
   font-size: 70px;
 }
 .iconify{
@@ -104,10 +110,10 @@ export default {
   box-shadow: 10px 10px 10px -1px rgba(0,0,0,0.59), 2px 5px 16px 0px rgba(12, 13, 16, 0.46), 0px 6px 50px -8px rgba(14, 12, 12, 0);
   margin-bottom: 3rem;
 }
-.postInfo >>> .vs-button{
+.postReal >>> .vs-button{
   margin: 2rem auto 0;
 }
-.postInfo >>> .vs-dialog{
+.postReal >>> .vs-dialog{
   background-color: #080a0b;
 }
 .chooseMov{

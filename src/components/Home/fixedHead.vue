@@ -11,15 +11,6 @@
 import switchExplorer from "./switchExplorer";
 export default {
   name: "navbar",
-  data(){
-    return{
-      activeSearch: "1",
-      activeBookmark: "1",
-      activeMovie: "1",
-      activeUser: "1",
-      activeHome: "0",
-    }
-  },
   components: {switchExplorer}
 }
 </script>

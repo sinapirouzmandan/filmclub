@@ -9,8 +9,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     baseURl: 'http://192.168.1.35:3000',
+    //watchList
     watchListMoviesIDs: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
     watchListMoviesList: [],
+    //AddNewPost
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
     showNavbar: true,
@@ -250,7 +252,7 @@ export default new Vuex.Store({
         });
         commit('fetchProfile', userInf)
     },
-    updateName({state,commit},name){
+    async updateName({state,commit},name){
       const options = {
         method: 'PUT',
         url: `${state.baseURl}/users/update/name`,
@@ -261,7 +263,7 @@ export default new Vuex.Store({
           name: name
         })
       };
-      axios.request(options).then(function (response) {
+      await axios.request(options).then(function (response) {
         commit('changeErrMsg', response.data.message)
         console.log(state.errMassage)
       }).catch(function (error) {
@@ -273,7 +275,7 @@ export default new Vuex.Store({
         }
       });
     },
-    updateBio({state,commit},bio){
+    async updateBio({state,commit},bio){
       const options = {
         method: 'PUT',
         url: `${state.baseURl}/users/update/bio`,
@@ -284,7 +286,7 @@ export default new Vuex.Store({
           bio: bio
         })
       };
-      axios.request(options).then(function (response) {
+      await axios.request(options).then(function (response) {
         commit('changeErrMsg', response.data.message)
         console.log(state.errMassage)
       }).catch(function (error) {

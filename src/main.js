@@ -8,14 +8,12 @@ import 'vuesax/dist/vuesax.css'
 import VueLazyload from 'vue-lazyload'
 const loadimage = require('./assets/loading.gif')
 const errorimage = require('./assets/err.gif')
-
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: errorimage,
   loading: loadimage,
   attempt: 3
 })
-
 Vue.use(VueLazyload)
 Vue.config.productionTip = false
 Vue.use(Vuesax, {

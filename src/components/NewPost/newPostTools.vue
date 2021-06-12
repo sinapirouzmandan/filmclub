@@ -2,10 +2,12 @@
   <div class="tools">
     <div class="top-tools">
       <vs-row>
-        <vs-col w="1">
+        <vs-col w="2">
+          <div @click="back" >
             <i class='iconify close' data-icon="mdi:close"></i>
+          </div>
         </vs-col>
-        <vs-col w="7"></vs-col>
+        <vs-col w="6"></vs-col>
         <vs-col w="4">
           <vs-button
               class="sendPost"
@@ -13,7 +15,7 @@
               warn
               animation-type="vertical"
           >
-            Message
+            share
             <template #animate >
               <i class='bx bx-mail-send' ></i> Send
             </template>
@@ -21,14 +23,6 @@
         </vs-col>
       </vs-row>
     </div>
-    <vs-button
-        class="floating-add-image"
-        circle
-        icon
-        floating
-    >
-      <i class='iconify' data-icon="bx:bxs-image-add"></i>
-    </vs-button>
   </div>
 </template>
 
@@ -37,6 +31,11 @@ export default {
   name: "newPostTools",
   data(){
     return{
+    }
+  },
+  methods:{
+    back(){
+      this.$router.push({name: 'NewPost'})
     }
   }
 }

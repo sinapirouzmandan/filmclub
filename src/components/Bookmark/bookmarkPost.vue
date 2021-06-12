@@ -4,6 +4,7 @@
     <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
       <div class="B-movie_card" id="B-bright">
         <div class="B-info_section">
+          <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header">
             <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
             <h1>{{ post.title }}</h1>
@@ -13,6 +14,9 @@
             <i class="iconify" data-icon="bx:bxl-imdb" style="font-size: 40px; color: rgba(0, 0, 0, 0.5);" data-inline="true"></i>
             <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">{{post.rating}} / 10</p>
           </div>
+          <!-- -----------------        ///      --------------------- -->
+
+          <!-- -----------------        post action btn       --------------------- -->
           <div class="B-movie_social">
             <ul>
               <li><i class="iconify" data-icon="bx:bxs-share-alt">share</i></li>
@@ -20,7 +24,11 @@
             </ul>
           </div>
         </div>
+        <!-- -----------------        ///       --------------------- -->
+
+        <!-- -----------------        post background        --------------------- -->
         <div class="B-blur_back B-bright_back" :style="{background: `url(${post.poster})`}"></div>
+        <!-- -----------------        ///        --------------------- -->
       </div>
     </vs-col>
   </vs-row>
