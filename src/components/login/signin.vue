@@ -48,6 +48,12 @@ created() {
 },
   methods:{
     ...mapActions(['signin']),
+    isMail() {
+      this.user.userName = this.user.userName.replace(/\s/g, '');
+      //eslint-disable-next-line
+      const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      return re.test(this.user.userName)
+    },
     getNotif(){
           this.$vs.notification({
             duration: 3000,
@@ -73,11 +79,20 @@ created() {
         this.isLoading = false
         return
       }
-      this.signin(this.user).then(()=>{
-        this.getNotif()
-      }).catch(()=>{
-        this.getNotif()
-      })
+      if(this.isMail()){
+        this.signin(this.user, 1).then(()=>{
+          console.log('done')
+        }).catch(()=>{
+          this.getNotif()
+        })
+      }
+      else{
+        this.signin(this.user, 2).then(()=>{
+          console.log('done')
+        }).catch(()=>{
+          this.getNotif()
+        })
+      }
     }
   }
 }
