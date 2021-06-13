@@ -24,13 +24,13 @@ export default {
 <style scoped>
 .container{
   width: 100%;
-  background-color: #0a0d0e;
+  background-color: var(--vs-mainback);
 }
 .xi-top-head{
   padding: 14px;
 }
 .xi-top-head >>> .vs-input{
-  background-color: #171b1d !important;
+  background-color: var(--vs-navs) !important;
   width: 100%;
   color:white;
 }

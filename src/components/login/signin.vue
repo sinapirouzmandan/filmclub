@@ -4,12 +4,12 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
       <h2>Login</h2>
-      <vs-input placeholder="" v-model="user.userName">
+      <vs-input placeholder="email or username" v-model="user.userName">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-user"></i>
         </template>
       </vs-input>
-      <vs-input placeholder="" class="password" v-model="user.password">
+      <vs-input placeholder="password" class="password" v-model="user.password">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-key"></i>
         </template>
@@ -91,11 +91,8 @@ created() {
 
 }
 .papa  >>> .vs-input__label{
-  width: 60%;
+  width: 80%;
   display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
 }
 .username{
   margin-top: 9rem;

@@ -138,9 +138,6 @@ export default {
 .papa  >>> .vs-input__label{
   width: 60%;
   display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
 }
 .username{
   margin-top: 9rem;

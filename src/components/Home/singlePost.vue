@@ -62,7 +62,7 @@ export default {
 
 <style scoped>
 .home >>> .vs-card{
-  background-color: #121818 !important;
+  background-color: var(--vs-cardback) !important;
   width: 100%;
   max-width:500px;
   margin: 20px auto;

@@ -1,5 +1,6 @@
 <template>
 <div>
+  <component-loading/>
   <vs-row>
     <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
       <div class="B-movie_card" id="B-bright">
@@ -18,9 +19,8 @@
 
           <!-- -----------------        post action btn       --------------------- -->
           <div class="B-movie_social">
-            <ul>
-              <li><i class="iconify" data-icon="bx:bxs-share-alt">share</i></li>
-              <li><i class="iconify" data-icon="bx:bxs-trash">chat_bubble</i></li>
+            <ul  @click="del(post.id)">
+              <li><i class="iconify" data-icon="bx:bxs-trash" style="font-size:30px;"></i></li>
             </ul>
           </div>
         </div>
@@ -35,15 +35,32 @@
 </div>
 </template>
 <script>
+import componentLoading from "../componentLoading";
 import  {mapState,mapActions} from 'vuex'
+import swal from 'sweetalert'
 export default {
   name: "bookmarkPost",
   data (){
     return{
+      loaded: false
     }
   },
+  components: {componentLoading},
   methods: {
-    ...mapActions(['getMoviesList'])
+    ...mapActions(['getMoviesList', 'toggleWatchListPost']),
+    del(id){
+      swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: false,
+      })
+          .then((willDelete) => {
+            if (willDelete) {
+              this.toggleWatchListPost(id)
+            }
+          });
+    }
   },
   created() {
   this.getMoviesList();
@@ -187,5 +204,11 @@ export default {
 }
 .B-bright_back {
   filter: blur(0.8rem);
+}
+.swal-modal{
+  background-color: var(--vs-navs);
+}
+.swal-title{
+  color:white !important;
 }
 </style>

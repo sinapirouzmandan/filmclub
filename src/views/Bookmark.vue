@@ -10,7 +10,9 @@
   <h2 style="display: inline-block;">watch list</h2>
   </div>
   <hr>
+  <keep-alive>
   <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
+  </keep-alive>
   <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{endOrLoad}}</p>
 </div>
 </template>

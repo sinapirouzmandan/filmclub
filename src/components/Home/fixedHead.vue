@@ -24,7 +24,7 @@ export default {
   left:0;
   height: 50px;
   width:100%;
-  background-color: #1e2023;
+  background-color: var(--vs-navs);
   display:flex;
   z-index: 999999999;
 }

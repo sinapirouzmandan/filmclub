@@ -3,15 +3,16 @@ import Vuex from 'vuex'
 import axios from "axios";
 import qs from 'querystring'
 import router from "../router";
-
+import swal from 'sweetalert'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     baseURl: 'http://192.168.1.35:3000',
     //watchList
-    watchListMoviesIDs: ['tt1375666','tt1974419','tt0105323', 'tt6723592', 'tt0108778', 'tt0052357','tt0068646', 'tt0137523', 'tt2582802'],
+    watchListMoviesIDs: [],
     watchListMoviesList: [],
+    isWatchListLoaded: false,
     //AddNewPost
     searchListMoviesList: [],
     endOrLoad: 'Loading content ...',
@@ -21,7 +22,8 @@ export default new Vuex.Store({
     isMailAvailable: false,
     isUserNameAvailable: false,
     errMassage:'Redirecting ...',
-    userProfile: ''
+    userProfile: '',
+    isProfileLoaded: false
   },
   getters: {
     watchListLengthCalc(state){
@@ -32,6 +34,9 @@ export default new Vuex.Store({
   mutations: {
     fetchWatchListMovies(state,payload) {
       state.watchListMoviesList = payload;
+    },
+    toggleWatchListLoaded(state,payload){
+      this.state.isWatchListLoaded = payload
     },
     fetchSearchListMovies(state,payload) {
       state.searchListMoviesList = payload;
@@ -70,6 +75,18 @@ export default new Vuex.Store({
     fetchProfile(state,payload){
       state.userProfile =  payload
     },
+    toggleProfileLoaded(state,payload){
+      this.state.isProfileLoaded = payload
+    },
+    loadImdbIds(state,payload){
+      state.watchListMoviesIDs=payload
+    },
+    removeWatchListPost(state,id){
+      const watch = state.watchListMoviesList.filter((movie)=>
+        movie.id !== id
+      )
+      state.watchListMoviesList = watch
+    },
       getTokenFromLocal(state){
         if (state.token == null){
             if(localStorage.getItem('token') !== null || localStorage.getItem('token') !== 'null'){
@@ -80,29 +97,49 @@ export default new Vuex.Store({
   },
   actions: {
     async getMoviesList({commit,state}){
-      let watchListPosts = []
-      let id = null
-      for (id in state.watchListMoviesIDs) {
-        const options = {
+      if(!(state.isWatchListLoaded)){
+        const optionsServer = {
           method: 'GET',
-          url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + state.watchListMoviesIDs[id],
+          url: `${state.baseURl}/watchlist/`,
           headers: {
-            'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
-            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
+            'authorization':`Bearer ${state.token}`
           }
         };
-        await axios.request(options).then(function (response) {
-          watchListPosts.push(response.data);
+        await axios.request(optionsServer).then(function (response) {
+          commit('loadImdbIds', response.data.list)
         }).catch(function (error) {
-          console.error(error);
+          if (!error.response) {
+            commit('changeErrMsg', "can't connect to server, check your internet connection")
+          } else {
+            commit('changeErrMsg', error.response.data.errors['0']['msg'] + error.response.data.message)
+            console.error(error);
+          }
         });
-        commit('fetchWatchListMovies', watchListPosts)
-      }
-      if (Object.keys(watchListPosts).length <= 0) {
-        commit('changeEndLoad', 'Error loading, maybe the name is wrong')
-      }
-      else{
-        commit('changeEndLoad')
+        let watchListPosts = []
+        let id = null
+        for (id in state.watchListMoviesIDs) {
+          const options = {
+            method: 'GET',
+            url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + state.watchListMoviesIDs[id],
+            headers: {
+              'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
+              'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
+            }
+          };
+          await axios.request(options).then(function (response) {
+            watchListPosts.push(response.data);
+            commit('toggleWatchListLoaded', true)
+          }).catch(function (error) {
+            console.error(error);
+          });
+          commit('fetchWatchListMovies', watchListPosts)
+        }
+        if (Object.keys(watchListPosts).length <= 0) {
+          commit('changeEndLoad', 'There is no movie in your watch list')
+        }
+        else{
+          commit('changeEndLoad')
+        }
       }
     },
     async getSearchList({commit}, search){
@@ -231,7 +268,8 @@ export default new Vuex.Store({
       });
     },
     async getUserProfile({commit,state}){
-      let userInf = []
+      if(!(state.isProfileLoaded)){
+        let userInf = []
         const options = {
           method: 'GET',
           url: `${state.baseURl}/users/me/`,
@@ -241,9 +279,10 @@ export default new Vuex.Store({
         };
         await axios.request(options).then(function (response) {
           userInf = response.data
+          commit('toggleProfileLoaded', true)
         }).catch(function (error) {
           if (!error.response) {
-            alert("Can't connect to server, check your internet connection")
+            swal("Can't connect to server, check your internet connection")
           } else {
             commit('setToken', null)
             router.go("/signin")
@@ -251,6 +290,7 @@ export default new Vuex.Store({
           }
         });
         commit('fetchProfile', userInf)
+      }
     },
     async updateName({state,commit},name){
       const options = {
@@ -293,7 +333,31 @@ export default new Vuex.Store({
         if (!error.response) {
           commit('changeErrMsg', "can't connect to server, check your internet connection")
         } else {
-          commit('changeErrMsg', error.response.data.errors['0']['msg'])
+          commit('changeErrMsg', error.response.data.errors['0']['msg'] + error.response.data.message)
+          console.error(error);
+        }
+      });
+    },
+    async toggleWatchListPost({state,commit},id){
+      state.isWatchListLoaded = false
+      const options = {
+        method: 'POST',
+        url: `${state.baseURl}/watchlist/`,
+        headers: {
+          'authorization':`Bearer ${state.token}`
+        },
+        data: qs.stringify({
+          imdb_id: id
+        })
+      };
+      await axios.request(options).then(function (response) {
+        commit('removeWatchListPost',id)
+        commit('changeErrMsg', response.data.message)
+      }).catch(function (error) {
+        if (!error.response) {
+          commit('changeErrMsg', "can't connect to server, check your internet connection")
+        } else {
+          commit('changeErrMsg', error.response.data.errors['0']['msg'] + error.response.data.message)
           console.error(error);
         }
       });

@@ -8,9 +8,12 @@
 <style>
 :root{
   --vs-gray-3: 0,0,0 !important;
+  --vs-mainback: #0a0d0e;
+  --vs-navs: #1e2023;
+  --vs-cardback: #121818;
 }
 head,body {
-  background-color: #0a0d0e;
+  background-color: var(--vs-mainback);
   user-select: none;
   overflow:auto;
   overflow:initial;
@@ -64,6 +67,7 @@ img{
 }
 </style>
 <script>
+import navbar from "./components/navbar";
 import {mapState} from 'vuex'
 export default {
   name: 'App',
@@ -72,7 +76,7 @@ export default {
     }
   },
   components: {
-    navbar: () => import(/* webpackPrefetch: true */ './components/navbar')
+    navbar
   },
   computed:{
     ...mapState(['showNavbar'])

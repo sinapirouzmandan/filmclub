@@ -94,7 +94,7 @@ export default {
   width: 100%;
 }
 .postReal >>> .vs-input{
-  background-color: #171b1d !important;
+  background-color: var(--vs-navs) !important;
   width: 300px;
   color:white;
 }
