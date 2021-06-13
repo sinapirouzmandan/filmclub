@@ -1,5 +1,6 @@
 <template>
   <div id="top" class="topHeader">
+    <settings/>
       <img :src="userProfile.header" :alt="'header photo posted by ' + userProfile.username" class="backAvatar" @error="userProfile.header = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw6dWCVifqh42ha6sxuoGCnKGU2lcJiyISMndReOdYKaDQsckEe4A8mr-MxsCZAsCxpg&usqp=CAU'">
   <vs-row class="avatars">
     <vs-col w="4">
@@ -60,9 +61,11 @@
 </template>
 
 <script>
+import settings from "./settings";
 import {mapState} from 'vuex'
 export default {
   name: "accountHeader",
+  components:{settings},
   data(){
     return{
       editPro: false,
@@ -122,13 +125,12 @@ export default {
 
 <style scoped>
 .avatars {
-  z-index: 9999;
-  margin-top: 60px;
+  margin-top: 110px;
 }
 .backAvatar {
   width: 100%;
   position: absolute;
-  top: 0;
+  top: 50px;
   right: 0;
   left: 0;
   height: 100px;
@@ -136,7 +138,7 @@ export default {
   background-color: #0a0d0e;
 }
 .editProfile {
-  margin-top: 50px;
+  margin-top: 60px;
 }
 .username{
   margin-top: 15px;
