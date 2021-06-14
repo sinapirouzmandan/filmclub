@@ -43,7 +43,10 @@ export default {
 margin-top: 1.5rem;
 }
 hr {
+  margin: 40px auto 0;
+  width: 60%;
   border: 0;
   height: 1px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
 }
 </style>

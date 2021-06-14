@@ -4,6 +4,8 @@
   <keep-alive>
   <component :is="searchBox"></component>
   </keep-alive>
+  <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{endOrLoad}}</p>
+
 </div>
 </template>
 
@@ -11,6 +13,7 @@
 import searchFixedHeader from "../components/search/searchFixedHeader";
 import boxOffice from "../components/search/boxOffice";
 import searchUsers from "../components/search/searchUsers";
+import {mapState} from "vuex";
 export default {
   name: "search.vue",
   data(){
@@ -31,6 +34,9 @@ export default {
   },
   created() {
     this.$store.commit('toggleNavbar',true);
+  },
+  computed:{
+    ...mapState(['endOrLoad']),
   }
 }
 </script>
