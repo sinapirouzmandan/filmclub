@@ -29,8 +29,11 @@ export default {
 .divider{
   width:100%;
   height:1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   margin-top: 0.5rem;
+  width: 90%;
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(85, 84, 84, 0.31), rgba(255, 255, 255, 0));
 }
 .bottom{
   margin-top: 4rem;
