@@ -15,52 +15,42 @@
           v-model="active"
       >
         <template #logo>
-          <!-- ...img logo -->
+          <img src="../../../public/img/avatar.jpg" alt="avatar">
+          <div @click="sideBar = false" style="width: 100%;">
+          <i class="iconify" data-icon="mdi:close" id="close"></i>
+          </div>
         </template>
         <vs-sidebar-item id="home">
-          <template #icon>
-            <i class="iconify" data-icon='bx:bx-home'></i>
-          </template>
-          Home
+          <vs-switch primary v-model="active2">
+            <template #circle>
+              <i class="iconify switch" data-icon='bx:bxs-moon'></i>
+            </template>
+          </vs-switch>
         </vs-sidebar-item>
-        <vs-sidebar-item id="market">
+        <vs-sidebar-item id="update">
           <template #icon>
-            <i class="iconify" data-icon='bx:bx-grid-alt'></i>
+            <i class="iconify" data-icon='bx:bx-cloud-snow'></i>
           </template>
-          Market Overview
+          update
         </vs-sidebar-item>
-        <vs-sidebar-item id="Music">
+        <vs-sidebar-item id="logout">
           <template #icon>
-            <i class="iconify" data-icon='bx:bxs-music'></i>
+            <i class="iconify" data-icon='bx:bx-log-out-circle'  @click="logout"></i>
           </template>
-          Music
+          <span @click="logout">Logout</span>
         </vs-sidebar-item>
-        <vs-sidebar-item id="donate">
+        <div @click="deleteAccount">
+        <vs-sidebar-item id="delete">
           <template #icon>
-            <i class="iconify" data-icon='bx:bxs-donate-heart' ></i>
+            <i class="iconify" data-icon='mdi:delete-circle-outline' style="color: red;"></i>
           </template>
-          Donate
+          <p style="color: red;">
+          Delete account
+          </p>
         </vs-sidebar-item>
-        <vs-sidebar-item id="drink">
-          <template #icon>
-            <i class="iconify" data-icon='bx:bx-drink'></i>
-          </template>
-          Drink
-        </vs-sidebar-item>
-        <vs-sidebar-item id="shopping">
-          <template #icon>
-            <i class="iconify" data-icon='bx:bxs-shopping-bags'></i>
-          </template>
-          Shopping
-        </vs-sidebar-item>
-        <vs-sidebar-item id="chat">
-          <template #icon>
-            <i class="iconify" data-icon='bx:bx-chat' ></i>
-          </template>
-          Chat
-        </vs-sidebar-item>
+        </div>
         <template #footer>
-          <vs-row justify="space-between">
+          <vs-row dir="rtl">
             <vs-avatar badge-color="danger" badge-position="top-right">
               <i class="iconify" data-icon='bx:bx-bell' ></i>
 
@@ -76,12 +66,55 @@
 </template>
 
 <script>
+import {mapMutations,mapActions,mapState} from 'vuex'
+import swal from 'sweetalert'
 export default {
   name: "settings",
   data(){
     return{
       sideBar:false,
-      active: 'home'
+      active: 'home',
+      active2:true
+    }
+  },
+  computed:{
+    ...mapState(['errMassage'])
+  },
+  methods:{
+    ...mapMutations(['setToken']),
+    ...mapActions(['deleteUser']),
+    logout(){
+      console.log('hi')
+      this.setToken(null)
+      this.$router.go()
+    },
+    getNotif(){
+      this.$vs.notification({
+        duration: 3000,
+        progress: 'auto',
+        border: null,
+        position:'top-center',
+        color: '#296186',
+        title: this.errMassage,
+      })
+    },
+    deleteAccount(){
+      swal({
+        title: "Are you sure?",
+        text: 'All your data will be permanently deleted',
+        icon: "warning",
+        buttons: true,
+        dangerMode: false,
+      })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal("Enter your password", {
+                content: "input",
+              }).then((value) => {
+                this.deleteUser(value).then(()=>{this.getNotif()}).catch(()=>{this.getNotif()})
+              });
+            }
+          });
     }
   }
 }
@@ -112,6 +145,15 @@ export default {
   margin-top: 5px;
 }
 .settingFather >>> .vs-sidebar__item__text, .settingFather >>> .vs-sidebar__item__icon{
+  color: white;
+}
+#close{
+  color:white;
+  font-size: 25px;
+}
+.settingFather >>> .vs-switch{
+  margin: 0 auto;
+  width: 70px !important;
   color: white;
 }
 </style>

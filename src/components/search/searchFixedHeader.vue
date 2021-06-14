@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 <div class="xi-top-head">
-  <vs-input v-model="search" placeholder="User Name">
+  <vs-input v-model="search" placeholder="User Name" @input="search !='' ? $emit('focused') : $emit('unfocused')">
     <template #icon>
       <i class='iconify' data-icon="bx:bx-search"></i>
     </template>

@@ -353,7 +353,25 @@ export default new Vuex.Store({
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
-        }
-    },
+        },
+        async deleteUser({state, commit, dispatch},password) {
+    const options = {
+        method: 'DELETE',
+        url: `${state.baseURl}/users/`,
+        headers: {
+            'authorization': `Bearer ${state.token}`
+        },
+        data: qs.stringify({
+            password: password
+        })
+    };
+    console.log(options)
+    await axios.request(options).then(function (response) {
+        commit('changeErrMsg', response.data.message)
+    }).catch(function (error) {
+        dispatch('errorHandler', error)
+    });
+}
+},
     modules: {}
 })

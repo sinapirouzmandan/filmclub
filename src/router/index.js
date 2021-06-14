@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Bookmark from "../views/Bookmark";
-import search from "../views/search";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
 import profile from "../views/profile";
@@ -27,7 +26,7 @@ const routes = [
   {
     path: '/search',
     name: 'search',
-    component: search
+    component: () => import('../views/search')
   },
   {
     path:'/login',

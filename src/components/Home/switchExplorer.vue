@@ -18,10 +18,7 @@ export default {
   name: "switchExplorer",
   data:() =>({
     active: false
-  }),
-   mounted() {
-     this.$vs.setColor('primary', '#5b3cc4')
-  }
+  })
 }
 </script>
 

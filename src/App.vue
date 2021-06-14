@@ -81,6 +81,9 @@ export default {
   computed:{
     ...mapState(['showNavbar'])
   },
+mounted() {
+  this.$vs.setColor('primary', '#5b3cc4')
+},
   created() {
     this.$store.commit('getTokenFromLocal')
   }

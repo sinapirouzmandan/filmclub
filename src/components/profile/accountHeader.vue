@@ -5,7 +5,7 @@
   <vs-row class="avatars">
     <vs-col w="4">
       <vs-avatar circle badge-color="success" size="90">
-        <img src="../../../public/img/avatar.jpg" alt="avatar">
+        <img v-lazy="'./img/avatar.jpg'" alt="avatar" class="avatar">
       </vs-avatar>
       <div class="username">
         <p>{{userProfile.name}}</p>
@@ -175,5 +175,9 @@ export default {
   top:2rem;
   width: 40px;
   height: 40px;
+}
+.avatar{
+  width: 90px;
+  height: 90px;
 }
 </style>
