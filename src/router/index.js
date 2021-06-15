@@ -5,6 +5,7 @@ import Bookmark from "../views/Bookmark";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
 import profile from "../views/profile";
+import userPage from "../views/userPage";
 Vue.use(VueRouter)
 let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
 const routes = [
@@ -48,6 +49,11 @@ const routes = [
     path: '/signin',
     name: 'signin',
     component: () =>  import('../components/login/signin')
+  },
+  {
+    path: '/users/:user',
+    name: 'users',
+    component: userPage
   }
   // {
   //   path: '/about',

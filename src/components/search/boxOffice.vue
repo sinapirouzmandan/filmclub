@@ -6,12 +6,12 @@
   <h3 class="subject">Movie of the week</h3>
   <hr>
   <vs-row>
-    <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
+    <vs-col w="12" v-for="(post,index) in boxOfficeList.movies" :key="index">
       <div class="B-movie_card1" id="B-bright">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
@@ -26,12 +26,12 @@
   <h3 class="subject">Series of the week</h3>
   <hr>
   <vs-row>
-    <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
+    <vs-col w="12" v-for="(post,index) in boxOfficeList.series" :key="index">
       <div class="B-movie_card1" id="B-bright">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
@@ -55,15 +55,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getMoviesList']),
+    ...mapActions(['getBoxOfficeList']),
   },
   created() {
-    this.getMoviesList();
+    this.getBoxOfficeList();
   },
   computed:{
-    ...mapState({
-      moviesList: 'watchListMoviesList'
-    }),
+    ...mapState(['boxOfficeList'])
   }
 }
 </script>

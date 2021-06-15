@@ -179,7 +179,7 @@ h2{
 .papa >>> .vs-input__progress{
   position: absolute;
   bottom: 0;
-  margin-left: 3rem;
   width: 75%;
+  margin-left: 3rem;
 }
 </style>

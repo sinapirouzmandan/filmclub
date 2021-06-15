@@ -55,15 +55,17 @@ created() {
       return re.test(this.user.userName)
     },
     getNotif(){
-          this.$vs.notification({
-            duration: 3000,
-            progress: 'auto',
-            border: null,
-            position:'bottom-center',
-            color: '#296186',
-            title: this.errMassage,
-          })
-          this.isLoading=false
+      this.isLoading = false
+      if (this.errMassage){
+        this.$vs.notification({
+          duration: 4000,
+          progress: 'auto',
+          border: null,
+          position:'bottom-center',
+          color: '#5b3cc4',
+          title: this.errMassage,
+        })
+      }
     },
     login(){
       this.isLoading = true
@@ -81,14 +83,14 @@ created() {
       }
       if(this.isMail()){
         this.signin(this.user, 1).then(()=>{
-          console.log('done')
+          this.getNotif()
         }).catch(()=>{
           this.getNotif()
         })
       }
       else{
         this.signin(this.user, 2).then(()=>{
-          console.log('done')
+          this.getNotif()
         }).catch(()=>{
           this.getNotif()
         })

@@ -4,7 +4,7 @@
   <keep-alive>
   <component :is="searchBox"></component>
   </keep-alive>
-  <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{endOrLoad}}</p>
+  <p style="margin-bottom: 5rem; opacity: 0; font-size:15px;">{{endOrLoad}}</p>
 
 </div>
 </template>
