@@ -3,12 +3,14 @@
     <accountHeader/>
     <accountBio/>
     <accountStatus/>
+    <posts/>
   </div>
 </template>
 <script>
 import accountStatus from "../components/userPage/accountStatus";
 import accountBio from "../components/userPage/accountBio";
 import accountHeader from "../components/userPage/accountHeader";
+import posts from '../components/userPage/posts'
 import {mapActions} from "vuex";
 export default {
   name: "userPage",
@@ -18,7 +20,7 @@ export default {
     }
   },
   components: {
-    accountStatus,accountBio,accountHeader
+    accountStatus,accountBio,accountHeader,posts
   },
   created() {
     this.$store.commit('toggleNavbar',true);

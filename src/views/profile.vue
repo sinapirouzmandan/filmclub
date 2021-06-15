@@ -31,5 +31,7 @@ export default {
 body,html{
   overflow-x: hidden;
 }
-
+.bodyMargin{
+  margin: 10px;
+}
 </style>
