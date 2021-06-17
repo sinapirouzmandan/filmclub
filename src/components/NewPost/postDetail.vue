@@ -21,7 +21,7 @@
         </vs-input>
       </div>
     </div>
-    <div class="editorContainer">
+    <div class="editorContainer" dir="auto">
     <div id="editor" dir="rtl">
     </div>
     </div>
@@ -125,7 +125,8 @@ h1{
   margin-left: 5%;
   margin-top: 8rem;
   border: 2px dotted #5b3cc4;
-  text-align: right;
   padding: 10px;
+  text-align: right;
+  font-width: 700;
 }
 </style>

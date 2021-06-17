@@ -23,6 +23,7 @@
           <i class="iconify" data-icon="bx:bx-like" data-inline="false"></i><p style="color: white; margin-left: 5px;"> 43</p>
         </vs-button>
         <h3>Interstellar</h3>
+        <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;">#spoilers </span>#critic</h6>
       </template>
       <template #img>
         <img v-lazy="source" alt="Image Load Error" id="postImage">
@@ -31,17 +32,16 @@
         <i class="iconify" data-icon="bx:bxs-star"></i>
         <span> 7.3 / 10
         </span>
-        <p>
+        <p dir="auto">
           <br>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit ....
-
-          <vs-button
-              style="display: inline; margin-top: 1rem;"
-              flat
-          >
-            View full post
-          </vs-button>
         </p>
+        <vs-button
+            style="display: inline; margin-top: 1rem;"
+            flat
+        >
+          View full post
+        </vs-button>
         <small style="opacity: 0.3;"><br> 4 hours ago</small>
       </template>
     </vs-card>

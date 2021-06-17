@@ -1,9 +1,13 @@
 <template>
   <vs-row>
     <vs-col w="12">
-      <p class="bioText" style="text-align: left;white-space: pre-wrap;">
+      <p class="bioText" style="text-align: left;white-space: pre-wrap;" v-if="usernameInfo.biography != ''">
         {{usernameInfo.biography}}
-      </p></vs-col>
+      </p>
+      <p v-else class="bioText" style="text-align: left;white-space: pre-wrap;">
+        On the movies planet
+      </p>
+    </vs-col>
   </vs-row>
 </template>
 

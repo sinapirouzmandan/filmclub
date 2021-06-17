@@ -5,6 +5,9 @@
       <vs-col w="4">
         <vs-avatar circle badge-color="success" size="90">
           <img v-lazy="'./img/avatar.jpg'" alt="avatar" class="avatar">
+          <template #badge v-if="false">
+            Reviewer
+          </template>
         </vs-avatar>
         <div class="username">
           <p>{{usernameInfo.name}}</p>
@@ -20,6 +23,14 @@
             :loading="isLoading"
         >
           {{ followText }}
+        </vs-button>
+        <vs-button
+            style="width:100%; border: 1px solid #7f1818;"
+            gradient
+            color="#0a0d0e"
+        >
+          <i class="iconify" data-icon="bx:bx-error">  </i>
+             <span>Ban User</span>
         </vs-button>
       </vs-col>
     </vs-row>

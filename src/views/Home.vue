@@ -2,10 +2,10 @@
   <div class="home bodyMargin">
     <fixedHead/>
     <vs-row>
-      <vs-col xs="5" lg="5">
+      <vs-col lg="5">
       <Notifications v-if="!isMobile" :position="position"/>
     </vs-col>
-      <vs-col xs="7" lg="7" sm="12">
+      <vs-col sm="12" lg="7" xs="12">
         <vs-row>
           <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
         </vs-row>

@@ -6,6 +6,9 @@
     <vs-col w="4">
       <vs-avatar circle badge-color="success" size="90">
         <img v-lazy="'./img/avatar.jpg'" alt="avatar" class="avatar">
+        <template #badge>
+          Reviewer
+        </template>
       </vs-avatar>
       <div class="username">
         <p>{{userProfile.name}}</p>
