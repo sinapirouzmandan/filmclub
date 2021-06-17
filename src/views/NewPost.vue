@@ -8,7 +8,10 @@
 import movieName from "../components/NewPost/movieName";
 export default {
   name: "NewPost",
-  components:{movieName}
+  components:{movieName},
+  created() {
+    this.$store.dispatch('getUserProfile')
+  }
 }
 </script>
 

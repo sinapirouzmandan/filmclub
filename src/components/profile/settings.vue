@@ -51,7 +51,7 @@
         </div>
         <template #footer>
           <vs-row dir="rtl">
-            <vs-avatar badge-color="danger" badge-position="top-right">
+            <vs-avatar badge-color="danger" badge-position="top-right" @click="$router.push('Notifications')">
               <i class="iconify" data-icon='bx:bx-bell' ></i>
 
               <template #badge>

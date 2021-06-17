@@ -1,7 +1,7 @@
 <template>
 <div id="tumber">
   <vs-row class="tumbPostRow">
-  <vs-col v-for="(tump,index) in (1,16)" :key="index" w="6" class="tumbContainer" lg="4" xs="12">
+  <vs-col v-for="(tump,index) in (1,16)" :key="index" w="6" class="tumbContainer" xs="12">
     <vs-card type="3">
       <template #title>
         <h3>Pot with a plant</h3>

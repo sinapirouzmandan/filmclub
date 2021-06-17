@@ -4,13 +4,21 @@
   <accountBio/>
   <accountStatus/>
       <tumb-post/>
+  <vs-button
+      circle
+      icon
+      floating
+      to="Notifications"
+      class="notifIcon"
+  >
+    <i class='iconify' data-icon="bx:bx-bell"></i>
+  </vs-button>
 </div>
 </template>
 <script>
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
 import accountHeader from "../components/profile/accountHeader";
-import {mapActions} from "vuex";
 export default {
   name: "profile",
   components: {
@@ -19,10 +27,7 @@ export default {
   },
   created() {
     this.$store.commit('toggleNavbar',true);
-    this.getUserProfile();
-  },
-  methods:{
-    ...mapActions(['getUserProfile'])
+    this.$store.dispatch('getUserProfile')
   }
 }
 </script>
@@ -33,5 +38,12 @@ body,html{
 }
 .bodyMargin{
   margin: 10px;
+}
+.notifIcon{
+  position: fixed;
+  z-index: 9;
+  bottom: 4rem;
+  right: 1rem;
+  font-size: 35px;
 }
 </style>

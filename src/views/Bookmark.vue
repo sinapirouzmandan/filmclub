@@ -30,6 +30,7 @@ export default {
   },
   created() {
     this.$store.commit('toggleNavbar',true);
+    this.$store.dispatch('getUserProfile')
   },
   computed:{
     ...mapState(['endOrLoad','watchListLength']),

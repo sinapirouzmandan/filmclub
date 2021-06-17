@@ -312,7 +312,7 @@ export default new Vuex.Store({
                         swal("Can't connect to server, check your internet connection")
                     } else {
                         commit('setToken', null)
-                        router.go("/signin")
+                        router.go(0)
                     }
                 });
                 commit('fetchProfile', userInf)
