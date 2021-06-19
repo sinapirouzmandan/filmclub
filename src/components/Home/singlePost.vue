@@ -26,7 +26,7 @@
         <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;">#spoilers </span>#critic</h6>
       </template>
       <template #img>
-        <img v-lazy="source" alt="Image Load Error" id="postImage">
+        <img v-lazy="'https://www.fanbolt.com/storage/2014/11/interstellar-review.jpg'" alt="Image Load Error" id="postImage">
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star"></i>
@@ -53,7 +53,6 @@ export default {
   name: "singlePost",
   data(){
     return{
-      source: `https://picsum.photos/id/${this.number}/500/500`
     }
   },
   props:['number']

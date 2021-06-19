@@ -5,7 +5,7 @@
       <vs-col w="4">
         <vs-avatar circle badge-color="success" size="90">
           <img v-lazy="'./img/avatar.jpg'" alt="avatar" class="avatar">
-          <template #badge v-if="false">
+          <template #badge v-if="usernameInfo.role == 'reviewer'">
             Reviewer
           </template>
         </vs-avatar>
@@ -25,6 +25,7 @@
           {{ followText }}
         </vs-button>
         <vs-button
+            v-if="usernameInfo.role == 'reviewer'"
             style="width:100%; border: 1px solid #7f1818;"
             gradient
             color="#0a0d0e"
