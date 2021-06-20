@@ -1,7 +1,6 @@
 <template>
   <div class="writeBox">
     <newPostTools/>
-    <h1>{{ title }}</h1>
     <div class="headerImage">
       <div class="xinu">
         <vs-button
@@ -10,17 +9,25 @@
         >
           specify Post header image
         </vs-button>
-
       </div>
       <div class="rating">
+        <vs-row>
+        </vs-row>
         <vs-input v-model="score" :state="state" danger icon-after label-placeholder="My score to : " type="number"
                   @change="checkRate()" warn>
           <template #icon>
             /10
           </template>
         </vs-input>
+        <vs-switch v-model="active" class="margin-2">
+          has spoilers
+        </vs-switch>
+        <vs-switch v-model="active" class="margin-2">
+          is critic
+        </vs-switch>
       </div>
     </div>
+    <h1 style="margin-top: 2rem;">{{ title }}</h1>
     <div class="editorContainer" dir="auto">
     <div id="editor" dir="rtl">
     </div>
@@ -80,40 +87,32 @@ export default {
 </script>
 
 <style scoped>
-.writeBox {
-  margin-top: 5rem;
-}
-
 .headerImage {
-  width: 80%;
+  width: 100%;
   max-width: 500px;
-  height: 200px;
+  height: 250px;
   margin: 0 auto;
-  background: url('https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png');
-  background-size: contain;
+  background: url('https://i.stack.imgur.com/y9DpT.jpg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   justify-items: center;
 }
 
 .xinu {
-  margin-top: 140px;
+  margin-top: 230px;
   color: black;
   font-size: 20px;
 }
 
 .rating {
-  width: 150px;
+  width: 100px;
   position: absolute;
   top: 380px;
 }
 .writeBox >>> .vs-input{
-  width: 150px;
-}
-.star {
-  font-size: 20px;
-  cursor: pointer;
-  color: #dabd18b2 !important;
+  width: 100px;
 }
 h1{
   font-size: 20px;
@@ -123,10 +122,16 @@ h1{
   min-height:500px;
   height: auto;
   margin-left: 5%;
-  margin-top: 8rem;
+  margin-top: 15rem;
   border: 2px dotted #5b3cc4;
   padding: 10px;
   text-align: right;
   font-width: 700;
+}
+.margin-2{
+  margin-top: 1rem;
+}
+.writeBox >>> .vs-switch{
+  background-color: #8e949c;;
 }
 </style>

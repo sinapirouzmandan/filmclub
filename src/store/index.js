@@ -51,7 +51,7 @@ export default new Vuex.Store({
         fetchSearchListMovies(state, payload) {
             state.searchListMoviesList = payload;
         },
-        changeEndLoad(state, payload = 'End of Content') {
+        changeEndLoad(state, payload = '') {
             state.endOrLoad = payload
         },
         toggleNavbar(state, payload) {
@@ -373,16 +373,17 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async deleteUser({state, commit, dispatch},password) {
+        async deleteUser({state, commit, dispatch},del) {
     const options = {
         method: 'DELETE',
         url: `${state.baseURl}/users/`,
         headers: {
             'authorization': `Bearer ${state.token}`
         },
-        data: qs.stringify({
-            password: password
-        })
+        data: {
+            password: del.password,
+            target: del.target
+        }
     };
     await axios.request(options).then(function (response) {
         commit('changeErrMsg', response.data.message)

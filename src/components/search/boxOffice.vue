@@ -7,11 +7,11 @@
   <hr>
   <vs-row>
     <vs-col w="12" v-for="(post,index) in boxOfficeList.movies" :key="index">
-      <div class="B-movie_card1" id="B-bright">
+      <div class="B-movie_card1" id="B-bright" v-if="isMovieLoaded">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="this.isMovieLoaded = true;"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
@@ -21,17 +21,18 @@
         <!-- -----------------        ///        --------------------- -->
       </div>
     </vs-col>
+    <loading  v-if="!isMovieLoaded"/>
   </vs-row>
 
   <h3 class="subject">Series of the week</h3>
   <hr>
   <vs-row>
     <vs-col w="12" v-for="(post,index) in boxOfficeList.series" :key="index">
-      <div class="B-movie_card1" id="B-bright">
+      <div class="B-movie_card1" id="B-bright"  v-if="isSerieLoaded">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="this.isSerieLoaded = true"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
@@ -41,24 +42,31 @@
         <!-- -----------------        ///        --------------------- -->
       </div>
     </vs-col>
+    <loading  v-if="!isSerieLoaded"/>
   </vs-row>
 </div>
 </template>
 
 <script>
 import  {mapState,mapActions} from 'vuex'
+import loading from "../loading";
 export default {
   name: "boxOffice",
   data (){
     return{
-      loaded: false
+      loaded: false,
+      isMovieLoaded: false,
+      isSerieLoaded: false
     }
+  },
+  components: {
+    loading
   },
   methods: {
     ...mapActions(['getBoxOfficeList']),
   },
   created() {
-    this.getBoxOfficeList();
+    this.getBoxOfficeList().then(()=>{this.isMovieLoaded = true; this.isSerieLoaded = true;});
   },
   computed:{
     ...mapState(['boxOfficeList'])

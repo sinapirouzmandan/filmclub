@@ -25,9 +25,10 @@ export default {
   created() {
     this.$store.commit('toggleNavbar',true);
     this.getUserById(this.username);
+    this.getUserProfile()
   },
   methods:{
-    ...mapActions(['getUserById'])
+    ...mapActions(['getUserById', 'getUserProfile'])
   }
 }
 </script>

@@ -25,10 +25,11 @@
           {{ followText }}
         </vs-button>
         <vs-button
-            v-if="usernameInfo.role == 'reviewer'"
+            v-if="userProfile.role == 'reviewer'"
             style="width:100%; border: 1px solid #7f1818;"
             gradient
             color="#0a0d0e"
+            @click="deleteAccount()"
         >
           <i class="iconify" data-icon="bx:bx-error">  </i>
              <span>Ban User</span>
@@ -41,6 +42,7 @@
 
 <script>
 import {mapState,mapActions} from 'vuex'
+import swal from "sweetalert";
 export default {
   name: "accountHeader",
   data(){
@@ -50,11 +52,15 @@ export default {
       gradient: true,
       followText: 'follow',
       isFollowed: false,
-      isLoading:false
+      isLoading:false,
+      deleteObj: {
+        password: 'defaultpass',
+        target: null
+      }
     }
   },
   computed:{
-    ...mapState(['usernameInfo', 'errMassage'])
+    ...mapState(['usernameInfo', 'errMassage', 'userProfile'])
   },
   methods:{
     getNotif(){
@@ -70,10 +76,10 @@ export default {
         })
       }
     },
-    ...mapActions(['toggleFollow']),
+    ...mapActions(['toggleFollow', 'deleteUser']),
     follow(){
       this.isLoading = true
-      this.toggleFollow(this.$route.params.user).then(()=>{
+      this.toggleFollow(this.usernameInfo.username).then(()=>{
         if(!(this.errMassage)){
           if(!(this.isFollowed)){
             this.gradient = false
@@ -94,8 +100,33 @@ export default {
       }).catch(()=>{
         this.getNotif()
       })
+    },
+    deleteAccount(){
+      this.deleteObj.target = this.usernameInfo.username
+      swal({
+        title: "Are you sure?",
+        text: 'This account will be banned permanently',
+        icon: "warning",
+        buttons: true,
+        dangerMode: false,
+      })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal("Reason to ban this account", {
+                content: "input",
+                // eslint-disable-next-line no-unused-vars
+              }).then((value) => {
+                if (value) {
+                  this.deleteUser(this.deleteObj).then(() => {
+                    this.getNotif()
+                  }).catch(() => {
+                    this.getNotif()
+                  })
+                }
+              });
+            }
+          });
     }
-
   }
 }
 </script>

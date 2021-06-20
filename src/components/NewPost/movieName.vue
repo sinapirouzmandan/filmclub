@@ -15,7 +15,7 @@
                 @click="active = !active; getSearch()"
                 circle
             >
-              Search Movie
+              New Post
             </vs-button>
           </div>
           </div>
@@ -28,8 +28,10 @@
         </h4>
       </template>
 <vs-row>
-  <vs-col w="4" class="chooseMov" v-for="(option,index) in searchListMoviesList['0']" :key="index">
+  <vs-col xs="6" sm="4" lg="3" v-for="(option,index) in searchListMoviesList['0']" :key="index">
+    <div class="chooseMov">
     <img v-lazy="option.Poster" :alt="option.Title" @click="nextPage(option)">
+    </div>
   </vs-col>
 </vs-row>
       <template #footer>
@@ -71,6 +73,12 @@ export default {
 </script>
 
 <style scoped>
+:root{
+  --vs-gray-3: 0,0,0 !important;
+  --vs-mainback: #0a0d0e;
+  --vs-navs: #1e2023;
+  --vs-cardback: #121818;
+}
 .father{
   display: flex;
   justify-content: center;
@@ -118,7 +126,6 @@ export default {
 }
 .chooseMov{
   margin: 5px;
-  width: 30%;
   background-color: #2c3e50;
 }
 .chooseMov img{

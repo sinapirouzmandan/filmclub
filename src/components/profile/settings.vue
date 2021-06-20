@@ -74,7 +74,11 @@ export default {
     return{
       sideBar:false,
       active: 'home',
-      active2:true
+      active2:true,
+      deleteObj: {
+        password: 'defaultpass',
+        target: null
+      }
     }
   },
   computed:{
@@ -111,7 +115,8 @@ export default {
               swal("Enter your password", {
                 content: "input",
               }).then((value) => {
-                this.deleteUser(value).then(()=>{this.getNotif()}).catch(()=>{this.getNotif()})
+                this.deleteObj.password = value
+                this.deleteUser(this.deleteObj).then(()=>{this.getNotif()}).catch(()=>{this.getNotif()})
               });
             }
           });

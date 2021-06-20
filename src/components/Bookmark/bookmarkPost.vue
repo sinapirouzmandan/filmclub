@@ -1,13 +1,13 @@
 <template>
 <div>
-  <component-loading/>
+  <loading v-if="!isLoaded"/>
   <vs-row>
     <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
-      <div class="B-movie_card" id="B-bright">
+      <div class="B-movie_card" id="B-bright" v-show="isLoaded">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header">
-            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"  @load="isLoaded = true"/>
             <h1>{{ post.title }}</h1>
             <span class="B-minutes">{{post.length}}</span>
             <p class="B-type">{{post.plot}}</p>
@@ -35,17 +35,18 @@
 </div>
 </template>
 <script>
-import componentLoading from "../componentLoading";
+import loading from "../loading";
 import  {mapState,mapActions} from 'vuex'
 import swal from 'sweetalert'
 export default {
   name: "bookmarkPost",
   data (){
     return{
-      loaded: false
+      loaded: false,
+      isLoaded: false
     }
   },
-  components: {componentLoading},
+  components: {loading},
   methods: {
     ...mapActions(['getMoviesList', 'toggleWatchListPost']),
     del(id){
@@ -63,7 +64,7 @@ export default {
     }
   },
   created() {
-  this.getMoviesList();
+  this.getMoviesList().then(()=>{this.isLoaded = true});
   },
   computed:{
     ...mapState({
