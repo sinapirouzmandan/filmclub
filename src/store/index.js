@@ -33,7 +33,8 @@ export default new Vuex.Store({
             series: []
         },
         // other users
-        usernameInfo: []
+        usernameInfo: [],
+        searchedUsers:  []
     },
     getters: {
         watchListLengthCalc(state) {
@@ -114,6 +115,9 @@ export default new Vuex.Store({
         },
         fetchUserInfo(state,payload){
             state.usernameInfo = payload.user
+        },
+        fetchSearchUsers(state,payload){
+            state.searchedUsers = payload.users
         }
     },
     actions: {
@@ -442,6 +446,31 @@ export default new Vuex.Store({
                 }
             });
         },
+        async searchUsers({state, dispatch, commit},username) {
+            console.log(username)
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/users/searchUsers`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    username: username
+                })
+            };
+            console.log(options)
+            await axios.request(options).then((response)=>{
+                console.log(response.data)
+                commit('fetchSearchUsers', response.data)
+            }).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                }
+            });
+        }
 },
     modules: {}
 })

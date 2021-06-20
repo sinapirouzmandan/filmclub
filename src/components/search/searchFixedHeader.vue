@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 <div class="xi-top-head">
-  <vs-input v-model="search" placeholder="User Name" @input="search !='' ? $emit('focused') : $emit('unfocused')">
+  <vs-input v-model="search" placeholder="User Name" @input="search !='' ? focused() : $emit('unfocused')">
     <template #icon>
       <i class='iconify' data-icon="bx:bx-search"></i>
     </template>
@@ -11,11 +11,21 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: "searchFixedHeader",
   data: ()=>{
     return{
       search: ''
+    }
+  },
+  methods:{
+    ...mapActions(['searchUsers']),
+    focused(){
+      this.$emit('focused')
+      this.searchUsers(
+          this.search
+      )
     }
   }
 }

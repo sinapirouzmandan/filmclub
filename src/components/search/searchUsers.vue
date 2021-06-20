@@ -1,12 +1,18 @@
 <template>
 <div class="container bodyMargin">
-  <div class="user" v-for="(i,index) in (1,20)" :key="index">
+  <div v-for="(user,index) in searchedUsers" :key="index">
+  <div class="user" @click="$router.push(`/users/${user.username}`)">
     <div class="divider"></div>
     <div class="avatar">
+      <img src="../../../dist/img/avatar.jpg" alt="">
     </div>
-    <p>user {{i}}</p>
-    <p class="bio">this is user {{i}} talking  to you about u</p>
+    <p>
+      {{user.username}}
+      <br>
+      <span class="bio">{{user.biography | truncate(60, '...')}}</span>
+    </p>
     <div class="divider bottom"></div>
+  </div>
   </div>
   <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
 
@@ -14,8 +20,14 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
-  name: "searchUsers"
+  name: "searchUsers",
+  computed: {
+    ...mapState(['searchedUsers'])
+  }
+
 }
 </script>
 
@@ -52,11 +64,19 @@ export default {
   position: relative;
   bottom: 2%;
   left:10px;
+  text-align: left;
 }
 .user .bio{
   font-size: 11px;
-  margin-top: 2.2rem;
   opacity: 0.7;
-  margin-left: -45px;
+  position: relative;
+  top:0.1rem;
+  width: 100%;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+.avatar img{
+  width: 100%;
 }
 </style>

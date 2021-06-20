@@ -8,6 +8,15 @@ import 'vuesax/dist/vuesax.css'
 import VueLazyload from 'vue-lazyload'
 const loadimage = require('./assets/loading.gif')
 const errorimage = require('./assets/err.gif')
+
+// truncate
+Vue.filter('truncate', function (text, length, suffix) {
+  if (text.length > length) {
+    return text.substring(0, length) + suffix;
+  } else {
+    return text;
+  }
+});
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: errorimage,
