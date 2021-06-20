@@ -1,13 +1,12 @@
 <template>
 <div>
-  <loading v-if="!isLoaded"/>
   <vs-row>
     <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
-      <div class="B-movie_card" id="B-bright" v-show="isLoaded">
+      <div class="B-movie_card" id="B-bright">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header">
-            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"  @load="isLoaded = true"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
             <h1>{{ post.title }}</h1>
             <span class="B-minutes">{{post.length}}</span>
             <p class="B-type">{{post.plot}}</p>
@@ -32,6 +31,7 @@
       </div>
     </vs-col>
   </vs-row>
+  <loading v-if="!isLoaded"/>
 </div>
 </template>
 <script>
@@ -64,7 +64,9 @@ export default {
     }
   },
   created() {
-  this.getMoviesList().then(()=>{this.isLoaded = true});
+  this.getMoviesList().then(()=>{
+    this.isLoaded = true
+  });
   },
   computed:{
     ...mapState({

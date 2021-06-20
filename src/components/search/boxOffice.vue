@@ -11,7 +11,7 @@
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="this.isMovieLoaded = true;"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="isMovieLoaded = true;"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
@@ -32,7 +32,7 @@
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="this.isSerieLoaded = true"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="isSerieLoaded = true"/>
             <h1>{{post.title}}</h1>
             <br>
           </div>
