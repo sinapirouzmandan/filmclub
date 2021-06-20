@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 <div class="xi-top-head">
-  <vs-input v-model="search" placeholder="User Name" @input="search !='' ? focused() : $emit('unfocused')">
+  <vs-input v-model="search" placeholder="UserName" @input="search !='' ? focused() : $emit('unfocused')">
     <template #icon>
       <i class='iconify' data-icon="bx:bx-search"></i>
     </template>
@@ -22,10 +22,10 @@ export default {
   methods:{
     ...mapActions(['searchUsers']),
     focused(){
-      this.$emit('focused')
+      this.$emit('focused', true)
       this.searchUsers(
           this.search
-      )
+      ).then(this.$emit('focused', false))
     }
   }
 }

@@ -2,7 +2,7 @@
 <div class="bodyMargin">
   <searchFixedHeader @focused="searchBoxActivator" @unfocused="searchBoxDeActivator"/>
   <keep-alive>
-  <component :is="searchBox"></component>
+  <component :is="searchBox"  :isLoading="isSearching"></component>
   </keep-alive>
   <p style="margin-bottom: 5rem; opacity: 0; font-size:15px;">{{endOrLoad}}</p>
 
@@ -18,15 +18,17 @@ export default {
   name: "search.vue",
   data(){
     return{
-      searchBox: boxOffice
+      searchBox: boxOffice,
+      isSearching: false
     }
   },
   components: {
     searchFixedHeader
   },
   methods:{
-    searchBoxActivator(){
+    searchBoxActivator(val){
       this.searchBox = searchUsers
+      this.isSearching = val
     },
     searchBoxDeActivator(){
       this.searchBox = boxOffice

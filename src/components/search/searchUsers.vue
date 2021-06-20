@@ -4,7 +4,7 @@
   <div class="user" @click="$router.push(`/users/${user.username}`)">
     <div class="divider"></div>
     <div class="avatar">
-      <img src="../../../dist/img/avatar.jpg" alt="">
+      <img :src="'./img/avatar.jpg'" alt="">
     </div>
     <p>
       {{user.username}}
@@ -14,6 +14,7 @@
     <div class="divider bottom"></div>
   </div>
   </div>
+  <loading v-if="isLoading"/>
   <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
 
 </div>
@@ -21,12 +22,14 @@
 
 <script>
 import {mapState} from 'vuex'
-
+import loading from "../loading";
 export default {
   name: "searchUsers",
   computed: {
     ...mapState(['searchedUsers'])
-  }
+  },
+  components:{loading},
+  props:['isLoading']
 
 }
 </script>
@@ -78,5 +81,6 @@ export default {
 }
 .avatar img{
   width: 100%;
+  border-radius: 50%;
 }
 </style>

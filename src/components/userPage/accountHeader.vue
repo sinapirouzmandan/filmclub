@@ -11,6 +11,7 @@
         </vs-avatar>
         <div class="username">
           <p>{{usernameInfo.name}}</p>
+          <small>@{{usernameInfo.username}}</small>
         </div>
       </vs-col>
       <vs-col w="4" class="editProfile" offset="3">
@@ -25,7 +26,7 @@
           {{ followText }}
         </vs-button>
         <vs-button
-            v-if="userProfile.role == 'reviewer'"
+            v-if="userProfile.role == 'reviewer' && usernameInfo.role != 'reviewer'"
             style="width:100%; border: 1px solid #7f1818;"
             gradient
             color="#0a0d0e"
@@ -55,7 +56,8 @@ export default {
       isLoading:false,
       deleteObj: {
         password: 'defaultpass',
-        target: null
+        target: null,
+        reason:null
       }
     }
   },

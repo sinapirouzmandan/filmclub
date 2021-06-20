@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.35:3000',
+        baseURl: 'http://192.168.43.67:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -386,7 +386,8 @@ export default new Vuex.Store({
         },
         data: {
             password: del.password,
-            target: del.target
+            target: del.target,
+            reason: del.reason
         }
     };
     await axios.request(options).then(function (response) {
@@ -447,7 +448,6 @@ export default new Vuex.Store({
             });
         },
         async searchUsers({state, dispatch, commit},username) {
-            console.log(username)
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/users/searchUsers`,
@@ -459,9 +459,7 @@ export default new Vuex.Store({
                     username: username
                 })
             };
-            console.log(options)
             await axios.request(options).then((response)=>{
-                console.log(response.data)
                 commit('fetchSearchUsers', response.data)
             }).catch(function (error) {
                 if (!error.response) {
