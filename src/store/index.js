@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.43.67:3000',
+        baseURl: 'http://192.168.1.35:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -427,6 +427,7 @@ export default new Vuex.Store({
                         swal("Can't connect to server, check your internet connection")
                     } else {
                         dispatch('errorHandler', error)
+                        router.push('/userNotFound')
                     }
                 });
                 commit('fetchUserInfo', userInfo)

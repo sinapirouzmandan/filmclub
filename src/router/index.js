@@ -5,7 +5,6 @@ import Bookmark from "../views/Bookmark";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
 import profile from "../views/profile";
-import userPage from "../views/userPage";
 import Notifications from "../views/Notifications";
 Vue.use(VueRouter)
 let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
@@ -26,6 +25,7 @@ const routes = [
     component: Bookmark
   },
   {
+    //lazy load search component
     path: '/search',
     name: 'search',
     component: () => import('../views/search')
@@ -54,21 +54,17 @@ const routes = [
   {
     path: '/users/:user',
     name: 'users',
-    component: userPage
+    component: () => import('../views/userPage')
   },
   {
     path: '/Notifications',
     name: 'Notifications',
     component:Notifications
+  },
+  {
+    path: "*",
+    component: () => import('../views/notFound')
   }
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({

@@ -55,7 +55,6 @@ export default {
   },
   methods:{
     getSearch(){
-      this.searchMov = this.searchMov.replace(/\s/g, '');
       this.$store.dispatch('getSearchList',this.searchMov)
     },
     nextPage(movie){

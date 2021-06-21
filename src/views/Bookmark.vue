@@ -14,6 +14,15 @@
   <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
   </keep-alive>
   <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{endOrLoad}}</p>
+  <vs-button
+      circle
+      icon
+      floating
+      to="Notifications"
+      class="addNewIcon"
+  >
+    <i class='iconify' data-icon="bx:bx-bell"></i>
+  </vs-button>
 </div>
 </template>
 
@@ -49,5 +58,12 @@ hr {
   border: 0;
   height: 1px;
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+}
+.addNewIcon{
+  position: fixed;
+  z-index: 9;
+  bottom: 4rem;
+  right: 1rem;
+  font-size: 35px;
 }
 </style>
