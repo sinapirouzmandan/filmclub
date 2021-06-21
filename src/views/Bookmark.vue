@@ -18,16 +18,57 @@
       circle
       icon
       floating
-      to="Notifications"
       class="addNewIcon"
+      @click="active=true;"
   >
-    <i class='iconify' data-icon="bx:bx-bell"></i>
+    <i class='iconify' data-icon="mdi:movie-open-plus-outline"></i>
   </vs-button>
+
+  <vs-dialog blur v-model="active">
+    <template #header>
+      <h4 class="not-margin">
+        Name of movie
+      </h4>
+    </template>
+
+
+    <div class="con-form">
+      <vs-input v-model="searchMov" placeholder="name" color="#5b3cc4" class="input-field">
+      </vs-input>
+    </div>
+
+    <template #footer>
+      <div class="footer-dialog">
+        <vs-button block @click="active2 = true;getSearch()">
+          search movie
+        </vs-button>
+      </div>
+    </template>
+  </vs-dialog>
+  <vs-dialog blur v-model="active2">
+    <template #header>
+      <h4 class="not-margin">
+        Select the Movie
+      </h4>
+    </template>
+    <vs-row>
+      <vs-col xs="6" sm="4" lg="3" v-for="(option,index) in searchListMoviesList['0']" :key="index">
+        <div class="chooseMov">
+          <img v-lazy="option.Poster" :alt="option.Title" @click="addItem(option.imdbID)">
+        </div>
+      </vs-col>
+    </vs-row>
+    <template #footer>
+      <div class="con-footer">
+        <p style="margin-bottom: 5rem; opacity: 1; font-size:15px;">{{endOrLoad}}</p>
+      </div>
+    </template>
+  </vs-dialog>
 </div>
 </template>
 
 <script>
-import  {mapState,mapGetters} from 'vuex'
+import  {mapState,mapGetters, mapActions} from 'vuex'
 export default {
   name: "Bookmark",
   components: {
@@ -35,6 +76,9 @@ export default {
   },
   data(){
     return{
+      active:false,
+      active2: false,
+      searchMov: ''
     }
   },
   created() {
@@ -42,8 +86,20 @@ export default {
     this.$store.dispatch('getUserProfile')
   },
   computed:{
-    ...mapState(['endOrLoad','watchListLength']),
+    ...mapState(['endOrLoad','watchListLength', 'searchListMoviesList']),
     ...mapGetters(['watchListLengthCalc'])
+  },
+  methods: {
+    getSearch(){
+      this.$store.dispatch('getSearchList',this.searchMov)
+    },
+    ...mapActions(['toggleWatchListPost', "getMoviesList"]),
+    addItem(id) {
+      this.toggleWatchListPost(id)
+      this.active2 = false;
+      this.active = false
+      this.getMoviesList()
+    }
   }
 }
 </script>
@@ -65,5 +121,21 @@ hr {
   bottom: 4rem;
   right: 1rem;
   font-size: 35px;
+}
+.input-field >>> .vs-input {
+  background-color: #171b1d !important;
+  color: #d5cccc;
+  width: 100%;
+}
+.chooseMov{
+  margin: 5px;
+  background-color: #2c3e50;
+}
+.chooseMov img{
+  width: 100%;
+  height: 200px;
+}
+h4{
+  color: #c4baba;
 }
 </style>

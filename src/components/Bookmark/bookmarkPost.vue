@@ -1,12 +1,12 @@
 <template>
 <div>
   <vs-row>
-    <vs-col w="12" v-for="(post,index) in moviesList" :key="index">
+    <vs-col w="12" v-for="(post,index) in watchListMoviesList" :key="index">
       <div class="B-movie_card" id="B-bright">
         <div class="B-info_section">
           <!-- -----------------        post header       --------------------- -->
           <div class="B-movie_header">
-            <img class="B-locandina" v-lazy="post.poster" :alt="moviesList.title"/>
+            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
             <h1>{{ post.title }}</h1>
             <span class="B-minutes">{{post.length}}</span>
             <p class="B-type">{{post.plot}}</p>
@@ -69,9 +69,7 @@ export default {
   });
   },
   computed:{
-    ...mapState({
-      moviesList: 'watchListMoviesList'
-    }),
+    ...mapState(['watchListMoviesList'])
   }
 }
 </script>
