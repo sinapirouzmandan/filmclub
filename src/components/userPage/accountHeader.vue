@@ -62,7 +62,7 @@ export default {
     }
   },
   computed:{
-    ...mapState(['usernameInfo', 'errMassage', 'userProfile'])
+    ...mapState(['usernameInfo', 'errMassage', 'userProfile', 'followStatus'])
   },
   methods:{
     getNotif(){
@@ -78,7 +78,7 @@ export default {
         })
       }
     },
-    ...mapActions(['toggleFollow', 'deleteUser']),
+    ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus']),
     follow(){
       this.isLoading = true
       this.toggleFollow(this.usernameInfo.username).then(()=>{
@@ -102,6 +102,20 @@ export default {
       }).catch(()=>{
         this.getNotif()
       })
+    },
+    loadBtnStyle(){
+      if((this.isFollowed)){
+        this.gradient = false
+        this.border = 'followBtn'
+        this.colorBtn = 'rgba(255,255,255,0)'
+        this.followText = 'Unfollow'
+      }
+      else{
+        this.gradient = true
+        this.border = ''
+        this.colorBtn = 'rgb(70,126,246)'
+        this.followText = 'follow'
+      }
     },
     deleteAccount(){
       this.deleteObj.target = this.usernameInfo.username
@@ -129,6 +143,12 @@ export default {
             }
           });
     }
+  },
+  mounted() {
+    this.getFollowStatus(this.$route.params.user).then(()=>{
+      this.isFollowed = this.followStatus
+      this.loadBtnStyle()
+    })
   }
 }
 </script>

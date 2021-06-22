@@ -1,48 +1,47 @@
 <template>
   <div class="notif" :style="position">
+    <div  @click="loadNotification" style="width: 100%; height: 50px;">
     <h4 class="not-margin">
       Notifications
+      <i class="iconify" data-icon="mdi:reload"></i>
     </h4>
-  <vs-alert>
-    <i class="iconify icon" data-icon="mdi:bell-circle-outline"></i>
+    </div>
+    <div class="iconLoad">
+      <i class="iconify" data-icon="mdi:bell-circle-outline"></i>
+      <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
+      <i class="iconify" data-icon="mdi:arrow-up-circle-outline"></i>
+    </div>
+  <vs-alert v-for="(notification,index) in notifications" :key="index + Math.random() * 1000">
+    <i class="iconify icon" :data-icon="notification.icon" :style="{ color: notification.color }"></i>
     <span class="desc">
-    @artin liked your post
-      </span>
-    <img src="https://picsum.photos/100/60" alt="post" class="notifImage">
-  </vs-alert>
-  <vs-alert>
-    <i class="iconify icon" data-icon="mdi:bell-circle-outline"></i>
-    <span class="desc">
-    @artin posted a comment
-      </span>
-    <img src="https://picsum.photos/100/60" alt="post" class="notifImage">
-  </vs-alert>
-  <vs-alert>
-    <i class="iconify icon red" data-icon="mdi:delete-circle-outline"></i>
-    <span class="desc">
-    We deleted your post for spoiling
-      </span>
-    <img src="https://picsum.photos/100/60" alt="post" class="notifImage">
-  </vs-alert>
-  <vs-alert>
-    <i class="iconify icon warn" data-icon="mdi:alert-circle-outline"></i>
-    <span class="desc">
-    This is a warning because of reason X
+    <span v-if="!(notification.customNotif)">{{notification.commiter}}</span> {{notification.message}}
       </span>
   </vs-alert>
+
   <p style="margin-bottom: 9rem; opacity: 0; font-size:15px;">end of content ...</p>
 
   </div>
 </template>
 
 <script>
+import { mapState } from'vuex'
 export default {
   name: "Notifications",
   created() {
     this.$store.commit('toggleNavbar',true);
     this.$store.dispatch('getUserProfile')
+    this.loadNotification()
   },
-  props:['position']
+  methods:{
+    loadNotification(){
+      this.$store.dispatch('getNotificationList')
+      this.$forceUpdate()
+    }
+  },
+  props:['position'],
+  computed: {
+    ...mapState(['notifications'])
+  }
 }
 </script>
 
@@ -56,34 +55,23 @@ export default {
 .notif >>> .vs-alert__content__text{
   color: white;
   text-align: left;
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 20px;
   font-size: 14px;
 }
 .notif >>> .vs-alert{
   margin-top: 15px;
 }
-.notif >>> .notifImage{
-  width: 80px;
-  height: 55px;
-  position: absolute;
-  top:10px;
-  right: 10px;
-  float: right;
-}
 .icon{
   font-size: 1.5rem;
   position: absolute;
   left:1rem;
-  top:1.7rem;
-}
-.red{
-  color: red;
-}
-.warn{
-  color: darkorange;
+  top:1.4rem;
 }
 .desc{
   margin-right: 100px;
+}
+.iconLoad{
+  opacity: 0;
 }
 </style>

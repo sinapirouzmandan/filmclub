@@ -26,6 +26,7 @@ export default new Vuex.Store({
         errMassage: null,
         userProfile: '',
         isProfileLoaded: false,
+        notifications: [],
         //BOX Office
         isBoxOfficeLoaded: false,
         boxOfficeList: {
@@ -34,11 +35,19 @@ export default new Vuex.Store({
         },
         // other users
         usernameInfo: [],
-        searchedUsers:  []
+        searchedUsers:  [],
+        followStatus: null
     },
     getters: {
         watchListLengthCalc(state) {
             let len = Object.keys(state.watchListMoviesIDs).length
+            return Number(len)
+        },
+        notificatonsCalc(state) {
+            let notifications = state.notifications.map((item)=>{
+                return item.isSeen == false
+            });
+            let len = Object.keys(notifications).length
             return Number(len)
         }
     },
@@ -118,20 +127,44 @@ export default new Vuex.Store({
         },
         fetchSearchUsers(state,payload){
             state.searchedUsers = payload.users
+        },
+        fetchNotifications(state,payload){
+            let notifications = payload.notifications.map((item)=>{
+                item.id = Math.floor(Math.random() * 9999999999999)
+                if (item.icon == 'normal'){
+                    item.icon = 'mdi:bell-circle-outline'
+                    item.color = 'white'
+                }
+                else if (item.icon == 'danger'){
+                    item.icon = 'mdi:alert-circle-outline'
+                    item.color = 'red'
+                }
+                else if (item.icon == 'warn'){
+                    item.icon = 'mdi:alert-circle-outline'
+                    item.color = 'orange'
+                }
+                else if (item.icon == 'success') {
+                    item.icon = 'mdi:arrow-up-circle-outline'
+                    item.color = 'green'
+                }
+                return item
+            });
+            state.notifications = notifications.sort((function(a,b){
+                return new Date(b.date) - new Date(a.date);
+            }))
         }
     },
     actions: {
         errorHandler({commit}, error) {
-                if (!error.response) {
-                    commit('changeErrMsg', "can't connect to server, check your internet connection")
-                }
-                else if (typeof error.response.data.errors != 'undefined') {
-                    commit('changeErrMsg', error.response.data.errors['0']['msg'])
-                } else if (typeof error.response.data != 'undefined') {
-                    commit('changeErrMsg', error.response.data.message)
-                } else {
-                    commit('changeErrMsg', 'Some error occurred !')
-                }
+            if (!error.response) {
+                commit('changeErrMsg', "can't connect to server, check your internet connection")
+            } else if (typeof error.response.data.errors != 'undefined') {
+                commit('changeErrMsg', error.response.data.errors['0']['msg'])
+            } else if (typeof error.response.data != 'undefined') {
+                commit('changeErrMsg', error.response.data.message)
+            } else {
+                commit('changeErrMsg', 'Some error occurred !')
+            }
         },
         async getMoviesList({commit, state, dispatch}) {
             if (!(state.isWatchListLoaded)) {
@@ -144,6 +177,9 @@ export default new Vuex.Store({
                 };
                 await axios.request(optionsServer).then(function (response) {
                     commit('loadImdbIds', response.data.list)
+                    if (response.data.list.length == 0){
+                        commit('loadImdbIds', ['tt0068646'])
+                    }
                 }).catch(function (error) {
                     dispatch('errorHandler', error)
                 });
@@ -204,7 +240,7 @@ export default new Vuex.Store({
         async signin({commit, state, dispatch}, user, type) {
             let token = null
             let options = null
-            if(type == 1){
+            if (type == 1) {
                 options = {
                     method: 'POST',
                     url: `${state.baseURl}/users/login`,
@@ -213,8 +249,7 @@ export default new Vuex.Store({
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 };
-            }
-            else {
+            } else {
                 options = {
                     method: 'POST',
                     url: `${state.baseURl}/users/login`,
@@ -377,25 +412,25 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async deleteUser({state, commit, dispatch},del) {
-    const options = {
-        method: 'DELETE',
-        url: `${state.baseURl}/users/`,
-        headers: {
-            'authorization': `Bearer ${state.token}`
+        async deleteUser({state, commit, dispatch}, del) {
+            const options = {
+                method: 'DELETE',
+                url: `${state.baseURl}/users/`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                },
+                data: {
+                    password: del.password,
+                    target: del.target,
+                    reason: del.reason
+                }
+            };
+            await axios.request(options).then(function (response) {
+                commit('changeErrMsg', response.data.message)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
-        data: {
-            password: del.password,
-            target: del.target,
-            reason: del.reason
-        }
-    };
-    await axios.request(options).then(function (response) {
-        commit('changeErrMsg', response.data.message)
-    }).catch(function (error) {
-        dispatch('errorHandler', error)
-    });
-},
         async getBoxOfficeList({state, commit, dispatch}) {
             if (!(state.isBoxOfficeLoaded)) {
                 const options = {
@@ -411,28 +446,29 @@ export default new Vuex.Store({
                 });
             }
         },
-        async getUserById({commit, state, dispatch},user) {
-                let userInfo = []
-                const options = {
-                    method: 'GET',
-                    url: `${state.baseURl}/users/${user}`,
-                    headers: {
-                        'authorization': `Bearer ${state.token}`
-                    }
-                };
-                await axios.request(options).then(function (response) {
-                    userInfo = response.data
-                }).catch(function (error) {
-                    if (!error.response) {
-                        swal("Can't connect to server, check your internet connection")
-                    } else {
-                        dispatch('errorHandler', error)
-                        router.push('/userNotFound')
-                    }
-                });
-                commit('fetchUserInfo', userInfo)
+        async getUserById({commit, state, dispatch}, user) {
+            let userInfo = []
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/users/users/${user}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then(function (response) {
+                userInfo = response.data
+
+            }).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                    router.push('/userNotFound')
+                }
+            });
+            commit('fetchUserInfo', userInfo)
         },
-        async toggleFollow({state, dispatch},user) {
+        async toggleFollow({state, dispatch}, user) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/users/follow/${user}`,
@@ -448,7 +484,7 @@ export default new Vuex.Store({
                 }
             });
         },
-        async searchUsers({state, dispatch, commit},username) {
+        async searchUsers({state, dispatch, commit}, username) {
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/users/searchUsers`,
@@ -460,7 +496,7 @@ export default new Vuex.Store({
                     username: username
                 })
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 commit('fetchSearchUsers', response.data)
             }).catch(function (error) {
                 if (!error.response) {
@@ -469,6 +505,44 @@ export default new Vuex.Store({
                     dispatch('errorHandler', error)
                 }
             });
+        },
+        async getFollowStatus({state, dispatch}, username) {
+            if (state.token){
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/checkFollow/${username}`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+            await axios.request(options).then((response) => {
+                state.followStatus = response.data.isFollowed
+            }).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                }
+            });
+        }
+    },
+        async getNotificationList({state, dispatch, commit}) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/notifications`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchNotifications', response.data)
+                }).catch(function (error) {
+                    if (!error.response) {
+                        swal("Can't connect to server, check your internet connection")
+                    } else {
+                        dispatch('errorHandler', error)
+                    }
+                });
         }
 },
     modules: {}

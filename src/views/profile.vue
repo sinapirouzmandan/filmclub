@@ -12,6 +12,7 @@
       class="notifIcon"
   >
     <i class='iconify' data-icon="bx:bx-bell"></i>
+    {{notificatonsCalc}}
   </vs-button>
 </div>
 </template>
@@ -19,6 +20,7 @@
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
 import accountHeader from "../components/profile/accountHeader";
+import { mapGetters } from 'vuex'
 export default {
   name: "profile",
   components: {
@@ -27,7 +29,12 @@ export default {
   },
   created() {
     this.$store.commit('toggleNavbar',true);
-    this.$store.dispatch('getUserProfile')
+    this.$store.dispatch('getUserProfile').then(()=>{
+      this.$store.dispatch('getNotificationList')
+    })
+  },
+  computed:{
+    ...mapGetters(['notificatonsCalc'])
   }
 }
 </script>
@@ -44,6 +51,6 @@ body,html{
   z-index: 9;
   bottom: 4rem;
   right: 1rem;
-  font-size: 35px;
+  font-size: 20px;
 }
 </style>

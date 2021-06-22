@@ -55,7 +55,7 @@
               <i class="iconify" data-icon='bx:bx-bell' ></i>
 
               <template #badge>
-                28
+                {{ notificatonsCalc }}
               </template>
             </vs-avatar>
           </vs-row>
@@ -68,6 +68,7 @@
 <script>
 import {mapMutations,mapActions,mapState} from 'vuex'
 import swal from 'sweetalert'
+import { mapGetters } from 'vuex'
 export default {
   name: "settings",
   data(){
@@ -83,7 +84,8 @@ export default {
     }
   },
   computed:{
-    ...mapState(['errMassage'])
+    ...mapState(['errMassage']),
+    ...mapGetters(['notificatonsCalc'])
   },
   methods:{
     ...mapMutations(['setToken']),
