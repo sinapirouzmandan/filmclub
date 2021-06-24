@@ -6,8 +6,8 @@
 </template>
 
 <style>
-:root{
-  --vs-gray-3: 0,0,0 !important;
+:root {
+  --vs-gray-3: 0, 0, 0 !important;
   --vs-mainback: #1A1A1D;
   --vs-navs: #293337;
   --vs-cardback: #121818;
@@ -15,28 +15,31 @@
   --vs-main-text: #fff;
   --vs-nav-icons: blue;
 }
-p,i{
-  color: var(--vs-main-text)
-}
-head,body {
+
+head, body {
   background-color: var(--vs-mainback);
   user-select: none;
-  overflow:auto;
-  overflow:initial;
+  overflow: auto;
+  overflow: initial;
   margin: 0;
 }
+
 .bodyMargin {
   margin: 6px;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: #34373d;
 }
+
 img {
   -khtml-user-select: none;
   -o-user-select: none;
@@ -44,6 +47,7 @@ img {
   -webkit-user-select: none;
   user-select: none;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -64,28 +68,29 @@ img {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-img{
+
+img {
   color: rgba(0, 0, 0, 0) !important;
 }
 </style>
 <script>
 import navbar from "./components/navbar";
 import {mapState} from 'vuex'
+
 export default {
   name: 'App',
-  data(){
-    return{
-    }
+  data() {
+    return {}
   },
   components: {
     navbar
   },
-  computed:{
+  computed: {
     ...mapState(['showNavbar'])
   },
-mounted() {
-  this.$vs.setColor('primary', '#5b3cc4')
-},
+  mounted() {
+    this.$vs.setColor('primary', '#5b3cc4')
+  },
   created() {
     this.$store.commit('getTokenFromLocal')
   }

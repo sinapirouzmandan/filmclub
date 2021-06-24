@@ -3,21 +3,21 @@
     <div class="top-tools">
       <vs-row>
         <vs-col w="2">
-          <div @click="back" >
+          <div @click="back">
             <i class='iconify close' data-icon="mdi:close"></i>
           </div>
         </vs-col>
         <vs-col w="6"></vs-col>
         <vs-col w="4">
           <vs-button
+              animation-type="vertical"
               class="sendPost"
               flat
               warn
-              animation-type="vertical"
           >
             share
-            <template #animate >
-              <i class='bx bx-mail-send' ></i> Send
+            <template #animate>
+              <i class='bx bx-mail-send'></i> Send
             </template>
           </vs-button>
         </vs-col>
@@ -29,12 +29,11 @@
 <script>
 export default {
   name: "newPostTools",
-  data(){
-    return{
-    }
+  data() {
+    return {}
   },
-  methods:{
-    back(){
+  methods: {
+    back() {
       this.$router.push({name: 'profile'})
     }
   }
@@ -42,38 +41,43 @@ export default {
 </script>
 
 <style scoped>
-.floating-add-image{
+.floating-add-image {
   position: fixed;
   bottom: 10%;
-  right:2rem;
+  right: 2rem;
 }
-.tools >>> .floating-add-image{
+
+.tools >>> .floating-add-image {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
 }
-.iconify{
+
+.iconify {
   font-size: 1.6rem;
 }
-.top-tools{
+
+.top-tools {
   position: fixed;
   top: 0;
   right: 0;
   will-change: transform;
   transform: translateZ(0);
-  height:45px;
-  width:100%;
+  height: 45px;
+  width: 100%;
   background-color: #1e2023;
-  display:flex;
+  display: flex;
   z-index: 999999999;
 }
-.close{
+
+.close {
   width: 2rem;
-  height:2rem;
+  height: 2rem;
   margin-top: 0.5rem;
   margin-left: 1.5rem;
 }
-.sendPost{
+
+.sendPost {
   float: right;
   margin-right: 15%;
   margin-top: 7px;

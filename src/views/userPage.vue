@@ -12,32 +12,34 @@ import accountBio from "../components/userPage/accountBio";
 import accountHeader from "../components/userPage/accountHeader";
 import posts from '../components/userPage/posts'
 import {mapActions} from "vuex";
+
 export default {
   name: "userPage",
-  computed:{
-    username(){
+  computed: {
+    username() {
       return this.$route.params['user']
     }
   },
   components: {
-    accountStatus,accountBio,accountHeader,posts
+    accountStatus, accountBio, accountHeader, posts
   },
   created() {
-    this.$store.commit('toggleNavbar',true);
+    this.$store.commit('toggleNavbar', true);
     this.getUserById(this.username);
     this.getUserProfile()
   },
-  methods:{
+  methods: {
     ...mapActions(['getUserById', 'getUserProfile'])
   }
 }
 </script>
 
 <style scoped>
-body,html{
+body, html {
   overflow-x: hidden;
 }
-.bodyMargin{
+
+.bodyMargin {
   margin: 10px;
 }
 </style>

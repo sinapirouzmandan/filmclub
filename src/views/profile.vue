@@ -1,56 +1,59 @@
 <template>
-<div class="bodyMargin">
-<accountHeader/>
-  <accountBio/>
-  <accountStatus/>
-      <tumb-post/>
-  <vs-button
-      circle
-      icon
-      floating
-      color="#000"
-      to="Notifications"
-      class="notifIcon"
-  >
-    <i class='iconify' data-icon="bx:bx-bell"></i>
-    {{notificatonsCalc}}
-  </vs-button>
-</div>
+  <div class="bodyMargin">
+    <accountHeader/>
+    <accountBio/>
+    <accountStatus/>
+    <tumb-post/>
+    <vs-button
+        circle
+        class="notifIcon"
+        color="#000"
+        floating
+        icon
+        to="Notifications"
+    >
+      <i class='iconify' data-icon="bx:bx-bell"></i>
+      {{ notificatonsCalc }}
+    </vs-button>
+  </div>
 </template>
 <script>
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
 import accountHeader from "../components/profile/accountHeader";
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
+
 export default {
   name: "profile",
   components: {
     tumbPost: () => import('../components/profile/tumbPost'),
-    accountStatus,accountBio,accountHeader
+    accountStatus, accountBio, accountHeader
   },
   created() {
-    this.$store.commit('toggleNavbar',true);
-    this.$store.dispatch('getUserProfile').then(()=>{
+    this.$store.commit('toggleNavbar', true);
+    this.$store.dispatch('getUserProfile').then(() => {
       this.$store.dispatch('getNotificationList')
     })
   },
-  computed:{
+  computed: {
     ...mapGetters(['notificatonsCalc'])
   }
 }
 </script>
 
 <style scoped>
-body,html{
+body, html {
   overflow-x: hidden;
 }
-.bodyMargin{
+
+.bodyMargin {
   margin: 10px;
 }
-.notifIcon{
+
+.notifIcon {
   position: absolute;
   z-index: 9;
-  top:167px;
+  top: 167px;
   right: 1rem;
   font-size: 20px;
   color: #fff;

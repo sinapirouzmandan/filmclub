@@ -1,7 +1,7 @@
 <template>
   <div id="tumber">
     <vs-row class="tumbPostRow">
-      <vs-col v-for="(tump,index) in (1,16)" :key="index" w="6" class="tumbContainer" lg="4" xs="12">
+      <vs-col v-for="(tump,index) in (1,16)" :key="index" class="tumbContainer" lg="4" w="6" xs="12">
         <vs-card type="3">
           <template #title>
             <h3>Pot with a plant</h3>
@@ -21,7 +21,7 @@
             12
           </span>
             </vs-button>
-            <vs-button class="btn-chat" shadow primary  style="color: white">
+            <vs-button class="btn-chat" primary shadow style="color: white">
               <i class="iconify" data-icon='bx:bx-chat'></i>
               <span class="span">
            54
@@ -42,10 +42,11 @@ export default {
 }
 </script>
 <style scoped>
-.tumbPostRow{
+.tumbPostRow {
   margin-top: 35px;
 }
-#tumber >>> .vs-card{
+
+#tumber >>> .vs-card {
   margin-top: 2rem;
   margin-left: auto;
   margin-right: auto;

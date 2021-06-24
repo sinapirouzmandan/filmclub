@@ -1,31 +1,32 @@
 <template>
   <div class="container">
-<div class="xi-top-head">
-  <vs-input v-model="search" placeholder="UserName" @input="search !='' ? focused() : $emit('unfocused')">
-    <template #icon>
-      <i class='iconify' data-icon="bx:bx-search"></i>
-    </template>
-  </vs-input>
-</div>
+    <div class="xi-top-head">
+      <vs-input v-model="search" placeholder="UserName" @input="search !='' ? focused() : $emit('unfocused')">
+        <template #icon>
+          <i class='iconify' data-icon="bx:bx-search"></i>
+        </template>
+      </vs-input>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import {mapActions} from 'vuex'
+
 export default {
   name: "searchFixedHeader",
-  data: ()=>{
-    return{
+  data: () => {
+    return {
       search: ''
     }
   },
-  methods:{
+  methods: {
     ...mapActions(['searchUsers']),
-    focused(){
+    focused() {
       this.$emit('focused', true)
       this.searchUsers(
           this.search
-      ).then(()=>{
+      ).then(() => {
         this.$emit('focused', false)
       });
     }
@@ -34,25 +35,29 @@ export default {
 </script>
 
 <style scoped>
-.container{
+.container {
   width: 100%;
   background-color: var(--vs-mainback);
 }
-.xi-top-head{
+
+.xi-top-head {
   padding: 14px;
 }
-.xi-top-head >>> .vs-input{
+
+.xi-top-head >>> .vs-input {
   background-color: var(--vs-cardback) !important;
   width: 100%;
-  color:white;
+  color: white;
 }
-.xi-top-head >>> .vs-input__icon{
+
+.xi-top-head >>> .vs-input__icon {
   background-color: var(--vs-navs) !important;
 }
-.xi-top-head >>>.vs-input__label{
+
+.xi-top-head >>> .vs-input__label {
   position: absolute !important;
-  left:42px !important;
-  width:60%;
+  left: 42px !important;
+  width: 60%;
 
 }
 </style>

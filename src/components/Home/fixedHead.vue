@@ -3,12 +3,13 @@
     <div class="logo">
       <h1>MovieBar</h1>
     </div>
-  <switchExplorer/>
+    <switchExplorer/>
   </nav>
 </template>
 
 <script>
 import switchExplorer from "./switchExplorer";
+
 export default {
   name: "navbar",
   components: {switchExplorer}
@@ -17,21 +18,23 @@ export default {
 
 <style scoped>
 @import url('http://fonts.cdnfonts.com/css/magic');
-.xi-top-head{
+
+.xi-top-head {
   position: fixed;
   top: 0;
   right: 0;
-  left:0;
+  left: 0;
   height: 50px;
-  width:100%;
+  width: 100%;
   background-color: var(--vs-navs);
-  display:flex;
+  display: flex;
   z-index: 999999999;
 }
-.logo h1{
-float: left;
+
+.logo h1 {
+  float: left;
   margin-left: 30px;
-  margin-top:17px;
-  font-family:'magic', sans-serif;
+  margin-top: 17px;
+  font-family: 'magic', sans-serif;
 }
 </style>

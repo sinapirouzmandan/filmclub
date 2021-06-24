@@ -9,19 +9,19 @@
       </div>
     </nav>
     <div class="hidden">
-      <vs-sidebar absolute :open="sideBar" v-model="active">
+      <vs-sidebar v-model="active" :open="sideBar" absolute>
         <template #logo>
-          <img :src="userAvatar" alt="avatar" style="border-radius: 30%" />
-          <div @click="sideBar = false" style="width: 100%">
-            <i class="iconify" data-icon="mdi:close" id="close"></i>
+          <img :src="userAvatar" alt="avatar" style="border-radius: 30%"/>
+          <div style="width: 100%" @click="sideBar = false">
+            <i id="close" class="iconify" data-icon="mdi:close"></i>
           </div>
         </template>
         <vs-sidebar-item id="home">
-<!--          <vs-switch warn v-model="mode" @change="changeColorTheme()">-->
-<!--            <template #circle>-->
-<!--              <i class="iconify switch" data-icon="bx:bxs-moon"></i>-->
-<!--            </template>-->
-<!--          </vs-switch>-->
+          <!--          <vs-switch warn v-model="mode" @change="changeColorTheme()">-->
+          <!--            <template #circle>-->
+          <!--              <i class="iconify switch" data-icon="bx:bxs-moon"></i>-->
+          <!--            </template>-->
+          <!--          </vs-switch>-->
         </vs-sidebar-item>
         <vs-sidebar-item id="update">
           <template #icon>
@@ -32,9 +32,9 @@
         <vs-sidebar-item id="logout">
           <template #icon>
             <i
-              class="iconify"
-              data-icon="bx:bx-log-out-circle"
-              @click="logout"
+                class="iconify"
+                data-icon="bx:bx-log-out-circle"
+                @click="logout"
             ></i>
           </template>
           <span @click="logout">Logout</span>
@@ -43,9 +43,9 @@
           <vs-sidebar-item id="delete">
             <template #icon>
               <i
-                class="iconify"
-                data-icon="mdi:delete-circle-outline"
-                style="color: red"
+                  class="iconify"
+                  data-icon="mdi:delete-circle-outline"
+                  style="color: red"
               ></i>
             </template>
             <p style="color: red">Delete account</p>
@@ -54,9 +54,9 @@
         <template #footer>
           <vs-row dir="rtl">
             <vs-avatar
-              badge-color="danger"
-              badge-position="top-right"
-              @click="$router.push('Notifications')"
+                badge-color="danger"
+                badge-position="top-right"
+                @click="$router.push('Notifications')"
             >
               <i class="iconify" data-icon="bx:bx-bell"></i>
 
@@ -72,9 +72,9 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapState } from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import swal from "sweetalert";
-import { mapGetters } from "vuex";
+
 export default {
   name: "settings",
   data() {
@@ -100,7 +100,7 @@ export default {
       }
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.root = document.documentElement;
   },
   created() {
@@ -139,12 +139,12 @@ export default {
           }).then((value) => {
             this.deleteObj.password = value;
             this.deleteUser(this.deleteObj)
-              .then(() => {
-                this.getNotif();
-              })
-              .catch(() => {
-                this.getNotif();
-              });
+                .then(() => {
+                  this.getNotif();
+                })
+                .catch(() => {
+                  this.getNotif();
+                });
           });
         }
       });
@@ -168,6 +168,7 @@ export default {
 
 <style scoped>
 @import url("http://fonts.cdnfonts.com/css/magic");
+
 .xi-top-head {
   position: absolute;
   top: 0;
@@ -177,6 +178,7 @@ export default {
   width: 100%;
   background-color: var(--vs-navs);
 }
+
 .logo h1 {
   float: right;
   margin-top: 2vh;
@@ -184,20 +186,24 @@ export default {
   text-align: right;
   font-family: "magic", sans-serif;
 }
+
 .settings {
   float: left;
   margin-left: 5%;
   font-size: 40px;
   margin-top: 5px;
 }
+
 .settingFather >>> .vs-sidebar__item__text,
 .settingFather >>> .vs-sidebar__item__icon {
   color: white;
 }
+
 #close {
   color: white;
   font-size: 25px;
 }
+
 .settingFather >>> .vs-switch {
   margin: 0 auto;
   width: 70px !important;

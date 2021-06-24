@@ -37,7 +37,7 @@ export default new Vuex.Store({
         },
         // other users
         usernameInfo: [],
-        searchedUsers:  [],
+        searchedUsers: [],
         followStatus: null
     },
     getters: {
@@ -46,15 +46,14 @@ export default new Vuex.Store({
             return Number(len)
         },
         notificatonsCalc(state) {
-            let notifications = state.notifications.filter((item)=>{
+            let notifications = state.notifications.filter((item) => {
                 return item.isSeen == false
             });
             let len = Object.keys(notifications).length
-            if (Number(len) === 0){
+            if (Number(len) === 0) {
                 return ''
-            }
-            else {
-            return Number(len)
+            } else {
+                return Number(len)
             }
         }
     },
@@ -121,46 +120,43 @@ export default new Vuex.Store({
                 }
             }
         },
-        fetchBoxOffice(state,payload){
-            state.boxOfficeList.movies = payload.filter((item)=>{
+        fetchBoxOffice(state, payload) {
+            state.boxOfficeList.movies = payload.filter((item) => {
                 return item['classify'] == 'movies'
             })
-            state.boxOfficeList.series = payload.filter((item)=>{
+            state.boxOfficeList.series = payload.filter((item) => {
                 return item['classify'] == 'series'
             })
         },
-        fetchUserInfo(state,payload){
+        fetchUserInfo(state, payload) {
             state.usernameInfo = payload.user
         },
-        fetchSearchUsers(state,payload){
-            let users = payload.users.map((user)=>{
-                user.biography = user.biography.slice(0,50)
+        fetchSearchUsers(state, payload) {
+            let users = payload.users.map((user) => {
+                user.biography = user.biography.slice(0, 45)
                 return user
             })
             state.searchedUsers = users
         },
-        fetchNotifications(state,payload){
-            let notifications = payload.notifications.map((item)=>{
+        fetchNotifications(state, payload) {
+            let notifications = payload.notifications.map((item) => {
                 item.id = Math.floor(Math.random() * 9999999999999)
-                if (item.icon == 'normal'){
+                if (item.icon == 'normal') {
                     item.icon = 'mdi:bell-circle-outline'
                     item.color = 'white'
-                }
-                else if (item.icon == 'danger'){
+                } else if (item.icon == 'danger') {
                     item.icon = 'mdi:alert-circle-outline'
                     item.color = 'red'
-                }
-                else if (item.icon == 'warn'){
+                } else if (item.icon == 'warn') {
                     item.icon = 'mdi:alert-circle-outline'
                     item.color = 'orange'
-                }
-                else if (item.icon == 'success') {
+                } else if (item.icon == 'success') {
                     item.icon = 'mdi:arrow-up-circle-outline'
                     item.color = 'green'
                 }
                 return item
             });
-            state.notifications = notifications.sort((function(a,b){
+            state.notifications = notifications.sort((function (a, b) {
                 return new Date(b.date) - new Date(a.date);
             }))
         }
@@ -188,7 +184,7 @@ export default new Vuex.Store({
                 };
                 await axios.request(optionsServer).then(function (response) {
                     commit('loadImdbIds', response.data.list)
-                    if (response.data.list.length == 0){
+                    if (response.data.list.length == 0) {
                         commit('loadImdbIds', ['tt0068646'])
                     }
                 }).catch(function (error) {
@@ -518,7 +514,7 @@ export default new Vuex.Store({
             });
         },
         async getFollowStatus({state, dispatch}, username) {
-            if (state.token){
+            if (state.token) {
                 const options = {
                     method: 'GET',
                     url: `${state.baseURl}/users/checkFollow/${username}`,
@@ -526,27 +522,8 @@ export default new Vuex.Store({
                         'authorization': `Bearer ${state.token}`
                     }
                 };
-            await axios.request(options).then((response) => {
-                state.followStatus = response.data.isFollowed
-            }).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
-                    dispatch('errorHandler', error)
-                }
-            });
-        }
-    },
-        async getNotificationList({state, dispatch, commit}) {
-                const options = {
-                    method: 'GET',
-                    url: `${state.baseURl}/users/notifications`,
-                    headers: {
-                        'authorization': `Bearer ${state.token}`
-                    }
-                };
                 await axios.request(options).then((response) => {
-                    commit('fetchNotifications', response.data)
+                    state.followStatus = response.data.isFollowed
                 }).catch(function (error) {
                     if (!error.response) {
                         swal("Can't connect to server, check your internet connection")
@@ -554,8 +531,27 @@ export default new Vuex.Store({
                         dispatch('errorHandler', error)
                     }
                 });
+            }
         },
-        async updateProfilePhoto ({state, dispatch, commit}, packet) {
+        async getNotificationList({state, dispatch, commit}) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/users/notifications`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response) => {
+                commit('fetchNotifications', response.data)
+            }).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                }
+            });
+        },
+        async updateProfilePhoto({state, dispatch, commit}, packet) {
             const options = {
                 method: 'PUT',
                 data: packet.image,
@@ -565,7 +561,7 @@ export default new Vuex.Store({
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            await axios.request(options).then(()=>{
+            await axios.request(options).then(() => {
                 commit('toggleProfileLoaded', false)
                 dispatch('getUserProfile')
             }).catch(function (error) {
@@ -576,7 +572,7 @@ export default new Vuex.Store({
                 }
             });
         },
-        async setNotificationsSeen ({state, dispatch}) {
+        async setNotificationsSeen({state, dispatch}) {
             const options = {
                 method: 'PUT',
                 url: `${state.baseURl}/users/seenNotifications`,
@@ -592,6 +588,6 @@ export default new Vuex.Store({
                 }
             });
         }
-},
+    },
     modules: {}
 })

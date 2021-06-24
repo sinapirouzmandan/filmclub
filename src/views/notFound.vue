@@ -1,30 +1,30 @@
 <template>
-<div>
-  <vs-row justify="center">
-    <vs-col w="12">
-      <h1 data-text="404"><span>404</span></h1>
-    </vs-col>
-    <vs-col w="12">
-      <h1 data-text="Page not found!" style="margin-top: 4rem;"><span>Page not found!</span></h1>
-    </vs-col>
-    <vs-col w="12">
-      <vs-button
-        class="takeBack"
-        :active="true"
-        @click="$router.push('/search')"
-    >
-      Take me back to the place
-    </vs-button>
-    </vs-col>
-  </vs-row>
-</div>
+  <div>
+    <vs-row justify="center">
+      <vs-col w="12">
+        <h1 data-text="404"><span>404</span></h1>
+      </vs-col>
+      <vs-col w="12">
+        <h1 data-text="Page not found!" style="margin-top: 4rem;"><span>Page not found!</span></h1>
+      </vs-col>
+      <vs-col w="12">
+        <vs-button
+            :active="true"
+            class="takeBack"
+            @click="$router.push('/search')"
+        >
+          Take me back to the place
+        </vs-button>
+      </vs-col>
+    </vs-row>
+  </div>
 </template>
 
 <script>
 export default {
   name: "404.vue",
-  created(){
-    this.$store.commit('toggleNavbar',true);
+  created() {
+    this.$store.commit('toggleNavbar', true);
   }
 }
 </script>
@@ -119,9 +119,10 @@ h1::after {
     transform: translate(-49%, -53%);
   }
 }
-.takeBack{
+
+.takeBack {
   border: 1px solid #1da9cc;
   background-color: transparent;
-  margin:15rem auto 0;
+  margin: 15rem auto 0;
 }
 </style>

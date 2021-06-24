@@ -1,59 +1,60 @@
 <template>
-<div>
-<h1>
-  Box Office
-</h1>
-  <h3 class="subject">Movie of the week</h3>
-  <hr>
-  <vs-row>
-    <vs-col w="12" v-for="(post,index) in boxOfficeList.movies" :key="index">
-      <div class="B-movie_card1" id="B-bright" v-if="isMovieLoaded">
-        <div class="B-info_section">
-          <!-- -----------------        post header       --------------------- -->
-          <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="isMovieLoaded = true;"/>
-            <h1>{{post.title}}</h1>
-            <br>
+  <div>
+    <h1>
+      Box Office
+    </h1>
+    <h3 class="subject">Movie of the week</h3>
+    <hr>
+    <vs-row>
+      <vs-col v-for="(post,index) in boxOfficeList.movies" :key="index" w="12">
+        <div v-if="isMovieLoaded" id="B-bright" class="B-movie_card1">
+          <div class="B-info_section">
+            <!-- -----------------        post header       --------------------- -->
+            <div class="B-movie_header1">
+              <img v-lazy="post.poster" :alt="post.title" class="B-locandina" @load="isMovieLoaded = true;"/>
+              <h1>{{ post.title }}</h1>
+              <br>
+            </div>
           </div>
+          <!-- -----------------        post background        --------------------- -->
+          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
+          <!-- -----------------        ///        --------------------- -->
         </div>
-        <!-- -----------------        post background        --------------------- -->
-        <div class="B-blur_back B-bright_back" :style="{background: `url(${post.poster})`}"></div>
-        <!-- -----------------        ///        --------------------- -->
-      </div>
-    </vs-col>
-    <loading  v-if="!isMovieLoaded"/>
-  </vs-row>
+      </vs-col>
+      <loading v-if="!isMovieLoaded"/>
+    </vs-row>
 
-  <h3 class="subject">Series of the week</h3>
-  <hr>
-  <vs-row>
-    <vs-col w="12" v-for="(post,index) in boxOfficeList.series" :key="index">
-      <div class="B-movie_card1" id="B-bright"  v-if="isSerieLoaded">
-        <div class="B-info_section">
-          <!-- -----------------        post header       --------------------- -->
-          <div class="B-movie_header1">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title" @load="isSerieLoaded = true"/>
-            <h1>{{post.title}}</h1>
-            <br>
+    <h3 class="subject">Series of the week</h3>
+    <hr>
+    <vs-row>
+      <vs-col v-for="(post,index) in boxOfficeList.series" :key="index" w="12">
+        <div v-if="isSerieLoaded" id="B-bright" class="B-movie_card1">
+          <div class="B-info_section">
+            <!-- -----------------        post header       --------------------- -->
+            <div class="B-movie_header1">
+              <img v-lazy="post.poster" :alt="post.title" class="B-locandina" @load="isSerieLoaded = true"/>
+              <h1>{{ post.title }}</h1>
+              <br>
+            </div>
           </div>
+          <!-- -----------------        post background        --------------------- -->
+          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
+          <!-- -----------------        ///        --------------------- -->
         </div>
-        <!-- -----------------        post background        --------------------- -->
-        <div class="B-blur_back B-bright_back" :style="{background: `url(${post.poster})`}"></div>
-        <!-- -----------------        ///        --------------------- -->
-      </div>
-    </vs-col>
-    <loading  v-if="!isSerieLoaded"/>
-  </vs-row>
-</div>
+      </vs-col>
+      <loading v-if="!isSerieLoaded"/>
+    </vs-row>
+  </div>
 </template>
 
 <script>
-import  {mapState,mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import loading from "../loading";
+
 export default {
   name: "boxOffice",
-  data (){
-    return{
+  data() {
+    return {
       loaded: false,
       isMovieLoaded: false,
       isSerieLoaded: false
@@ -66,9 +67,12 @@ export default {
     ...mapActions(['getBoxOfficeList']),
   },
   created() {
-    this.getBoxOfficeList().then(()=>{this.isMovieLoaded = true; this.isSerieLoaded = true;});
+    this.getBoxOfficeList().then(() => {
+      this.isMovieLoaded = true;
+      this.isSerieLoaded = true;
+    });
   },
-  computed:{
+  computed: {
     ...mapState(['boxOfficeList'])
   }
 }
@@ -91,6 +95,7 @@ export default {
   box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.5);
   transition: all 0.4s;
 }
+
 .B-movie_card1 .B-info_section {
   position: relative;
   width: 100%;
@@ -99,18 +104,21 @@ export default {
   z-index: 2;
   border-radius: 10px;
 }
+
 .B-movie_card1 .B-info_section .B-movie_header1 {
   position: relative;
   padding: 25px;
 
 }
+
 .B-movie_card1 .B-info_section .B-movie_header1 h1 {
   color: black;
   font-weight: 400;
   font-size: 20px;
-  margin-top:40px;
+  margin-top: 40px;
   width: 100%;
 }
+
 .B-movie_card1 .B-info_section .B-movie_header1 h4 {
   color: #555;
   font-weight: 400;
@@ -123,6 +131,7 @@ export default {
   height: 120px;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.5);
 }
+
 .B-movie_card1 .B-blur_back {
   position: absolute;
   top: 0;
@@ -137,6 +146,7 @@ export default {
   .B-movie_header1 {
     width: 100%;
   }
+
   .B-info_section {
     background-color: rgba(255, 255, 255, 0.3);
   }
@@ -146,12 +156,17 @@ export default {
     background-position: -100% 10% !important;
   }
 }
+
 @media screen and (max-width: 768px) {
   .B-movie_card1 {
-    width: 70%;
+    width: 90%;
     margin: 20px auto;
     min-height: 100px;
     height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
   }
 
   .B-blur_back {
@@ -159,22 +174,25 @@ export default {
     background-position: 50% 50% !important;
   }
 
-  .B-movie_header1 {
+  .B-movie_header1 h1{
     width: 100%;
-    margin-top: 10px;
   }
+
   .B-info_section {
     background-color: rgba(255, 255, 255, 0.2);
     display: inline-grid;
   }
 }
+
 .B-bright_back {
   filter: blur(0.8rem);
 }
-.subject{
+
+.subject {
   margin-top: 4rem;
   margin-bottom: -1rem;
 }
+
 hr {
   margin: 40px auto 0;
   width: 60%;

@@ -1,8 +1,8 @@
 <template>
   <vs-row>
-    <vs-col w="12" dir="auto">
-      <p class="bioText" style="text-align: left;white-space: pre-wrap;"  v-if="userProfile.biography != ''">
-{{userProfile.biography}}
+    <vs-col dir="auto" w="12">
+      <p v-if="userProfile.biography != ''" class="bioText" style="text-align: left;white-space: pre-wrap;">
+        {{ userProfile.biography }}
       </p>
       <p v-else class="bioText" style="text-align: left;white-space: pre-wrap;">On the movies planet</p>
     </vs-col>
@@ -11,9 +11,10 @@
 
 <script>
 import {mapState} from 'vuex'
+
 export default {
   name: "accountBio",
-  computed:{
+  computed: {
     ...mapState(['userProfile'])
   }
 }

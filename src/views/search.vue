@@ -1,12 +1,12 @@
 <template>
-<div class="bodyMargin">
-  <searchFixedHeader @focused="searchBoxActivator" @unfocused="searchBoxDeActivator"/>
-  <keep-alive>
-  <component :is="searchBox"  :isLoading="isSearching"></component>
-  </keep-alive>
-  <p style="margin-bottom: 5rem; opacity: 0; font-size:15px;">{{endOrLoad}}</p>
+  <div class="bodyMargin">
+    <searchFixedHeader @focused="searchBoxActivator" @unfocused="searchBoxDeActivator"/>
+    <keep-alive>
+      <component :is="searchBox" :isLoading="isSearching"></component>
+    </keep-alive>
+    <p style="margin-bottom: 5rem; opacity: 0; font-size:15px;">{{ endOrLoad }}</p>
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -14,10 +14,11 @@ import searchFixedHeader from "../components/search/searchFixedHeader";
 import boxOffice from "../components/search/boxOffice";
 import searchUsers from "../components/search/searchUsers";
 import {mapState} from "vuex";
+
 export default {
   name: "search.vue",
-  data(){
-    return{
+  data() {
+    return {
       searchBox: boxOffice,
       isSearching: false
     }
@@ -25,19 +26,19 @@ export default {
   components: {
     searchFixedHeader
   },
-  methods:{
-    searchBoxActivator(val){
+  methods: {
+    searchBoxActivator(val) {
       this.searchBox = searchUsers
       this.isSearching = val
     },
-    searchBoxDeActivator(){
+    searchBoxDeActivator() {
       this.searchBox = boxOffice
     }
   },
   created() {
-    this.$store.commit('toggleNavbar',true);
+    this.$store.commit('toggleNavbar', true);
   },
-  computed:{
+  computed: {
     ...mapState(['endOrLoad']),
   }
 }

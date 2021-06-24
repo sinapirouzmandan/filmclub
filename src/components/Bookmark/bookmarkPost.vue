@@ -1,47 +1,50 @@
 <template>
-<div>
-  <vs-row>
-    <vs-col w="12" v-for="(post,index) in watchListMoviesList" :key="index">
-      <div class="B-movie_card" id="B-bright">
-        <div class="B-info_section">
-          <!-- -----------------        post header       --------------------- -->
-          <div class="B-movie_header">
-            <img class="B-locandina" v-lazy="post.poster" :alt="post.title"/>
-            <h1>{{ post.title }}</h1>
-            <span class="B-minutes">{{post.length}}</span>
-            <p class="B-type">{{post.plot}}</p>
-            <br>
-            <i class="iconify" data-icon="bx:bxl-imdb" style="font-size: 40px; color: rgba(0, 0, 0, 0.5);" data-inline="true"></i>
-            <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">{{post.rating}} / 10</p>
-          </div>
-          <!-- -----------------        ///      --------------------- -->
+  <div>
+    <vs-row>
+      <vs-col v-for="(post,index) in watchListMoviesList" :key="index" w="12">
+        <div id="B-bright" class="B-movie_card">
+          <div class="B-info_section">
+            <!-- -----------------        post header       --------------------- -->
+            <div class="B-movie_header">
+              <img v-lazy="post.poster" :alt="post.title" class="B-locandina"/>
+              <h1>{{ post.title }}</h1>
+              <span class="B-minutes">{{ post.length }}</span>
+              <p class="B-type">{{ post.plot }}</p>
+              <br>
+              <i class="iconify" data-icon="bx:bxl-imdb" data-inline="true"
+                 style="font-size: 40px; color: rgba(0, 0, 0, 0.5);"></i>
+              <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">
+                {{ post.rating }} / 10</p>
+            </div>
+            <!-- -----------------        ///      --------------------- -->
 
-          <!-- -----------------        post action btn       --------------------- -->
-          <div class="B-movie_social">
-            <ul  @click="del(post.id)">
-              <li><i class="iconify" data-icon="bx:bxs-trash" style="font-size:30px;"></i></li>
-            </ul>
+            <!-- -----------------        post action btn       --------------------- -->
+            <div class="B-movie_social">
+              <ul @click="del(post.id)">
+                <li><i class="iconify" data-icon="bx:bxs-trash" style="font-size:30px;"></i></li>
+              </ul>
+            </div>
           </div>
+          <!-- -----------------        ///       --------------------- -->
+
+          <!-- -----------------        post background        --------------------- -->
+          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
+          <!-- -----------------        ///        --------------------- -->
         </div>
-        <!-- -----------------        ///       --------------------- -->
-
-        <!-- -----------------        post background        --------------------- -->
-        <div class="B-blur_back B-bright_back" :style="{background: `url(${post.poster})`}"></div>
-        <!-- -----------------        ///        --------------------- -->
-      </div>
-    </vs-col>
-  </vs-row>
-  <loading v-if="!isLoaded"/>
-</div>
+      </vs-col>
+    </vs-row>
+    <loading v-if="!isLoaded"/>
+  </div>
 </template>
 <script>
 import loading from "../loading";
-import  {mapState,mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import swal from 'sweetalert'
+
 export default {
   name: "bookmarkPost",
-  data (){
-    return{
+  data() {
+    return {
       loaded: false,
       isLoaded: false
     }
@@ -49,7 +52,7 @@ export default {
   components: {loading},
   methods: {
     ...mapActions(['getMoviesList', 'toggleWatchListPost']),
-    del(id){
+    del(id) {
       swal({
         title: "Are you sure?",
         icon: "warning",
@@ -64,11 +67,11 @@ export default {
     }
   },
   created() {
-  this.getMoviesList().then(()=>{
-    this.isLoaded = true
-  });
+    this.getMoviesList().then(() => {
+      this.isLoaded = true
+    });
   },
-  computed:{
+  computed: {
     ...mapState(['watchListMoviesList'])
   }
 }
@@ -91,6 +94,7 @@ export default {
   box-shadow: 0 0 10px -10px rgba(0, 0, 0, 0.5);
   transition: all 0.4s;
 }
+
 .B-movie_card .B-info_section {
   position: relative;
   width: 100%;
@@ -99,19 +103,23 @@ export default {
   z-index: 2;
   border-radius: 10px;
 }
+
 .B-movie_card .B-info_section .B-movie_header {
   position: relative;
   padding: 25px;
-
+  word-break: break-word;
 }
+
 .B-movie_card .B-info_section .B-movie_header h1 {
   color: black;
   font-weight: 400;
 }
+
 .B-movie_card .B-info_section .B-movie_header h4 {
   color: #555;
   font-weight: 400;
 }
+
 .B-movie_card .B-info_section .B-movie_header .B-minutes {
   display: inline-block;
   margin-top: 0;
@@ -121,11 +129,13 @@ export default {
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
+
 .B-movie_card .B-info_section .B-movie_header .B-type {
   display: inline-block;
   color: #3d3c3c;
   margin-left: 10px;
 }
+
 .B-movie_card .B-info_section .B-movie_header .B-locandina {
   position: relative;
   float: left;
@@ -133,15 +143,18 @@ export default {
   height: 120px;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.5);
 }
+
 .B-movie_card .B-info_section .B-movie_social {
   height: 10%;
   padding-left: 15px;
   padding-bottom: 20px;
 }
+
 .B-movie_card .B-info_section .B-movie_social ul {
   list-style: none;
   padding: 0;
 }
+
 .B-movie_card .B-info_section .B-movie_social ul li {
   display: inline-block;
   color: rgba(0, 0, 0, 0.3);
@@ -149,14 +162,17 @@ export default {
   transition-delay: 0.15s;
   margin: 0 10px;
 }
+
 .B-movie_card .B-info_section .B-movie_social ul li:hover {
   transition: color 0.3s;
   color: rgba(0, 0, 0, 0.7);
 }
+
 .B-movie_card .B-info_section .B-movie_social ul li i {
   font-size: 19px;
   cursor: pointer;
 }
+
 .B-movie_card .B-blur_back {
   position: absolute;
   top: 0;
@@ -171,6 +187,7 @@ export default {
   .B-movie_header {
     width: 65%;
   }
+
   .B-info_section {
     background-color: rgba(255, 255, 255, 0.3);
   }
@@ -180,6 +197,7 @@ export default {
     background-position: -100% 10% !important;
   }
 }
+
 @media screen and (max-width: 768px) {
   .B-movie_card {
     width: 95%;
@@ -194,22 +212,24 @@ export default {
   }
 
   .B-movie_header {
-    width: 100%;
     margin-top: 85px;
   }
 
   .B-info_section {
-   background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
     display: inline-grid;
   }
 }
+
 .B-bright_back {
   filter: blur(0.8rem);
 }
-.swal-modal{
+
+.swal-modal {
   background-color: var(--vs-navs);
 }
-.swal-title{
-  color:white !important;
+
+.swal-title {
+  color: white !important;
 }
 </style>

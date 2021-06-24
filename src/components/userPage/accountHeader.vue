@@ -1,39 +1,40 @@
 <template>
   <div id="top" class="topHeader">
-    <img :src="userHeader" :alt="'header photo posted by ' + $route.params.user" class="backAvatar" @error="usernameInfo.header = '/public/images/header.jpg'">
+    <img :alt="'header photo posted by ' + $route.params.user" :src="userHeader" class="backAvatar"
+         @error="usernameInfo.header = '/public/images/header.jpg'">
     <vs-row class="avatars">
       <vs-col w="4">
-        <vs-avatar circle badge-color="success" size="90">
+        <vs-avatar badge-color="success" circle size="90">
           <img :src="userAvatar" alt="avatar" class="avatar" @error="usernameInfo.avatar = '/public/images/avatar.jpg'">
-          <template #badge v-if="usernameInfo.role == 'reviewer'">
+          <template v-if="usernameInfo.role == 'reviewer'" #badge>
             Reviewer
           </template>
         </vs-avatar>
         <div class="username">
-          <p>{{usernameInfo.name}}</p>
-          <small>@{{$route.params.user}}</small>
+          <p>{{ usernameInfo.name }}</p>
+          <small>@{{ $route.params.user }}</small>
         </div>
       </vs-col>
-      <vs-col w="4" class="editProfile" offset="3">
+      <vs-col class="editProfile" offset="3" w="4">
         <vs-button
-            style="width:100%;"
+            :class="border"
             :color="colorBtn"
             :gradient="gradient"
-            @click="follow"
-            :class="border"
             :loading="isLoading"
+            style="width:100%;"
+            @click="follow"
         >
           {{ followText }}
         </vs-button>
         <vs-button
             v-if="userProfile.role == 'reviewer' && usernameInfo.role != 'reviewer'"
-            style="width:100%; border: 1px solid #7f1818;"
-            gradient
             color="#0a0d0e"
+            gradient
+            style="width:100%; border: 1px solid #7f1818;"
             @click="deleteAccount()"
         >
-          <i class="iconify" data-icon="bx:bx-error">  </i>
-             <span>Ban User</span>
+          <i class="iconify" data-icon="bx:bx-error"> </i>
+          <span>Ban User</span>
         </vs-button>
       </vs-col>
     </vs-row>
@@ -42,71 +43,69 @@
 </template>
 
 <script>
-import {mapState,mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import swal from "sweetalert";
+
 export default {
   name: "accountHeader",
-  data(){
-    return{
+  data() {
+    return {
       colorBtn: 'rgb(70,126,246)',
       border: '',
       gradient: true,
       followText: 'follow',
       isFollowed: false,
-      isLoading:false,
+      isLoading: false,
       deleteObj: {
         password: 'defaultpass',
         target: null,
-        reason:null
+        reason: null
       }
     }
   },
-  computed:{
+  computed: {
     ...mapState(['usernameInfo', 'errMassage', 'userProfile', 'followStatus', 'baseURl', 'alternativeAvatar', 'alternativeHeader',]),
-    userAvatar(){
-      if (this.usernameInfo.avatar){
-         return this.baseURl + this.usernameInfo.avatar
-      }
-      else {
+    userAvatar() {
+      if (this.usernameInfo.avatar) {
+        return this.baseURl + this.usernameInfo.avatar
+      } else {
         return this.alternativeAvatar
       }
     },
-    userHeader(){
-      if (this.usernameInfo.header){
-         return this.baseURl + this.usernameInfo.header
-      }
-      else {
+    userHeader() {
+      if (this.usernameInfo.header) {
+        return this.baseURl + this.usernameInfo.header
+      } else {
         return this.alternativeHeader
       }
     }
   },
-  methods:{
-    getNotif(){
+  methods: {
+    getNotif() {
       this.isLoading = false
-      if (this.errMassage){
+      if (this.errMassage) {
         this.$vs.notification({
           duration: 4000,
           progress: 'auto',
           border: null,
-          position:'top-center',
+          position: 'top-center',
           color: '#5b3cc4',
           title: this.errMassage,
         })
       }
     },
     ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus']),
-    follow(){
+    follow() {
       this.isLoading = true
-      this.toggleFollow(this.$route.params.user).then(()=>{
-        if(!(this.errMassage)){
-          if(!(this.isFollowed)){
+      this.toggleFollow(this.$route.params.user).then(() => {
+        if (!(this.errMassage)) {
+          if (!(this.isFollowed)) {
             this.gradient = false
             this.border = 'followBtn'
             this.colorBtn = 'rgba(255,255,255,0)'
             this.followText = 'Unfollow'
             this.isFollowed = !(this.isFollowed)
-          }
-          else{
+          } else {
             this.gradient = true
             this.border = ''
             this.colorBtn = 'rgb(70,126,246)'
@@ -115,25 +114,24 @@ export default {
           }
         }
         this.getNotif()
-      }).catch(()=>{
+      }).catch(() => {
         this.getNotif()
       })
     },
-    loadBtnStyle(){
-      if((this.isFollowed)){
+    loadBtnStyle() {
+      if ((this.isFollowed)) {
         this.gradient = false
         this.border = 'followBtn'
         this.colorBtn = 'rgba(255,255,255,0)'
         this.followText = 'Unfollow'
-      }
-      else{
+      } else {
         this.gradient = true
         this.border = ''
         this.colorBtn = 'rgb(70,126,246)'
         this.followText = 'follow'
       }
     },
-    deleteAccount(){
+    deleteAccount() {
       this.deleteObj.target = this.usernameInfo.username
       swal({
         title: "Are you sure?",
@@ -161,7 +159,7 @@ export default {
     }
   },
   mounted() {
-    this.getFollowStatus(this.$route.params.user).then(()=>{
+    this.getFollowStatus(this.$route.params.user).then(() => {
       this.isFollowed = this.followStatus
       this.loadBtnStyle()
     })
@@ -173,6 +171,7 @@ export default {
 .avatars {
   margin-top: 50px;
 }
+
 .backAvatar {
   width: 100%;
   position: absolute;
@@ -184,26 +183,32 @@ export default {
   background-color: #0a0d0e;
   object-fit: cover;
 }
+
 .editProfile {
   margin-top: 60px;
 }
-.username{
+
+.username {
   margin-top: 15px;
   width: 100%;
   text-align: left;
 }
+
 .username i {
   font-size: 15px;
 }
+
 .username p {
-  width:100%;
+  width: 100%;
 }
-.avatar{
+
+.avatar {
   width: 90px;
   height: 90px;
-  object-fit:cover;
+  object-fit: cover;
 }
-.followBtn{
+
+.followBtn {
   background-color: rgba(70, 126, 246, 0.22);
 }
 </style>

@@ -8,55 +8,56 @@
         </div>
         <p>
           {{ user.username }}
-          <br />
-        <i class="bio" style="text-align: left">{{ user.biography }} ...</i>
+          <br/>
+          <i class="bio" style="text-align: left">{{ user.biography }} ...</i>
         </p>
         <div class="divider bottom"></div>
       </div>
     </div>
-    <loading v-if="isLoading" />
-    <p style="margin-bottom: 35px; opacity: 0.1; font-size: 15px">
-      end of content ...
-    </p>
+    <loading v-if="isLoading"/>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import loading from "../loading";
+
 export default {
   name: "searchUsers",
   computed: {
     ...mapState(["searchedUsers", "baseURl", 'alternativeAvatar'])
   },
-  components: { loading },
+  components: {loading},
   props: ["isLoading"]
 };
 </script>
 
 <style scoped>
+
 .user {
-  width: 100%;
-  height: 5rem;
+  width: 94%;
+  height: 3rem;
   padding: 15px;
 }
+
 .divider {
   width: 100%;
   height: 1px;
-  margin-top: 0.5rem;
   width: 90%;
   border: 0;
   height: 1px;
   background-image: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0),
-    rgba(85, 84, 84, 0.31),
-    rgba(255, 255, 255, 0)
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(85, 84, 84, 0.31),
+      rgba(255, 255, 255, 0)
   );
 }
+
 .bottom {
   margin-top: 4rem;
 }
+
 .avatar {
   width: 3rem;
   height: 3rem;
@@ -71,19 +72,17 @@ export default {
   margin-left: 0.5rem;
   text-align: left;
 }
+
 .user .bio {
   font-size: 11px;
-  /*margin-top: 2.5rem;*/
   opacity: 0.7;
-  /*word-wrap: break-word; !* old name *!*/
-  /*overflow-wrap: break-word;*/
-  float:left;
-  /*display:inline;*/
+  float: left;
 }
+
 .avatar img {
   width: 100%;
   border-radius: 50%;
-  height:100%;
+  height: 100%;
   object-fit: cover;
 }
 </style>

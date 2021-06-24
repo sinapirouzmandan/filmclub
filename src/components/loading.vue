@@ -12,7 +12,11 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
-* {outline-width: 0;	font-family: 'Roboto';}
+
+* {
+  outline-width: 0;
+  font-family: 'Roboto';
+}
 
 
 .loader-centre {
@@ -22,8 +26,9 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .loader-loader {
-  width:30px;
+  width: 30px;
   height: 30px;
   border-top: 2px solid rgba(255, 255, 255, 0.3);
   border-right: 2px solid rgba(255, 255, 255, 0.3);
@@ -32,8 +37,13 @@ export default {
   border-radius: 50%;
   animation: spin 0.5s linear infinite;
 }
+
 @keyframes spin {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

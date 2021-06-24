@@ -1,17 +1,18 @@
 <template>
   <div class="papa">
     <div @click="$emit('back')">
-    <i class="iconify back"  data-icon="mdi:keyboard-backspace"></i>
+      <i class="iconify back" data-icon="mdi:keyboard-backspace"></i>
     </div>
     <div class="username">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
       <h2>username & password</h2>
-      <vs-input label-placeholder="username" v-model="user.username">
+      <vs-input v-model="user.username" border label-placeholder="username">
         <template #icon>
           <i class='iconify' data-icon="mdi:user"></i>
         </template>
       </vs-input>
-      <vs-input :progress="getProgress" label-placeholder="password" v-model="user.password" style="margin-top: 1.5rem;">
+      <vs-input v-model="user.password" :progress="getProgress" label-placeholder="password"
+                style="margin-top: 1.5rem;">
         <template #icon>
           <i class='iconify' data-icon="mdi:password"></i>
         </template>
@@ -31,10 +32,11 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+
 export default {
   name: "userName",
-  data(){
-    return{
+  data() {
+    return {
       user: {
         username: '',
         password: ''
@@ -43,7 +45,7 @@ export default {
       errMsg: ''
     }
   },
-  computed:{
+  computed: {
     ...mapState(['isUserNameAvailable', 'errMassage']),
     getProgress() {
       let progress = 0
@@ -74,50 +76,49 @@ export default {
       return progress
     }
   },
-  methods:{
+  methods: {
     ...mapActions(['checkUserNameAvailable', 'signup']),
     validUsername() {
-      if (this.user.username === '' || this.user.password === ''){
+      if (this.user.username === '' || this.user.password === '') {
         this.errMsg = 'Please  fill both fields'
         return true
       }
     },
-    sendInfo(){
-      if (this.user.password.length < 6){
+    sendInfo() {
+      if (this.user.password.length < 6) {
         this.$vs.notification({
           duration: 3000,
           progress: 'auto',
           border: null,
-          position:'bottom-center',
+          position: 'bottom-center',
           color: '#296186',
           title: 'Password should be at list 6 characters',
         })
         this.isLoading = false
         return
       }
-      if(this.validUsername()){
+      if (this.validUsername()) {
         this.$vs.notification({
           duration: 4000,
           progress: 'auto',
           border: null,
-          position:'bottom-center',
+          position: 'bottom-center',
           color: '#5b3cc4',
           title: this.errMsg,
         })
         return
       }
       this.isLoading = true
-      this.checkUserNameAvailable(this.user).then(()=>{
+      this.checkUserNameAvailable(this.user).then(() => {
         this.isLoading = false
-        if(this.isUserNameAvailable){
+        if (this.isUserNameAvailable) {
           console.log('logged in')
-        }
-        else{
+        } else {
           this.$vs.notification({
             duration: 4000,
             progress: 'auto',
             border: null,
-            position:'bottom-center',
+            position: 'bottom-center',
             color: '#5b3cc4',
             title: this.errMassage,
           })
@@ -129,54 +130,66 @@ export default {
 </script>
 
 <style scoped>
-.papa >>> .vs-input{
+.papa >>> .vs-input {
   background-color: var(--vs-cardback) !important;
   width: 100%;
-  color:white;
+  color: white;
 
 }
-.papa  >>> .vs-input__label{
+
+.papa >>> .vs-input__label {
   width: 60%;
   display: flex;
 }
-.username{
+
+.username {
   margin-top: 9rem;
 
 }
-.papa >>> .vs-input-parent{
+
+.papa >>> .vs-input-parent {
   flex-direction: row;
 }
-.papa >>> .vs-input-content{
+
+.papa >>> .vs-input-content {
   width: 80%;
   max-width: 500px;
 }
-.papa >>> .vs-input__icon{
+
+.papa >>> .vs-input__icon {
   background-color: var(--vs-navs) !important;
 }
-.logoUser{
+
+.logoUser {
   font-size: 70px;
   margin-bottom: 0;
 }
-.next{
+
+.next {
   margin: 2.5rem auto 0;
 }
-.papa >>> .vs-button{
-  width:80%;
+
+.papa >>> .vs-button {
+  width: 80%;
   max-width: 500px;
 }
-.signIn{
+
+.signIn {
   margin-top: 2rem;
 }
-h2{
+
+h2 {
   margin-bottom: 1.5rem;
 }
-.back{
+
+.back {
   font-size: 25px;
   position: absolute;
-  top:9rem;
-  left:20%;
+  top: 9rem;
+  left: 20%;
 }
-.papa >>> .vs-input__progress{
+
+.papa >>> .vs-input__progress {
   position: absolute;
   bottom: 0;
   width: 75%;

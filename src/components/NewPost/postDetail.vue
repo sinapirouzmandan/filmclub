@@ -5,70 +5,70 @@
       <div class="xinu">
         <vs-button
             :active="true"
-            flat
             color="#5B3CC4"
+            flat
             gradient
         >
           specify Post header image
         </vs-button>
       </div>
-      <div class="search" v-if="!Movietitle">
-            <vs-input
-                color="#5B3CC4"
-                gradient
-                v-model="searchMov"
-                placeholder="Movie or series name" />
-            <vs-button
-                @click="active = !active; getSearch()"
-                circle
-                color="#5B3CC4"
-                gradient
-            >
-              Search
-            </vs-button>
-          </div>
+      <div v-if="!Movietitle" class="search">
+        <vs-input
+            v-model="searchMov"
+            color="#5B3CC4"
+            gradient
+            placeholder="Movie or series name"/>
+        <vs-button
+            circle
+            color="#5B3CC4"
+            gradient
+            @click="active = !active; getSearch()"
+        >
+          Search
+        </vs-button>
+      </div>
       <div class="rating">
         <vs-row>
         </vs-row>
-        <vs-input v-model="score" :state="state" danger icon-after label-placeholder="My score to : " type="number"
-                  @change="checkRate()" warn v-if="Movietitle != ''">
+        <vs-input v-if="Movietitle != ''" v-model="score" :state="state" danger icon-after label-placeholder="My score to : "
+                  type="number" warn @change="checkRate()">
           <template #icon>
             /10
           </template>
         </vs-input>
-        <vs-switch v-model="active" class="margin-2" v-if="Movietitle != ''">
+        <vs-switch v-if="Movietitle != ''" v-model="hasSpoilers" class="margin-2">
           has spoilers
         </vs-switch>
-        <vs-switch v-model="active" class="margin-2" v-if="Movietitle != ''">
+        <vs-switch v-if="Movietitle != ''" v-model="isCritic" class="margin-2">
           is critic
         </vs-switch>
       </div>
     </div>
-    <h1 style="margin-top: 4rem;" v-if="Movietitle != ''">{{ Movietitle }}</h1>
-    <div class="editorContainer" dir="auto" v-show="Movietitle != ''">
-    <div id="editor" dir="rtl">
+    <h1 v-if="Movietitle != ''" style="margin-top: 4rem;">{{ Movietitle }}</h1>
+    <div v-show="Movietitle != ''" class="editorContainer" dir="auto">
+      <div id="editor" dir="rtl">
+      </div>
     </div>
-    </div>
-     <vs-dialog v-model="active" blur>
+    <vs-dialog v-model="active" blur>
       <template #header>
         <h4 class="not-margin">
           Select the Movie
         </h4>
       </template>
-<vs-row>
-  <vs-col xs="6" sm="4" lg="3" v-for="(option,index) in searchListMoviesList['0']" :key="index">
-    <div class="chooseMov">
-    <img v-lazy="option.Poster" :alt="option.Title" @click="nextPage(option)">
-    </div>
-  </vs-col>
-</vs-row>
+      <vs-row>
+        <vs-col v-for="(option,index) in searchListMoviesList['0']" :key="index" lg="3" sm="4" xs="6">
+          <div class="chooseMov">
+            <img v-lazy="option.Poster" :alt="option.Title" @click="nextPage(option)">
+          </div>
+        </vs-col>
+      </vs-row>
       <template #footer>
         <div class="con-footer">
-          <p style="margin-bottom: 5rem; opacity: 1; font-size:15px;">{{endOrLoad}}</p>
+          <p style="margin-bottom: 5rem; opacity: 1; font-size:15px;">{{ endOrLoad }}</p>
         </div>
       </template>
     </vs-dialog>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -76,43 +76,45 @@ import newPostTools from "./newPostTools";
 import swal from 'sweetalert'
 import EditorJS from '@editorjs/editorjs';
 import ImageTool from '@editorjs/image';
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
+
 export default {
   name: "postDetail",
   data() {
     return {
       score: null,
       state: 'warn',
-      active:false,
+      active: false,
       searchMov: '',
       Movieid: '',
-      Movietitle: ''
+      Movietitle: '',
+      hasSpoilers: false,
+      isCritic: false
     }
   },
   methods: {
     checkRate() {
-      if (1 <= Number(this.score) && Number(this.score) <= 10){
+      if (1 <= Number(this.score) && Number(this.score) <= 10) {
         this.state = 'success'
-      }
-      else {
+      } else {
         swal('Score should be between 1  and 10')
         this.state = 'danger'
       }
     },
-    getSearch(){
-      this.$store.dispatch('getSearchList',this.searchMov)
+    getSearch() {
+      this.$store.dispatch('getSearchList', this.searchMov)
     },
-    nextPage(movie){
+    nextPage(movie) {
       this.Movieid = movie.imdbID
       this.Movietitle = movie.Title
       this.active = false
     }
   },
   created() {
-    this.$store.commit('toggleNavbar',false);
+    this.$store.commit('toggleNavbar', false);
   },
-  computed:{
-    ...mapState(['searchListMoviesList','endOrLoad']),
+  computed: {
+    ...mapState(['searchListMoviesList', 'endOrLoad']),
   },
   mounted() {
     // eslint-disable-next-line no-unused-vars
@@ -159,15 +161,18 @@ export default {
   position: absolute;
   top: 420px;
 }
-.writeBox >>> .vs-input{
+
+.writeBox >>> .vs-input {
   width: 100px;
 }
-h1{
+
+h1 {
   font-size: 20px;
 }
-.editorContainer{
-  width: 90%;
-  min-height:500px;
+
+.editorContainer {
+  width: 85%;
+  min-height: 500px;
   height: auto;
   margin-left: 5%;
   margin-top: 17rem;
@@ -175,43 +180,53 @@ h1{
   padding: 10px;
   text-align: right;
 }
-.margin-2{
+
+.margin-2 {
   margin-top: 1rem;
+  background-color: rgb(70, 126, 246);
 }
-.writeBox >>> .vs-switch{
+
+.writeBox >>> .vs-switch {
   background-color: #8e949c;;
 }
-.search{
+
+.search {
   position: absolute;
-  top:2rem;
+  top: 2rem;
   font-size: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height:100%;
+  height: 100%;
   width: 100%;
 }
-.search >>> .vs-input{
+
+.search >>> .vs-input {
   background-color: var(--vs-navs) !important;
   width: 70vw;
   max-width: 400px;
-  color:white;
+  color: white;
 }
-.search >>> .vs-input__label{
+
+.search >>> .vs-input__label {
   width: 60%;
 }
-.writeBox >>> .vs-dialog{
+
+.writeBox >>> .vs-dialog {
   background-color: #080a0b;
 }
-.chooseMov{
+
+.chooseMov {
   margin: 5px;
   background-color: #2c3e50;
 }
-.chooseMov img{
+
+.chooseMov img {
   width: 100%;
   height: 200px;
 }
-h4{
+
+h4 {
   color: #c4baba;
 }
 </style>

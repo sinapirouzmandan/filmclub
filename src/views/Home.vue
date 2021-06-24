@@ -3,11 +3,11 @@
     <fixedHead/>
     <vs-row>
       <vs-col lg="4">
-      <Notifications v-if="!isMobile" :position="position"/>
-    </vs-col>
-      <vs-col sm="12" lg="8" xs="12">
+        <Notifications v-if="!isMobile" :position="position"/>
+      </vs-col>
+      <vs-col lg="8" sm="12" xs="12">
         <vs-row>
-          <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
+          <single-post v-for="(post,index)  in (1,20)" :key="index" :number="post"></single-post>
         </vs-row>
       </vs-col>
 
@@ -20,31 +20,32 @@
 import fixedHead from "../components/Home/fixedHead";
 import singlePost from '../components/Home/singlePost'
 import Notifications from "./Notifications";
+
 export default {
   name: 'Home',
-  components: {singlePost,fixedHead,Notifications},
+  components: {singlePost, fixedHead, Notifications},
   data() {
-    return{
-      images:[],
+    return {
+      images: [],
       isMobile: true,
       position: {
-        position:'fixed',
-        top:'3rem',
+        position: 'fixed',
+        top: '3rem',
         maxWidth: '550px'
       }
     }
   },
   created() {
-    if (window.innerWidth >= 1000){
+    if (window.innerWidth >= 1000) {
       this.isMobile = false
     }
-    this.$store.commit('toggleNavbar',true);
+    this.$store.commit('toggleNavbar', true);
     this.$store.dispatch('getUserProfile')
   }
 }
 </script>
 <style scoped>
-.home{
+.home {
   margin-top: 1.5rem;
 }
 
