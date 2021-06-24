@@ -1,17 +1,17 @@
 <template>
   <div id="top" class="topHeader">
-    <img :src="usernameInfo.header" :alt="'header photo posted by ' + usernameInfo.username" class="backAvatar" @error="usernameInfo.header = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw6dWCVifqh42ha6sxuoGCnKGU2lcJiyISMndReOdYKaDQsckEe4A8mr-MxsCZAsCxpg&usqp=CAU'">
+    <img :src="userHeader" :alt="'header photo posted by ' + $route.params.user" class="backAvatar" @error="usernameInfo.header = '/public/images/header.jpg'">
     <vs-row class="avatars">
       <vs-col w="4">
         <vs-avatar circle badge-color="success" size="90">
-          <img v-lazy="'./img/avatar.jpg'" alt="avatar" class="avatar">
+          <img :src="userAvatar" alt="avatar" class="avatar" @error="usernameInfo.avatar = '/public/images/avatar.jpg'">
           <template #badge v-if="usernameInfo.role == 'reviewer'">
             Reviewer
           </template>
         </vs-avatar>
         <div class="username">
           <p>{{usernameInfo.name}}</p>
-          <small>@{{usernameInfo.username}}</small>
+          <small>@{{$route.params.user}}</small>
         </div>
       </vs-col>
       <vs-col w="4" class="editProfile" offset="3">
@@ -62,7 +62,23 @@ export default {
     }
   },
   computed:{
-    ...mapState(['usernameInfo', 'errMassage', 'userProfile', 'followStatus'])
+    ...mapState(['usernameInfo', 'errMassage', 'userProfile', 'followStatus', 'baseURl', 'alternativeAvatar', 'alternativeHeader',]),
+    userAvatar(){
+      if (this.usernameInfo.avatar){
+         return this.baseURl + this.usernameInfo.avatar
+      }
+      else {
+        return this.alternativeAvatar
+      }
+    },
+    userHeader(){
+      if (this.usernameInfo.header){
+         return this.baseURl + this.usernameInfo.header
+      }
+      else {
+        return this.alternativeHeader
+      }
+    }
   },
   methods:{
     getNotif(){
@@ -81,7 +97,7 @@ export default {
     ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus']),
     follow(){
       this.isLoading = true
-      this.toggleFollow(this.usernameInfo.username).then(()=>{
+      this.toggleFollow(this.$route.params.user).then(()=>{
         if(!(this.errMassage)){
           if(!(this.isFollowed)){
             this.gradient = false
@@ -166,6 +182,7 @@ export default {
   height: 100px;
   z-index: -4;
   background-color: #0a0d0e;
+  object-fit: cover;
 }
 .editProfile {
   margin-top: 60px;
@@ -184,9 +201,9 @@ export default {
 .avatar{
   width: 90px;
   height: 90px;
+  object-fit:cover;
 }
 .followBtn{
   background-color: rgba(70, 126, 246, 0.22);
-
 }
 </style>

@@ -50,6 +50,7 @@
   >
     <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
   </vs-button>
+
 </nav>
 </template>
 
@@ -90,7 +91,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   background-color: transparent !important;
-  color:white;
+  color:var(--vs-nav-icons);
   transition: 0.4s;
 }
 .vs-button--flat.vs-button--dark{

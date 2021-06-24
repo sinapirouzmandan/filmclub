@@ -1,20 +1,16 @@
 <template>
 <div>
-  <movieName/>
+  <newpost/>
 </div>
 </template>
 
 <script>
-import movieName from "../components/NewPost/movieName";
+import newpost from "../components/NewPost/postDetail.vue";
 export default {
   name: "NewPost",
-  components:{movieName},
+  components:{newpost},
   created() {
     this.$store.dispatch('getUserProfile')
   }
 }
 </script>
-
-<style scoped>
-
-</style>

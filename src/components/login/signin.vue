@@ -17,7 +17,7 @@
       <vs-button
           :loading="isLoading"
           class="next"
-          color="#5b3cc4"
+          color="#5B3CC4"
           gradient
           @click="login"
       >
@@ -102,7 +102,7 @@ created() {
 
 <style scoped>
 .papa >>> .vs-input{
-  background-color: #171b1d !important;
+  background-color: var(--vs-cardback) !important;
   width: 100%;
   color:white;
 
@@ -123,7 +123,7 @@ created() {
   max-width: 500px;
 }
 .papa >>> .vs-input__icon{
-  background-color: #151718 !important;
+  background-color: var(--vs-navs) !important;
 }
 .logoUser{
   font-size: 70px;

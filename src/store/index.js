@@ -18,6 +18,8 @@ export default new Vuex.Store({
         searchListMoviesList: [],
         endOrLoad: 'Loading content ...',
         showNavbar: true,
+        alternativeAvatar: 'http://192.168.1.35:3000' + '/public/images/avatar.jpg',
+        alternativeHeader: 'http://192.168.1.35:3000' + '/public/images/header.jpg',
         token: null,
         // user it self
         userInfo: [],
@@ -44,11 +46,16 @@ export default new Vuex.Store({
             return Number(len)
         },
         notificatonsCalc(state) {
-            let notifications = state.notifications.map((item)=>{
+            let notifications = state.notifications.filter((item)=>{
                 return item.isSeen == false
             });
             let len = Object.keys(notifications).length
+            if (Number(len) === 0){
+                return ''
+            }
+            else {
             return Number(len)
+            }
         }
     },
     mutations: {
@@ -126,7 +133,11 @@ export default new Vuex.Store({
             state.usernameInfo = payload.user
         },
         fetchSearchUsers(state,payload){
-            state.searchedUsers = payload.users
+            let users = payload.users.map((user)=>{
+                user.biography = user.biography.slice(0,50)
+                return user
+            })
+            state.searchedUsers = users
         },
         fetchNotifications(state,payload){
             let notifications = payload.notifications.map((item)=>{
@@ -543,6 +554,43 @@ export default new Vuex.Store({
                         dispatch('errorHandler', error)
                     }
                 });
+        },
+        async updateProfilePhoto ({state, dispatch, commit}, packet) {
+            const options = {
+                method: 'PUT',
+                data: packet.image,
+                url: `${state.baseURl}/users/upload_${packet.location}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+            await axios.request(options).then(()=>{
+                commit('toggleProfileLoaded', false)
+                dispatch('getUserProfile')
+            }).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                }
+            });
+        },
+        async setNotificationsSeen ({state, dispatch}) {
+            const options = {
+                method: 'PUT',
+                url: `${state.baseURl}/users/seenNotifications`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                }
+            };
+            await axios.request(options).catch(function (error) {
+                if (!error.response) {
+                    swal("Can't connect to server, check your internet connection")
+                } else {
+                    dispatch('errorHandler', error)
+                }
+            });
         }
 },
     modules: {}

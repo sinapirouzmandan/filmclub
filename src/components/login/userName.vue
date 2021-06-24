@@ -130,7 +130,7 @@ export default {
 
 <style scoped>
 .papa >>> .vs-input{
-  background-color: #171b1d !important;
+  background-color: var(--vs-cardback) !important;
   width: 100%;
   color:white;
 
@@ -151,7 +151,7 @@ export default {
   max-width: 500px;
 }
 .papa >>> .vs-input__icon{
-  background-color: #151718 !important;
+  background-color: var(--vs-navs) !important;
 }
 .logoUser{
   font-size: 70px;

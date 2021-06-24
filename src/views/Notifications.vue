@@ -41,8 +41,11 @@ export default {
   props:['position'],
   computed: {
     ...mapState(['notifications'])
+  },
+  mounted() {
+    this.$store.dispatch('setNotificationsSeen')
   }
-}
+  }
 </script>
 
 <style scoped>

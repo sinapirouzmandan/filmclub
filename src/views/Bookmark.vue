@@ -2,7 +2,7 @@
 <div class="bodyMargin">
   <div class="headerH2">
     <vs-avatar badge badge-color="success" size="70" style="margin: 0 auto;">
-      <img src="../../public/img/avatar.jpg" alt="">
+      <img :src="userAvatar" alt="avatar" class="profileImg">
       <template #badge>
         {{watchListLengthCalc}}
       </template>
@@ -18,6 +18,8 @@
       circle
       icon
       floating
+      color="#5B3CC4"
+      gradient
       class="addNewIcon"
       @click="active=true;"
   >
@@ -39,7 +41,7 @@
 
     <template #footer>
       <div class="footer-dialog">
-        <vs-button block @click="active2 = true;getSearch()">
+        <vs-button block @click="active2 = true;getSearch()" color="#5B3CC4" gradient>
           search movie
         </vs-button>
       </div>
@@ -86,8 +88,16 @@ export default {
     this.$store.dispatch('getUserProfile')
   },
   computed:{
-    ...mapState(['endOrLoad','watchListLength', 'searchListMoviesList']),
-    ...mapGetters(['watchListLengthCalc'])
+    ...mapState(['endOrLoad','watchListLength', 'searchListMoviesList', 'userProfile', 'baseURl','alternativeAvatar']),
+    ...mapGetters(['watchListLengthCalc']),
+    userAvatar(){
+      if (this.userProfile.avatar){
+         return this.baseURl + this.userProfile.avatar
+      }
+      else {
+        return this.alternativeAvatar
+      }
+    },
   },
   methods: {
     getSearch(){
@@ -137,5 +147,10 @@ hr {
 }
 h4{
   color: #c4baba;
+}
+.profileImg{
+  width:100%;
+  height:100%;
+  object-fit: cover;
 }
 </style>

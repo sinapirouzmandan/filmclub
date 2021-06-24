@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 #control >>> .vs-switch{
-  background-color: rgb(59,89,153) !important;
+  background-color: var(--vs-buttons) !important;
   height: 30px;
 
 }
@@ -41,6 +41,6 @@ export default {
 }
 
 vs-switch__text off{
-  color: black !important;
+  color: white !important;
 }
 </style>

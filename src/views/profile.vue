@@ -8,6 +8,7 @@
       circle
       icon
       floating
+      color="#000"
       to="Notifications"
       class="notifIcon"
   >
@@ -47,10 +48,13 @@ body,html{
   margin: 10px;
 }
 .notifIcon{
-  position: fixed;
+  position: absolute;
   z-index: 9;
-  bottom: 4rem;
+  top:167px;
   right: 1rem;
   font-size: 20px;
+  color: #fff;
+  box-shadow: none;
+  border: 1px solid white;
 }
 </style>

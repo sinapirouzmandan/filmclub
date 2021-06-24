@@ -35,7 +35,7 @@ export default {
   },
   methods:{
     back(){
-      this.$router.push({name: 'NewPost'})
+      this.$router.push({name: 'profile'})
     }
   }
 }

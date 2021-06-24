@@ -8,9 +8,15 @@
 <style>
 :root{
   --vs-gray-3: 0,0,0 !important;
-  --vs-mainback: #0a0d0e;
-  --vs-navs: #1e2023;
+  --vs-mainback: #1A1A1D;
+  --vs-navs: #293337;
   --vs-cardback: #121818;
+  --vs-buttons: #5B3CC4;
+  --vs-main-text: #fff;
+  --vs-nav-icons: blue;
+}
+p,i{
+  color: var(--vs-main-text)
 }
 head,body {
   background-color: var(--vs-mainback);
@@ -30,10 +36,6 @@ head,body {
 }
 ::-webkit-scrollbar-thumb {
   background-color: #34373d;
-}
-*{
-  cursor: default;
-  box-sizing: border-box;
 }
 img {
   -khtml-user-select: none;

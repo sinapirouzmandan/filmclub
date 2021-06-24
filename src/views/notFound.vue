@@ -22,7 +22,10 @@
 
 <script>
 export default {
-  name: "404.vue"
+  name: "404.vue",
+  created(){
+    this.$store.commit('toggleNavbar',true);
+  }
 }
 </script>
 

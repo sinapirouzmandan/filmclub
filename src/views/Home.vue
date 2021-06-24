@@ -2,10 +2,10 @@
   <div class="home bodyMargin">
     <fixedHead/>
     <vs-row>
-      <vs-col lg="5">
+      <vs-col lg="4">
       <Notifications v-if="!isMobile" :position="position"/>
     </vs-col>
-      <vs-col sm="12" lg="7" xs="12">
+      <vs-col sm="12" lg="8" xs="12">
         <vs-row>
           <single-post :number="post" v-for="(post,index)  in (1,20)" :key="index"></single-post>
         </vs-row>
@@ -29,7 +29,8 @@ export default {
       isMobile: true,
       position: {
         position:'fixed',
-        top:'3rem'
+        top:'3rem',
+        maxWidth: '550px'
       }
     }
   },
@@ -43,9 +44,6 @@ export default {
 }
 </script>
 <style scoped>
-.btn-chat{
-  background-color: #18191c !important;
-}
 .home{
   margin-top: 1.5rem;
 }

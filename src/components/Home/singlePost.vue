@@ -37,8 +37,8 @@
           Lorem ipsum dolor sit amet consectetur, adipisicing elit ....
         </p>
         <vs-button
-            style="display: inline; margin-top: 1rem;"
             flat
+            class="fullPost"
         >
           View full post
         </vs-button>
@@ -66,7 +66,6 @@ export default {
   max-width:500px;
   margin: 20px auto;
 }
-
 .home >>> .vs-card__title{
   color:white;
   font-size: 17px;
@@ -84,16 +83,13 @@ export default {
   color:white;
   text-align: left;
 }
-.btn-chat{
-  background-color: #18191c !important;
-}
 .home >>> .vs-button__content svg,.home >>> .vs-button__content span{
   color:white;
   font-size: 17px;
 }
 .home >>> #postImage{
   width: 100%;
-  background-color: black;
+  background-color: var(--vs-mainback);
   min-height:200px;
 }
 .home >>> .vs-card:hover img{
@@ -103,5 +99,10 @@ export default {
   left:40%;
   bottom:-4%;
   width: 100%;
+}
+.fullPost {
+  margin-left: 40%;
+  margin-top: 2rem;
+  display: inline;
 }
 </style>

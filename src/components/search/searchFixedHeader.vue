@@ -25,7 +25,9 @@ export default {
       this.$emit('focused', true)
       this.searchUsers(
           this.search
-      ).then(this.$emit('focused', false))
+      ).then(()=>{
+        this.$emit('focused', false)
+      });
     }
   }
 }
@@ -40,12 +42,12 @@ export default {
   padding: 14px;
 }
 .xi-top-head >>> .vs-input{
-  background-color: var(--vs-navs) !important;
+  background-color: var(--vs-cardback) !important;
   width: 100%;
   color:white;
 }
 .xi-top-head >>> .vs-input__icon{
-  background-color: #151718 !important;
+  background-color: var(--vs-navs) !important;
 }
 .xi-top-head >>>.vs-input__label{
   position: absolute !important;

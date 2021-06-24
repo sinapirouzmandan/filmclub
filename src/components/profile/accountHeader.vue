@@ -1,25 +1,27 @@
 <template>
   <div id="top" class="topHeader">
     <settings/>
-      <img :src="userProfile.header" :alt="'header photo posted by ' + userProfile.username" class="backAvatar" @error="userProfile.header = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw6dWCVifqh42ha6sxuoGCnKGU2lcJiyISMndReOdYKaDQsckEe4A8mr-MxsCZAsCxpg&usqp=CAU'">
+    <input type="file" accept="image/*" class="uploadHeader" ref="header" @change="handleProfileUploads('header')">
+      <img :src="userHeader" :alt="'header photo posted by ' + userProfile.username" class="backAvatar" @error="userProfile.header = '/public/images/header.jpg'">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="changeHeader" fill="white"><g><path d="M19.708 22H4.292C3.028 22 2 20.972 2 19.708V7.375C2 6.11 3.028 5.083 4.292 5.083h2.146C7.633 3.17 9.722 2 12 2c2.277 0 4.367 1.17 5.562 3.083h2.146C20.972 5.083 22 6.11 22 7.375v12.333C22 20.972 20.972 22 19.708 22zM4.292 6.583c-.437 0-.792.355-.792.792v12.333c0 .437.355.792.792.792h15.416c.437 0 .792-.355.792-.792V7.375c0-.437-.355-.792-.792-.792h-2.45c-.317.05-.632-.095-.782-.382-.88-1.665-2.594-2.7-4.476-2.7-1.883 0-3.598 1.035-4.476 2.702-.16.302-.502.46-.833.38H4.293z"></path><path d="M12 8.167c-2.68 0-4.86 2.18-4.86 4.86s2.18 4.86 4.86 4.86 4.86-2.18 4.86-4.86-2.18-4.86-4.86-4.86zm2 5.583h-1.25V15c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-1.25H10c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.25V11c0-.414.336-.75.75-.75s.75.336.75.75v1.25H14c.414 0 .75.336.75.75s-.336.75-.75.75z"></path></g></svg>
   <vs-row class="avatars">
-    <vs-col w="4">
+    <vs-col w="3">
       <vs-avatar circle badge-color="success" size="90">
-        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQEA8PDhAPDw8NDw8PDQ0NDQ8NDQ0NFREWFhURFRUYHSggGBolGxMVITEhJSkrLi4uFx8/ODMtNygtOisBCgoKDg0OGxAQGiseHSUrLS0tLS0tLS0tLS0tKy0tLS0tKy0tKy0tLS0tLTctLS03LSstKy0tNy0tKzcrNzcrLf/AABEIALYBFQMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAABAIDBQEGB//EAC0QAAICAgIABAUEAgMAAAAAAAABAgMEESExBRJBUSJhcYGRBhOh8DJCFSPx/8QAGgEAAgMBAQAAAAAAAAAAAAAAAAMCBAUBBv/EACIRAAICAgMAAwEBAQAAAAAAAAABAgMRIQQSMSIyQRNRI//aAAwDAQACEQMRAD8A+VftnHWadGLscr8IclwbSpbMaXJjH1mCqv7oYdXBsS8JcfT+SS8MlL/FE40YFvlwf6eblXyWwxt+n8G3/wANJPbiMR8Na/1ZGPH3s7LmR/GYVeNr0JWVm28N9af4F78N+z/A3+KSILkKTPN5CE2PeIJqTQiZdv2watf1yAAAoYAAAAB2MtHAACdc9DFdkXtPjfuKATU2iLimaFfPHeiuzHbfAvVa4vj8Gri2RmuO/YfBxnpiZ5hsShj88l6xEaEMXbG4YpYhxyrPk4/TCnhlLx9HobcX+6EMijX/AIE+OlslXyM/pnVRLnAsqqLv2yEYaJynsz7q+BVo1bazPvQi2GNjqp5KDoAIHnAADgAdAAA6kBbTDaAkkQcketxIG1iQ+Ex8M36NeVG4vqeX5TKMn0DEXZ3K9PuSxlwH4Iz8CU/Qlog+0WaAWxeS+IryI9FyXxM7dW2gYxSw0eE8ag/O2zKZ6jx7Dk3uKb49F9TzVtbT5TX1WjK5EGpHqOLYpVorAAKxaAAAAAAAAAAAAAnTPT2QA6gayet8FvhPiW9/Xs9BDDh6NnzvEyXBrT+h7PwfxZTST/y9/c0+Pf2XV+mDz+NOL7R8NF4EfdieT4XH3Zpxs2VXMtGbC2afpmLwqK9f4F78PRtsQywSQ+u6be2Yl1JjZkdM9FejB8R7KnJilE1+NJtiB05omlwZyNEgAFn7T9gwDZBI7oujjTf+rCVMl2n+CXR/4R7r/S7Fj8P3Atxa3rp9+wDVF4K0pbPQY8jSryeDGomMq01YvKMi2vLHbL9sZx71rRjfvFkLSWhUqNYNqM9su2ZuJaP7Ispzhh4I1dy+pbOWuRemff1Ksu/W/ZdnGd6NyE/Es+MH5n6dI8d4jluyTk/UZ8Xy3Ob9lwjLbM/k25fU9Jw+Mq4p/pFgAFIvgAAAAAAAAAAAAAAAHUO+H5Li1r0EUWUdolF4ZCcVKLTPoHh2R54p/katTMX9PP4fwbVj6NqDzFM8tfDrY0gaEsnsfcjOy5ck0Rq2xC8wPEezcukYfiHZV5X1Nri+iBP0Ik/QzUaTILs00uFx6Iz647f3NuFXwr6IfRHOSvfLGBjHr+FFWRWPUaUV9BfIsj1pmh1SiZ0ZPsU1LgDqOEME2ShMn+4LqR3zHUzriWpl0JfIUhYXRt2dTRGUWauJYPfucGVQxuM+Bxn2w2MQfBmeK2tQb9zQg+PsZXjK/wCt/wB9CE/CXHj/ANFk8pbLkqJ2dkDGk9npYnAACBIAAAAAAAAAAAAAAAACdb5RA7H0AH4et/TtnDRu2eh5v9Pdm/OfRs0PMEeb5cf+zLZS+Rl5dnLNGVvBjZs+WNYvjx2L2TMjOfJpSkZeY+SnyH8TYoWGKE0QLCii6ztC5+6N+C+Bc+i9DAp7X1Rvw/xX0Ra436U+V+D9FaaRC7HiueS7FXCO5GtGhjKMvs1IzpaA5Zrff8nSBaQsjrRbTTsLadJ9fkWovGSfZZwLxRdVF+xyEEPVwXHX4CMcnJzwW44xvg5XXx0T8jS6LKKEpJsZxq9iviOE3GS+WxhWNdLopy83XfoiMkKh375R4bKrcW0/RlDNPxfmTklrZmMxro9ZNHpqpdopnAABQ0AAAAAAAAAAAAAAAACUSJ1ADPTfp6S2blkltHlvCG09649zYWSa/Gfw2YfKqbsyh6x8GPmT5ZoSuWvQycqfI2x6IceGGVSZn5fY82IZTKNz+JpVLYsiwrRYVUWmchLTX1RtRtaivojET5+5oWWryrWuh1MsJiLo5wb2HY/KdyLlrsxsbO0uSV+apLovRuXUoPjPvkunZsBSuewF/wBMj/54H8aa9RqzyOPfJmRZ12NE4zwhUq8vKHa6VvjoejVrXRjxzJLrX4GsfKb7JwnEVZXM2aoy10Str4710UVZb0V5GStLkaUeknI5dPW+TMyLdk7bhO2YuctF+mvBVfBSXJk2w0zUnb7CN62UL0maNLa0KgdaOFMtAAAAAAAAAAAAAAAAAN4FHmkkKDOFZqSJQx2WSFmerwehUPKul9hWyemMuzaErWa02saMytZey2FzKrJEYs5Ji86GKOGEmI5I3JieQV7XosVLZQiwrRYV0PZWyaZBkonEdLq2TZVAs2OT0KfpZU+AOQaAmQY5BHJy5OJkR2dCUtgxnGE32NYzCL2cs+ppRlwLZEy5S4Fb58lmT+JVrjsqcvmLz5LZPZEry2Wo6INaQnZyxyxCdrE2j6xewgdbOFNlpAAAcAAAAAAAAAAAAACUHpnIo0cfwqUkn5kvsycISk9EJzjFfJjmJbuK/BXcy+GOoR12LWmg8qKTKEcOTaORZxgmBAYRmJ3Dk2J3CrPBtfpWiZWiwQhzK2dRxnUcOlsCRGBIahbJ1gFfQEkQY1FHCS6K2PFHBzGQmhzHCHpGzwbYpcxpsUu7LE/CvX6VpkWzrIMQywjk2IZEh216Rmzltle54LFKIgAFUsAAAAAAAAAAAAAAEoQ29ABdh0+eWt6PRUQ8sdfIUwMKMeeWx6Rp8arqsv0zORb3lheC9zEbWN3iVh207UjiDZxAhI05MVuGpilouwbWQRNkETYlDWVs6jjBHDpdAkQiTGIWyUQCBwmiI4uiEmd83BCTHNiUgTHccSgO0Ha/SNvgy380JzfIzITk+R03oVWgZE6ym2ekJbwOisi+ZZ6ChKctvZEozl2ZdhHCwAABAkAAAAB2Md8HBjFcVy2Siss5J4RYsPjvkXspa9DRhNPpotrXPoWXTFrRW/rKPpjKL9maGBgyb3JaXzNymK10vwFjGw4iW2xE+W5aSIxWjkn/AHZHzEZSLWStjZVcxKwZuFLGV7GW60CYJkUySFDCMxa0ZmK2i7BkCKJMjEkxSGMgwQAROlsSRGJIahbJQAIs4SIjLIyJMhJjWLRKrs0seszqh+qTGVCrsllq0JMZtb0JtonYyNa0E5aM/It3wWZN3ohQpXWZ0i7VDG2AABXHAAAAAAAAASSInUzqBkoya6HcTJ50xFhB6ZOM3FkJwUkeoqlwRmxfCt3FFszUjLMcmU44kBCTDZFs42SSKrZCk2MWsWm+SvYyzWgRJEESTIImzk2K2DM2LWC7BkDkSTIxJMWibIAgBETpbEkRiSY1EGSicOxOHSJeQkTIsaxaJ1DlbE6xmDGQF2Ila+DPyLdE8vL9EZ8pN9irrV4htNX6wbA4BULQAAHAAAAAAAAAA6cA6B0AOsDhqeGT40PMyfDp86NNs0KJZgULo4md2QkzmyMhjZBIqtFZDFguyvMsQOE0Q0SRFE2cmL2F8hefYuZOARJMjEkyBMrOo4zqIgWxJEIkhqIMlEAiB0iX6IaABgtF0CnKva4QAE21HR2CzLYg2AAUy0AAAAAAAAAAAAAAAAAAAAB1HQOoGW471JGtEALfH8Kl/p0hIALDEC9pQwAryLEfAJJABFEmQmUSOALmTgdiSYARRMgCADgFsTp0BiIM7EAA6RP/2Q==" alt="avatar" class="avatar">
+        <img :src="userAvatar" alt="avatar" class="avatar" @error="userProfile.avatar = '/public/images/avatar.jpg'">
         <template #badge v-if="userProfile.role == 'reviewer'">
           Reviewer
         </template>
       </vs-avatar>
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="changeProfile" :fill="userAvatar == (baseURl + '/public/images/avatar.jpg') ? '#0a0d0e' : 'white'"><g><path d="M19.708 22H4.292C3.028 22 2 20.972 2 19.708V7.375C2 6.11 3.028 5.083 4.292 5.083h2.146C7.633 3.17 9.722 2 12 2c2.277 0 4.367 1.17 5.562 3.083h2.146C20.972 5.083 22 6.11 22 7.375v12.333C22 20.972 20.972 22 19.708 22zM4.292 6.583c-.437 0-.792.355-.792.792v12.333c0 .437.355.792.792.792h15.416c.437 0 .792-.355.792-.792V7.375c0-.437-.355-.792-.792-.792h-2.45c-.317.05-.632-.095-.782-.382-.88-1.665-2.594-2.7-4.476-2.7-1.883 0-3.598 1.035-4.476 2.702-.16.302-.502.46-.833.38H4.293z"></path><path d="M12 8.167c-2.68 0-4.86 2.18-4.86 4.86s2.18 4.86 4.86 4.86 4.86-2.18 4.86-4.86-2.18-4.86-4.86-4.86zm2 5.583h-1.25V15c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-1.25H10c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.25V11c0-.414.336-.75.75-.75s.75.336.75.75v1.25H14c.414 0 .75.336.75.75s-.336.75-.75.75z"></path></g></svg>
+      <input type="file" accept="image/*" class="uploadAvatar" ref="file" @change="handleProfileUploads('avatar')">
       <div class="username">
         <p>{{userProfile.name}}</p>
         <i v-if="userProfile.username">@{{userProfile.username}}</i>
       </div>
     </vs-col>
-    <vs-col w="4" class="editProfile" offset="3">
+    <vs-col w="5" class="editProfile" offset="3">
       <vs-button
-          style="width:100%;"
-          color="rgb(59,89,153)"
-          gradient
+          style="width:100%; background-color: rgb(0,0,0)"
           @click="editPro = true"
       >
         Edit Profile
@@ -53,7 +55,7 @@
 
       <template #footer>
         <div class="footer-dialog">
-          <vs-button block @click="sendReq()" :loading="isLoading">
+          <vs-button block @click="sendReq()" :loading="isLoading" color="#5B3CC4" gradient>
             submit
           </vs-button>
         </div>
@@ -65,7 +67,7 @@
 
 <script>
 import settings from "./settings";
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 export default {
   name: "accountHeader",
   components:{settings},
@@ -75,13 +77,35 @@ export default {
       changedName: false,
       changedBio: false,
       isLoading: false,
-      isNameEmpty: false
+      isNameEmpty: false,
+      file: '',
+      imageInfo: {
+        image: '',
+        location: ''
+      }
     }
   },
   computed:{
-    ...mapState(['userProfile', 'errMassage'])
+    ...mapState(['userProfile', 'errMassage', 'alternativeAvatar', 'alternativeHeader', 'baseURl']),
+    userAvatar(){
+      if (this.userProfile.avatar){
+         return this.baseURl + this.userProfile.avatar
+      }
+      else {
+        return this.alternativeAvatar
+      }
+    },
+    userHeader(){
+      if (this.userProfile.header){
+         return this.baseURl + this.userProfile.header
+      }
+      else {
+        return this.alternativeHeader
+      }
+    }
   },
   methods:{
+    ...mapActions(['updateProfilePhoto', 'getUserProfile']),
     validName() {
       if (this.userProfile.name === ''){
         this.isNameEmpty = true
@@ -121,6 +145,21 @@ export default {
         }
         else if(!(this.changedBio || this.changedName)){this.editPro=false}
       }
+    },
+    handleProfileUploads(location){
+      if (location == 'header') {
+      this.file = this.$refs.header.files[0];
+      }
+      else {
+        this.file = this.$refs.file.files[0];
+      }
+      if (this.file){
+        let formData = new FormData();
+        formData.append(location, this.file);
+        this.imageInfo.image = formData;
+        this.imageInfo.location = location;
+        this.updateProfilePhoto(this.imageInfo)
+      }
     }
   }
 }
@@ -139,9 +178,12 @@ export default {
   height: 100px;
   z-index: -4;
   background-color: #0a0d0e;
+  object-fit: cover;
 }
 .editProfile {
+  position: absolute;
   margin-top: 60px;
+  right: 2.5rem;
 }
 .username{
   margin-top: 15px;
@@ -183,5 +225,45 @@ export default {
   width: 90px;
   height: 90px;
   object-fit: cover;
+}
+.uploadAvatar{
+  position: absolute;
+  top:0;
+  left: 0;
+  z-index: 2;
+  height: 90px;
+  width:90px;
+  background-color: blue;
+  opacity: 0;
+}
+.uploadHeader{
+  position: absolute;
+  top:50px;
+  left: 0;
+  z-index: 2;
+  height: 100px;
+  width:100%;
+  background-color: blue;
+  opacity: 0;
+}
+.changeProfile{
+  z-index: 2;
+  margin:auto auto;
+  position: absolute;
+  top:30px;
+  left: 30px;
+  width:30px;
+  height: 30px;
+  color:white;
+}
+.changeHeader{
+  z-index: 2;
+  margin:auto auto;
+  position: absolute;
+  top:5rem;
+  left: 47%;
+  width:35px;
+  height: 35px;
+  color:white;
 }
 </style>
