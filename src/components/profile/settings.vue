@@ -103,9 +103,6 @@ export default {
   mounted: function () {
     this.root = document.documentElement;
   },
-  created() {
-    this.changeColorTheme()
-  },
   methods: {
     ...mapMutations(["setToken"]),
     ...mapActions(["deleteUser"]),
@@ -154,7 +151,7 @@ export default {
     //     if (this.mode == true) {
     //       this.root.style.setProperty("--vs-mainback", "#FFF");
     //       this.root.style.setProperty("--vs-navs", "#C6B0A8");
-    //       this.root.style.setProperty("--vs-main-text", "#000");
+    //       this.rootm.style.setProperty("--vs-main-text", "#000");
     //     }
     //     else {
     //       this.root.style.setProperty("--vs-mainback", "#0a0d0e");
