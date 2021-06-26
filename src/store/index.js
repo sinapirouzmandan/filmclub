@@ -499,7 +499,9 @@ export default new Vuex.Store({
                 })
             };
             await axios.request(options).then(function (response) {
-                commit('removeWatchListPost', id)
+                if (response.data.message === 'Item removed successfully!'){
+                    commit('removeWatchListPost', id)
+                }
                 commit('changeErrMsg', response.data.message)
             }).catch(function (error) {
                 dispatch('errorHandler', error)

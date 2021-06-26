@@ -29,6 +29,7 @@ import {mapState} from 'vuex'
 export default {
   name: "Notifications",
   created() {
+    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.$store.dispatch('getUserProfile')
     this.loadNotification()

@@ -36,6 +36,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
   },
   computed: {

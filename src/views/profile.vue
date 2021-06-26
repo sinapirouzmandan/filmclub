@@ -30,6 +30,7 @@ export default {
     accountStatus, accountBio, accountHeader
   },
   created() {
+    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.$store.dispatch('getUserProfile').then(() => {
       this.$store.dispatch('getNotificationList')

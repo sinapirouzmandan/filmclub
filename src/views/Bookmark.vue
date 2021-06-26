@@ -86,18 +86,9 @@ export default {
     }
   },
   created() {
+    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.$store.dispatch('getUserProfile');
-    const registration = navigator.serviceWorker.ready;
-    if ('periodicSync' in registration) {
-      const tags = registration.periodicSync.getTags();
-      // Only update content if sync isn't set up.
-      if (!tags.includes('content-sync')) {
-//fffg
-      }
-    } else {
-      // If periodic background sync isn't supported, always update.
-    }
   },
   computed: {
     ...mapState(['endOrLoad', 'watchListLength', 'searchListMoviesList', 'userProfile', 'baseURl', 'alternativeAvatar']),

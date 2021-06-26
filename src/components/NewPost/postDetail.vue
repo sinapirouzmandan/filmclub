@@ -49,7 +49,7 @@
     </div>
     <h1 v-if="post.title != ''" style="margin-top: 4rem;">{{ post.title }}</h1>
     <div v-show="post.title != ''" class="editorContainer" dir="auto">
-      <div id="editor" dir="rtl">
+      <div id="editor" dir="rtl" spellcheck="false">
       </div>
     </div>
     <vs-dialog v-model="active" blur>
@@ -89,8 +89,8 @@ export default {
       post: {
         poster: null,
         title: false,
-        spoiler: null,
-        critic: null,
+        spoiler: false,
+        critic: false,
         imdb_id: null,
         body: null,
       },
@@ -209,7 +209,7 @@ export default {
           config: {
             additionalRequestHeaders: auth,
             endpoints: {
-              byFile: `${this.baseURl}/posts/editorjs/upload/by_file`, // Your backend file uploader endpoint
+              byFile: `${this.baseURl}/posts/editorjs/upload/by_file`,
             }
           }
         },
@@ -267,10 +267,11 @@ h1 {
   width: 85%;
   min-height: 500px;
   height: auto;
-  margin-left: 5%;
   margin-top: 17rem;
-  border: 2px dotted var(--vs-buttons);
-  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px dotted rgba(255,255,255,0.5);
+  padding: 25px;
   text-align: right;
 }
 
@@ -285,7 +286,7 @@ h1 {
 
 .search {
   position: absolute;
-  top: 2rem;
+  top: 6rem;
   font-size: 70px;
   display: flex;
   justify-content: center;
@@ -343,6 +344,16 @@ width:100%;
 }
 #editor{
   font-family: Yekan;
-  font-size: 16px;
+  font-size: 15px;
+  text-decoration: none;
+}
+.writeBox >>> .ce-header {
+  font-size: 20px;
+  font-weight: 200;
+}
+.writeBox >>> .ce-toolbar__settings-btn {
+  width: 20px;
+  height: 20px;
+  background-color: white;
 }
 </style>

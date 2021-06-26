@@ -24,6 +24,7 @@ export default {
     accountStatus, accountBio, accountHeader, posts
   },
   created() {
+    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.getUserById(this.username);
     this.getUserProfile()

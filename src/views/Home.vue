@@ -36,6 +36,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('changeErrMsg', null)
     if (window.innerWidth >= 1000) {
       this.isMobile = false
     }
