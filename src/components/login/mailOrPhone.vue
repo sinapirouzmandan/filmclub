@@ -74,6 +74,7 @@ export default {
           color: '#5b3cc4',
           title: this.errMsg,
         })
+        this.$store.commit('changeErrMsg', null)
         return
       }
       this.isLoading = true
@@ -92,6 +93,7 @@ export default {
             color: '#5b3cc4',
             title: this.errMassage,
           })
+          this.$store.commit('changeErrMsg', null)
         }
       })
     }

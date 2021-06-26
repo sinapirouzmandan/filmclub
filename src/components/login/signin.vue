@@ -68,6 +68,7 @@ export default {
           title: this.errMassage,
         })
       }
+      this.$store.commit('changeErrMsg', null)
     },
     login() {
       this.isLoading = true
@@ -81,6 +82,7 @@ export default {
           title: 'Password should be at list 6 characters',
         })
         this.isLoading = false
+        this.$store.commit('changeErrMsg', null)
         return
       }
       if (this.isMail()) {

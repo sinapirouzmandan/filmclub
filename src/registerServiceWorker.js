@@ -27,12 +27,14 @@ if (process.env.NODE_ENV === 'production') {
           'For more details, visit https://goo.gl/AFskqB'
       )
     },
+    // eslint-disable-next-line no-unused-vars
     registered (registration) {
       console.log('Service worker has been registered.')
     },
     cached () {
       console.log('Content has been cached for offline use.')
     },
+    // eslint-disable-next-line no-unused-vars
     updatefound (registration) {
       console.log('New content is downloading.')
     },
@@ -47,6 +49,7 @@ if (process.env.NODE_ENV === 'production') {
       console.error('Error during service worker registration:', error)
     }
   });
+  // eslint-disable-next-line no-unused-vars
   var refreshing;
   navigator.serviceWorker.addEventListener("controllerchange", function() {
     window.location.reload();

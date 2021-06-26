@@ -92,6 +92,7 @@ export default {
           color: '#5b3cc4',
           title: this.errMassage,
         })
+        this.$store.commit('changeErrMsg', null)
       }
     },
     ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus']),
@@ -132,7 +133,7 @@ export default {
       }
     },
     deleteAccount() {
-      this.deleteObj.target = this.usernameInfo.username
+      this.deleteObj.target = this.$route.params.user
       swal({
         title: "Are you sure?",
         text: 'This account will be banned permanently',
@@ -147,6 +148,7 @@ export default {
                 // eslint-disable-next-line no-unused-vars
               }).then((value) => {
                 if (value) {
+                  this.deleteObj.reason = value
                   this.deleteUser(this.deleteObj).then(() => {
                     this.getNotif()
                   }).catch(() => {

@@ -84,8 +84,8 @@ export default {
       mode: false,
       deleteObj: {
         password: "defaultpass",
-        target: null,
-        reason: null,
+        target: 'default',
+        reason: 'default',
       },
     };
   },
@@ -112,14 +112,17 @@ export default {
       this.$router.go();
     },
     getNotif() {
-      this.$vs.notification({
-        duration: 3000,
-        progress: "auto",
-        border: null,
-        position: "top-center",
-        color: "#296186",
-        title: this.errMassage,
-      });
+      if (this.errMassage) {
+        this.$vs.notification({
+          duration: 3000,
+          progress: "auto",
+          border: null,
+          position: "top-center",
+          color: "#296186",
+          title: this.errMassage,
+        });
+        this.$store.commit('changeErrMsg', null)
+      }
     },
     deleteAccount() {
       swal({

@@ -2,8 +2,7 @@
   <div id="top" class="topHeader">
     <settings/>
     <input ref="header" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads('header')">
-    <img :alt="'header photo posted by ' + userProfile.username" :src="userHeader" class="backAvatar"
-         @error="userProfile.header = '/public/images/header.jpg'">
+    <img :alt="'header photo posted by ' + userProfile.username" :src="userHeader" class="backAvatar">
     <svg aria-hidden="true" class="changeHeader" fill="white" viewBox="0 0 24 24">
       <g>
         <path
@@ -15,7 +14,7 @@
     <vs-row class="avatars">
       <vs-col w="3">
         <vs-avatar badge-color="success" circle size="90">
-          <img :src="userAvatar" alt="avatar" class="avatar" @error="userProfile.avatar = '/public/images/avatar.jpg'">
+          <img :src="userAvatar" alt="avatar" class="avatar">
           <template v-if="userProfile.role == 'reviewer'" #badge>
             Reviewer
           </template>
@@ -132,17 +131,20 @@ export default {
       }
     },
     getNotif() {
-      setTimeout(() => {
-        this.$vs.notification({
-          duration: 3000,
-          progress: 'auto',
-          border: null,
-          position: 'top-center',
-          color: '#296186',
-          title: this.errMassage,
-        })
-        this.isLoading = false
-      }, 500)
+      if (this.errMassage){
+        setTimeout(() => {
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position: 'top-center',
+            color: '#296186',
+            title: this.errMassage,
+          })
+          this.isLoading = false
+          this.$store.commit('changeErrMsg', null)
+        }, 500)
+      }
     },
     sendReq() {
       this.validName()

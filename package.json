@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.22.0",
+    "@editorjs/header": "^2.6.1",
     "@iconify-icons/mdi-light": "^1.1.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "idb": "^6.1.2",
     "lozad": "^1.16.0",
     "query-string": "^7.0.0",
     "register-service-worker": "^1.7.1",

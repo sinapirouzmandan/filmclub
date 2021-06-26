@@ -70,12 +70,13 @@
 </template>
 
 <script>
+import bookmarkPost from "../components/Bookmark/bookmarkPost";
 import {mapActions, mapGetters, mapState} from 'vuex'
 
 export default {
   name: "Bookmark",
   components: {
-    bookmarkPost: () => import(/* webpackPrefetch: true */ '../components/Bookmark/bookmarkPost')
+    bookmarkPost
   },
   data() {
     return {
@@ -86,7 +87,17 @@ export default {
   },
   created() {
     this.$store.commit('toggleNavbar', true);
-    this.$store.dispatch('getUserProfile')
+    this.$store.dispatch('getUserProfile');
+    const registration = navigator.serviceWorker.ready;
+    if ('periodicSync' in registration) {
+      const tags = registration.periodicSync.getTags();
+      // Only update content if sync isn't set up.
+      if (!tags.includes('content-sync')) {
+//fffg
+      }
+    } else {
+      // If periodic background sync isn't supported, always update.
+    }
   },
   computed: {
     ...mapState(['endOrLoad', 'watchListLength', 'searchListMoviesList', 'userProfile', 'baseURl', 'alternativeAvatar']),

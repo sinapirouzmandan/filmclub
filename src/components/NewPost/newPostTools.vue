@@ -10,15 +10,15 @@
         <vs-col w="6"></vs-col>
         <vs-col w="4">
           <vs-button
+              @click="isLoading === false ? $emit('sendThePost') : console.log('wait')"
               animation-type="vertical"
               class="sendPost"
               flat
-              warn
+              :loading="isLoading"
+              color="#5b3cc4"
+              gradient
           >
             share
-            <template #animate>
-              <i class='bx bx-mail-send'></i> Send
-            </template>
           </vs-button>
         </vs-col>
       </vs-row>
@@ -29,14 +29,12 @@
 <script>
 export default {
   name: "newPostTools",
-  data() {
-    return {}
-  },
   methods: {
     back() {
       this.$router.push({name: 'profile'})
     }
-  }
+  },
+  props: ['isLoading']
 }
 </script>
 
@@ -81,5 +79,6 @@ export default {
   float: right;
   margin-right: 15%;
   margin-top: 7px;
+  width:50%;
 }
 </style>

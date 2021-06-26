@@ -40,7 +40,6 @@
 import loading from "../loading";
 import {mapActions, mapState} from 'vuex'
 import swal from 'sweetalert'
-
 export default {
   name: "bookmarkPost",
   data() {

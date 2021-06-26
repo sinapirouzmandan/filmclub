@@ -4,9 +4,65 @@ import axios from "axios";
 import qs from 'querystring'
 import router from "../router";
 import swal from 'sweetalert'
+import { openDB } from 'idb'
+// eslint-disable-next-line no-unused-vars
+async function putWatchList(post) {
+    let db = await openDB('movieDB', 2, {
+        upgrade(db) {
+            if (!(db.objectStoreNames.contains('watchList'))) {
+                db.createObjectStore('watchList')
+            }
+            if (!(db.objectStoreNames.contains('user'))) {
+                db.createObjectStore('user')
+            }
+        }
+    });
+    let tx = db.transaction(['watchList'], 'readwrite')
+    let store = tx.objectStore('watchList')
 
+    await store.put(post, 0)
+    db.close()
+}
+async function getWatchList() {
+    let db = await openDB('movieDB', 2)
+    let tx = db.transaction(['watchList'], 'readwrite')
+    let store = tx.objectStore('watchList')
+    let post = []
+    await store.getAll().then((posts)=>{
+        post = posts[0]
+    });
+    db.close()
+    return post
+}
+async function putUserInfo(user) {
+    let db = await openDB('movieDB', 2, {
+        upgrade(db) {
+            if (!(db.objectStoreNames.contains('watchList'))) {
+                db.createObjectStore('watchList')
+            }
+            if (!(db.objectStoreNames.contains('user'))) {
+                db.createObjectStore('user')
+            }
+        }
+    });
+    let tx = db.transaction('user', 'readwrite')
+    let store = tx.objectStore('user')
+
+    await store.put(user, 0)
+    db.close()
+}
+async function getUser() {
+    let db = await openDB('movieDB', 2)
+    let tx = db.transaction(['user'], 'readonly')
+    let store = tx.objectStore('user')
+    let user = {}
+    await store.getAll().then((data)=>{
+        user = data[0]
+    });
+    db.close()
+    return user
+}
 Vue.use(Vuex)
-
 export default new Vuex.Store({
     state: {
         baseURl: 'http://192.168.1.35:3000',
@@ -18,8 +74,8 @@ export default new Vuex.Store({
         searchListMoviesList: [],
         endOrLoad: 'Loading content ...',
         showNavbar: true,
-        alternativeAvatar: 'http://192.168.1.35:3000' + '/public/images/avatar.jpg',
-        alternativeHeader: 'http://192.168.1.35:3000' + '/public/images/header.jpg',
+        alternativeAvatar: require('../assets/avatar.jpg'),
+        alternativeHeader: require('../assets/header.jpg'),
         token: null,
         // user it self
         userInfo: [],
@@ -174,6 +230,7 @@ export default new Vuex.Store({
             }
         },
         async getMoviesList({commit, state, dispatch}) {
+            let errors = 0
             if (!(state.isWatchListLoaded)) {
                 const optionsServer = {
                     method: 'GET',
@@ -188,6 +245,14 @@ export default new Vuex.Store({
                         commit('loadImdbIds', ['tt0068646'])
                     }
                 }).catch(function (error) {
+                    errors += 1
+                    getWatchList().then((result)=>{
+                        console.log(result)
+                        state.watchListMoviesList = result
+                    })
+                    if (!error.response) {
+                        swal("Can't connect to server, check your internet connection")
+                    }
                     dispatch('errorHandler', error)
                 });
                 let watchListPosts = []
@@ -205,8 +270,21 @@ export default new Vuex.Store({
                         watchListPosts.push(response.data);
                         commit('toggleWatchListLoaded', true)
                     }).catch(function (error) {
+                        errors += 1
+                        if (!error.response) {
+                            swal("Can't connect to server, check your internet connection")
+                        }
                         dispatch('errorHandler', error)
                     });
+                    if (errors === 0) {
+                        await putWatchList(watchListPosts)
+                    }
+                    else {
+                        getWatchList().then((result)=>{
+                            console.log(result)
+                            state.watchListMoviesList = result
+                        })
+                    }
                     commit('fetchWatchListMovies', watchListPosts)
                 }
                 if (Object.keys(watchListPosts).length <= 0) {
@@ -293,7 +371,7 @@ export default new Vuex.Store({
             await axios.request(options).then(function (response) {
                 commit('setToken', null)
                 token = response.data.token
-                commit('changeErrMsg', 'Please wait to redirect')
+                commit('changeErrMsg', 'Please wait to redirect ...')
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
@@ -341,6 +419,7 @@ export default new Vuex.Store({
             });
         },
         async getUserProfile({commit, state}) {
+            let NoErr = false
             if (!(state.isProfileLoaded)) {
                 let userInf = []
                 const options = {
@@ -353,7 +432,11 @@ export default new Vuex.Store({
                 await axios.request(options).then(function (response) {
                     userInf = response.data
                     commit('toggleProfileLoaded', true)
+                    NoErr = true
                 }).catch(function (error) {
+                    getUser().then((result)=>{
+                        state.userProfile = result
+                    })
                     if (!error.response) {
                         swal("Can't connect to server, check your internet connection")
                     } else {
@@ -361,6 +444,9 @@ export default new Vuex.Store({
                         router.go(0)
                     }
                 });
+                if (NoErr){
+                    await putUserInfo(userInf)
+                }
                 commit('fetchProfile', userInf)
             }
         },
@@ -484,11 +570,7 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
                     dispatch('errorHandler', error)
-                }
             });
         },
         async searchUsers({state, dispatch, commit}, username) {
@@ -506,11 +588,7 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchSearchUsers', response.data)
             }).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
                     dispatch('errorHandler', error)
-                }
             });
         },
         async getFollowStatus({state, dispatch}, username) {
@@ -525,11 +603,7 @@ export default new Vuex.Store({
                 await axios.request(options).then((response) => {
                     state.followStatus = response.data.isFollowed
                 }).catch(function (error) {
-                    if (!error.response) {
-                        swal("Can't connect to server, check your internet connection")
-                    } else {
                         dispatch('errorHandler', error)
-                    }
                 });
             }
         },
@@ -544,11 +618,7 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchNotifications', response.data)
             }).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
                     dispatch('errorHandler', error)
-                }
             });
         },
         async updateProfilePhoto({state, dispatch, commit}, packet) {
@@ -565,11 +635,7 @@ export default new Vuex.Store({
                 commit('toggleProfileLoaded', false)
                 dispatch('getUserProfile')
             }).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
                     dispatch('errorHandler', error)
-                }
             });
         },
         async setNotificationsSeen({state, dispatch}) {
@@ -581,11 +647,21 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).catch(function (error) {
-                if (!error.response) {
-                    swal("Can't connect to server, check your internet connection")
-                } else {
                     dispatch('errorHandler', error)
+            });
+        },
+        async createNewPost ({state, dispatch}, post) {
+            const options = {
+                method: 'POST',
+                data: post,
+                url: `${state.baseURl}/posts/`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
+            };
+            await axios.request(options).catch(function (error) {
+                    dispatch('errorHandler', error)
             });
         }
     },
