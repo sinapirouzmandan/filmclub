@@ -1,46 +1,70 @@
 <template>
   <div id="tumber">
+    <loading v-if="isLoading"/>
     <vs-row class="tumbPostRow">
-      <vs-col v-for="(tump,index) in (1,16)" :key="index" class="tumbContainer" lg="4" w="6" xs="12">
+      <vs-col v-for="(post,index) in userPosts" :key="index" class="tumbContainer" w="6" xs="12">
         <vs-card type="3">
           <template #title>
-            <h3>Pot with a plant</h3>
+            <h3>{{post.title}}</h3>
           </template>
           <template #img>
-            <img v-lazy="'https://picsum.photos/id/' + Math.floor(Math.random(50,90) * 100) + '/1000/1000'" alt="image">
+            <img v-lazy="post.poster" alt="image">
           </template>
           <template #text>
             <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              {{post.body.replace('nbsp', ' ').replace('& ;', '')}}
             </p>
           </template>
           <template #interactions>
             <vs-button danger icon>
               <i class="iconify" data-icon='bx:bxs-heart'></i>
               <span>
-            12
+            {{post.likes}}
           </span>
             </vs-button>
             <vs-button class="btn-chat" primary shadow style="color: white">
               <i class="iconify" data-icon='bx:bx-chat'></i>
               <span class="span">
-           54
+           {{post.comments}}
         </span>
             </vs-button>
           </template>
         </vs-card>
       </vs-col>
     </vs-row>
-    <p style="margin-bottom: 50px; opacity: 0.1; font-size:15px;">end of content ...</p>
+    <p style="margin-bottom: 50px; opacity: 0; font-size:15px;">end of content ...</p>
   </div>
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex'
+import loading from '../loading'
 export default {
   name: "posts",
-
+  data(){
+    return {
+      isLoading: false
+    }
+  },
+  methods:{
+    ...mapActions(['getUserPosts'])
+  },
+  computed:{
+    ...mapState(['userPosts'])
+  },
+  mounted(){
+    this.isLoading = true
+    this.getUserPosts(this.username).then(()=>{
+      this.isLoading = false
+    })
+  },
+  components: {
+    loading
+  },
+  props: ['username']
 }
 </script>
+
 <style scoped>
 .tumbPostRow {
   margin-top: 35px;

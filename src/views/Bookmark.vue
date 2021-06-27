@@ -88,7 +88,6 @@ export default {
   created() {
     this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
-    this.$store.dispatch('getUserProfile');
   },
   computed: {
     ...mapState(['endOrLoad', 'watchListLength', 'searchListMoviesList', 'userProfile', 'baseURl', 'alternativeAvatar']),

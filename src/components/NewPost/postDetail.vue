@@ -286,7 +286,7 @@ h1 {
 
 .search {
   position: absolute;
-  top: 6rem;
+  top: 8.5rem;
   font-size: 70px;
   display: flex;
   justify-content: center;

@@ -1,16 +1,24 @@
 <template>
   <vs-row class="statusBar">
-    <vs-col w="4"><p>0 followers</p></vs-col>
-    <vs-col w="4"><p>0 following</p></vs-col>
-    <vs-col w="4"><p>0 posts</p></vs-col>
+    <vs-col w="4"><router-link to="/followers"> <p>{{statitics.followers}} follower</p> </router-link></vs-col>
+    <vs-col w="4"><router-link to="/followings"> <p>{{statitics.followings}} following</p> </router-link></vs-col>
+    <vs-col w="4"><p>{{statitics.posts}} posts</p></vs-col>
   </vs-row>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
-  name: "accountStatus"
+  name: "accountStatus",
+  computed:{
+    ...mapState(['statitics'])
+  }
 }
 </script>
 
-<style scoped>
+<style>
+.statusBar a {
+  text-decoration: none;
+  color: white;
+}
 </style>

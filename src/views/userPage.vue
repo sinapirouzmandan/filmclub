@@ -3,7 +3,7 @@
     <accountHeader/>
     <accountBio/>
     <accountStatus/>
-    <posts/>
+    <posts :username="username"/>
   </div>
 </template>
 <script>
@@ -27,10 +27,9 @@ export default {
     this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.getUserById(this.username);
-    this.getUserProfile()
   },
   methods: {
-    ...mapActions(['getUserById', 'getUserProfile'])
+    ...mapActions(['getUserById'])
   }
 }
 </script>

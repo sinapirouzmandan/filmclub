@@ -1,0 +1,185 @@
+<template>
+<div id="follow">
+  <div class="header">
+    <div class="back" @click="$router.push('/profile')">
+      <i class="iconify" data-icon="bx:bx-arrow-back"></i>
+    </div>
+    <div class="username">
+      <p style="text-align: left;">{{userProfile.username}}</p>
+    </div>
+    <vs-row class="tabs">
+      <vs-col w="6" :class="{'border-bottom': isFollower}" style="padding:12px; font-size: 15px; margin-bottom: 10px;">
+        <span @click="$router.push('/followers'); getFollow(0)">
+                {{statitics.followers}} followers
+        </span>
+      </vs-col>
+      <vs-col w="6" :class="{'border-bottom': !isFollower}" style="padding:12px; font-size: 15px; margin-bottom: 10px;">
+        <span @click="$router.push('/followings'); getFollow(1)">
+                {{statitics.followings}} followings
+        </span>
+      </vs-col>
+    </vs-row>
+  </div>
+  <h1 id="headerFollow">All {{$route.path.replace('/', '')}}</h1>
+  <div class="followers"  v-if="$route.path.replace('/', '') === 'followers'">
+    <loading v-if="isLoading"/>
+    <div class="user" v-for="(user) in followers" :key="user.followerUsername">
+      <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername}`)">
+      <vs-avatar circle class="avatarImage">
+        <img :src="alternativeAvatar">
+      </vs-avatar>
+      <div class="singleUser">
+      <p class="nameInSingleUser">{{user.followerUsername}}</p>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="followings" v-else>
+    <loading v-if="isLoading"/>
+    <div class="user" v-for="(user) in followings" :key="user.followingUsername">
+      <div class="unfollow" @click="toggleFollowing(user.followingUsername)">
+        <span v-if="!unfollowed.includes(user.followingUsername)">Unfollow</span>
+        <span v-else>Follow</span>
+      </div>
+      <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername}`)">
+      <vs-avatar circle class="avatarImage">
+        <img :src="alternativeAvatar">
+      </vs-avatar>
+      <div class="singleUser">
+      <p class="nameInSingleUser">{{user.followingUsername}}</p>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+
+<script>
+import { mapActions, mapState } from 'vuex'
+import loading from "../components/loading";
+export default {
+  name: "followView",
+  data () {
+    return {
+      unfollowed: [],
+      isLoading: false
+    }
+  },
+  components: {loading},
+  methods: {
+    ...mapActions(['getFollowers', 'getFollowings',  'getUserProfile', 'toggleFollow']),
+    getFollow(val){
+      if (val) {
+        if (val == 0){
+          this.getFollowers().then(()=>{
+            this.isLoading = false
+          })
+        }
+        else if (val == 1) {
+          this.getFollowings().then(()=>{
+            this.isLoading= false
+          })
+        }
+      }
+      else if (this.$route.path.replace('/', '') === 'followers'){
+        this.getFollowers().then(()=>{
+          this.isLoading= false
+        })
+      }
+      else {
+        this.getFollowings().then(()=>{
+          this.isLoading= false
+        })
+      }
+    },
+    toggleFollowing(value){
+      this.toggleFollow(value)
+      if (this.unfollowed.includes(value)){
+        this.unfollowed =  this.unfollowed.filter(function(item){
+          return item != value;
+        });
+      }
+      else {
+        this.unfollowed.push(value)
+      }
+      }
+  },
+  computed: {
+    ...mapState(['followers', 'followings', 'userProfile', 'statitics', 'alternativeAvatar']),
+    isFollower(){
+      return this.$route.path.replace('/', '') === 'followers'
+    }
+  },
+  mounted(){
+    this.isLoading = true
+    this.$store.dispatch('getCountsInProfile')
+    this.getUserProfile()
+    this.getFollow()
+  }
+}
+</script>
+
+<style scoped>
+.header {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#headerFollow{
+  padding:20px;
+  font-size:18px;
+  margin-top: 6rem;
+  text-align: left;
+  font-weight: normal;
+  border-bottom: 1px solid white;
+  width: auto;
+  max-width:150px;
+  margin-bottom:2rem;
+}
+.singleUser {
+  padding-bottom: 5px;
+}
+.back {
+  margin-left: 10px;
+  font-size: 20px;
+}
+.username{
+  margin-left: 20px;
+  font-size: 20px;
+}
+#follow >>> p{
+  text-align: left;
+  margin-left:20px;
+}
+.tabs {
+margin-top: 10px;
+}
+.border-bottom{
+  border-bottom: 1px solid white;
+}
+.unfollow {
+  width:80px;
+  height:25px;
+  border: 1px dashed white;
+  float: right;
+  margin-right: 20px;
+  font-size: 12px;
+  text-align-all: center;
+  line-height: 25px;
+  margin-top: 10px;
+}
+.avatarImage{
+  float:left;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.nameInSingleUser {
+  padding-top: 10px;
+}
+.containFullUser{
+  width:60%;
+  height: 100%;
+}
+</style>

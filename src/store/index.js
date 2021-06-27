@@ -65,7 +65,7 @@ async function getUser() {
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.35:3000',
+        baseURl: 'http://192.168.1.37:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -85,6 +85,13 @@ export default new Vuex.Store({
         userProfile: '',
         isProfileLoaded: false,
         notifications: [],
+        statitics: {
+            followers: 0,
+            followings: 0,
+            posts: 0
+        },
+        myPosts: [],
+        isPostsLoaded: false,
         //BOX Office
         isBoxOfficeLoaded: false,
         boxOfficeList: {
@@ -94,7 +101,11 @@ export default new Vuex.Store({
         // other users
         usernameInfo: [],
         searchedUsers: [],
-        followStatus: null
+        followStatus: null,
+        // followers and followings
+        followers:[],
+        followings: [],
+        userPosts: []
     },
     getters: {
         watchListLengthCalc(state) {
@@ -215,6 +226,24 @@ export default new Vuex.Store({
             state.notifications = notifications.sort((function (a, b) {
                 return new Date(b.date) - new Date(a.date);
             }))
+        },
+        fetchFollowers(state,payload) {
+            state.followers = payload
+        },
+        fetchFollowings (state,payload) {
+            state.followings = payload
+        },
+        fetchStatitics (state,payload) {
+            state.statitics.followings = payload.following
+            state.statitics.followers = payload.followers
+            state.statitics.posts = payload.posts
+        },
+        fetchMyPosts (state,payload) {
+            state.myPosts = payload
+            state.isPostsLoaded = true
+        },
+        fetchUserPosts (state,payload) {
+            state.userPosts = payload
         }
     },
     actions: {
@@ -653,6 +682,7 @@ export default new Vuex.Store({
             });
         },
         async createNewPost ({state, dispatch}, post) {
+            state.isPostsLoaded = false
             const options = {
                 method: 'POST',
                 data: post,
@@ -665,7 +695,87 @@ export default new Vuex.Store({
             await axios.request(options).catch(function (error) {
                     dispatch('errorHandler', error)
             });
-        }
+        },
+        async getFollowers({state, dispatch, commit}) {
+            if (state.token) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/followers`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchFollowers', response.data.followers)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+        },
+        async getFollowings({state, dispatch, commit}) {
+            if (state.token) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/followings`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchFollowings', response.data.followings)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+        },
+        async getCountsInProfile({state, dispatch, commit}) {
+            if (state.token) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/userstatitic`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchStatitics', response.data)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+        },
+        async getMyPosts ({state, dispatch, commit}) {
+            if (!(state.isPostsLoaded)) {
+                if (state.token) {
+                    const options = {
+                        method: 'GET',
+                        url: `${state.baseURl}/posts/me`,
+                        headers: {
+                            'authorization': `Bearer ${state.token}`
+                        }
+                    };
+                    await axios.request(options).then((response) => {
+                        commit('fetchMyPosts', response.data.posts)
+                    }).catch(function (error) {
+                        dispatch('errorHandler', error)
+                    });
+                }
+            }
+        },
+        async getUserPosts ({state, dispatch, commit}, username) {
+                    const options = {
+                        method: 'GET',
+                        url: `${state.baseURl}/posts/posts/${username}`,
+                        headers: {
+                            'authorization': `Bearer ${state.token}`
+                        }
+                    };
+                    await axios.request(options).then((response) => {
+                        commit('fetchUserPosts', response.data.posts)
+                    }).catch(function (error) {
+                        dispatch('errorHandler', error)
+                    });
+        },
     },
     modules: {}
 })

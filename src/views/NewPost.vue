@@ -12,7 +12,6 @@ export default {
   components: {newpost},
   created() {
     this.$store.commit('changeErrMsg', null)
-    this.$store.dispatch('getUserProfile')
   }
 }
 </script>

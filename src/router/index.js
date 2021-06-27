@@ -5,7 +5,7 @@ import Bookmark from "../views/Bookmark";
 import NewPost from "../views/NewPost";
 import postDetail from "../components/NewPost/postDetail";
 import profile from "../views/profile";
-import Notifications from "../views/Notifications";
+
 
 Vue.use(VueRouter)
 let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
@@ -29,7 +29,7 @@ const routes = [
         //lazy load search component
         path: '/search',
         name: 'search',
-        component: () => import('../views/search')
+        component: () => import(/* webpackPrefetch: true */ '../views/search')
     },
     {
         path: '/login',
@@ -55,12 +55,22 @@ const routes = [
     {
         path: '/users/:user',
         name: 'users',
-        component: () => import('../views/userPage')
+        component: () => import(/* webpackPrefetch: true */ '../views/userPage')
     },
     {
         path: '/Notifications',
         name: 'Notifications',
-        component: Notifications
+        component: () => import(/* webpackPrefetch: true */ "../views/Notifications")
+    },
+    {
+        path: '/followers',
+        name: 'follower',
+        component: () => import(/* webpackPrefetch: true */ "../views/followView")
+    },
+    {
+        path: '/followings',
+        name: 'following',
+        component: () => import(/* webpackPrefetch: true */ "../views/followView")
     },
     {
         path: "*",

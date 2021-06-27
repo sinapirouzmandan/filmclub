@@ -7,7 +7,7 @@
       </vs-col>
       <vs-col lg="8" sm="12" xs="12">
         <vs-row>
-          <single-post v-for="(post,index)  in (1,20)" :key="index" :number="post"></single-post>
+          <single-post v-for="(post,index)  in (1,3)" :key="index" :number="post"></single-post>
         </vs-row>
       </vs-col>
 
@@ -41,7 +41,6 @@ export default {
       this.isMobile = false
     }
     this.$store.commit('toggleNavbar', true);
-    this.$store.dispatch('getUserProfile')
   }
 }
 </script>
