@@ -73,6 +73,16 @@ const routes = [
         component: () => import(/* webpackPrefetch: true */ "../views/followView")
     },
     {
+        path: '/post/:title/:id',
+        name: 'single-post',
+        component: () => import(/* webpackPrefetch: true */ "../views/singlePost")
+    },
+    {
+        path: '/edit/:id',
+        name: 'single-post',
+        component: () => import(/* webpackPrefetch: true */ "../views/singlePost")
+    },
+    {
         path: "*",
         component: () => import('../views/notFound')
     }

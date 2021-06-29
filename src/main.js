@@ -18,6 +18,9 @@ Vue.filter('truncate', function (text, length, suffix) {
         return text;
     }
 });
+Vue.filter('sanitize', function (text) {
+    return text.replaceAll('nbsp', ' ').replaceAll('& ;', '')
+});
 Vue.use(VueLazyload, {
     preLoad: 1.3,
     error: errorimage,

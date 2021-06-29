@@ -30,24 +30,30 @@
           Search
         </vs-button>
       </div>
-      <div class="rating">
-        <vs-row>
-        </vs-row>
-        <vs-input v-if="post.title != ''" v-model="score" :state="state" danger icon-after label-placeholder="My score to : "
-                  type="number" warn @change="checkRate()">
-          <template #icon>
-            /10
-          </template>
-        </vs-input>
-        <vs-switch v-if="post.title != ''" v-model="post.spoiler" class="margin-2">
-          has spoilers
-        </vs-switch>
-        <vs-switch v-if="post.title != ''" v-model="post.critic" class="margin-2">
-          is critic
-        </vs-switch>
-      </div>
     </div>
     <h1 v-if="post.title != ''" style="margin-top: 4rem;">{{ post.title }}</h1>
+    <div class="rating">
+      <vs-row>
+      </vs-row>
+      <vs-input v-if="post.title != ''" v-model="score" :state="state" danger icon-after label-placeholder="My score to : "
+                type="number" warn @change="checkRate()">
+        <template #icon>
+          /10
+        </template>
+      </vs-input>
+    </div>
+    <div class="hashtags" v-if="post.title != ''">
+      <div class="hashtag_item">
+        <vs-checkbox primary v-model="post.critic">
+          #critic
+        </vs-checkbox>
+      </div>
+      <div class="hashtag_item">
+        <vs-checkbox danger v-model="post.spoiler">
+          #spoilers
+        </vs-checkbox>
+      </div>
+    </div>
     <div v-show="post.title != ''" class="editorContainer" dir="auto">
       <div id="editor" dir="rtl" spellcheck="false">
       </div>
@@ -94,7 +100,7 @@ export default {
         imdb_id: null,
         body: null,
       },
-      score: null,
+      score: 0,
       state: 'warn',
       active: false,
       searchMov: '',
@@ -120,6 +126,7 @@ export default {
       this.post.imdb_id = movie.imdbID
       this.post.title = movie.Title
       this.active = false
+      this.editor.caret.setToFirstBlock('end', 0);
     },
     handleProfileUploads() {
       this.file = this.$refs.file.files[0];
@@ -137,6 +144,7 @@ export default {
       }
     },
     sharePost(){
+      this.$store.commit('changeErrMsg', null)
       this.isSaving = true
       this.editor.save().then((outputData) => {
         if (this.file){
@@ -147,6 +155,7 @@ export default {
           formData.append('spoiler', this.post.spoiler);
           formData.append('critic', this.post.critic);
           formData.append('imdb_id', this.post.imdb_id);
+          formData.append('score', this.score);
           this.$store.dispatch('createNewPost', formData).then(()=>{
             if (!this.errMassage){
               this.isSaving = false
@@ -203,6 +212,7 @@ export default {
     // eslint-disable-next-line no-unused-vars
     this.editor = new EditorJS({
       holder: 'editor',
+      placeholder: 'Write here ...',
       tools: {
         image: {
           class: ImageTool,
@@ -216,6 +226,8 @@ export default {
         header: Header
       }
     })
+    // eslint-disable-next-line no-unused-vars
+
   },
   components: {newPostTools}
 }
@@ -251,8 +263,7 @@ export default {
 
 .rating {
   width: 100px;
-  position: absolute;
-  top: 420px;
+  margin: 4rem auto 0;
 }
 
 .writeBox >>> .vs-input {
@@ -260,17 +271,16 @@ export default {
 }
 
 h1 {
-  font-size: 20px;
+  font-size: 23px;
 }
 
 .editorContainer {
   width: 85%;
   min-height: 500px;
   height: auto;
-  margin-top: 17rem;
+  margin-top: 2rem;
   margin-left: auto;
   margin-right: auto;
-  border: 2px dotted rgba(255,255,255,0.5);
   padding: 25px;
   text-align: right;
 }
@@ -344,7 +354,8 @@ width:100%;
 }
 #editor{
   font-family: Yekan;
-  font-size: 15px;
+  font-size: 18px;
+  line-height:2;
   text-decoration: none;
 }
 .writeBox >>> .ce-header {
@@ -356,4 +367,17 @@ width:100%;
   height: 20px;
   background-color: white;
 }
+p {
+  font-size: 50px;
+}
+.hashtags {
+  margin-top: 4rem;
+}
+.hashtag_item{
+  margin-right: 5%;
+  flex-grow: 3;
+  display: inline-block;
+  text-align: center;
+}
+
 </style>

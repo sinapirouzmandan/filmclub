@@ -3,7 +3,7 @@
     <loading v-if="isLoading"/>
     <vs-row class="tumbPostRow">
       <vs-col v-for="(post,index) in myPosts" :key="index" class="tumbContainer" w="6" xs="12">
-        <vs-card type="3">
+        <vs-card type="3" @click="$router.push(`/post/${post.title}/${post.id}`)">
           <template #title>
             <h3>{{post.title}}</h3>
           </template>

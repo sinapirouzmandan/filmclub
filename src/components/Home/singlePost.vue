@@ -1,72 +1,126 @@
 <template>
-  <vs-col class="home" justify="space-around" w="12">
+  <div>
+  <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt">
     <vs-card>
       <template #title>
-        <img alt="" src="../../../public/img/avatar.jpg"
-             style="width: 30px; height: 30px; border-radius: 50%; float: left;">
-        <p class="userId">madman</p>
+        <img :src="baseURl + post.authorAvatar"
+             @click="$router.push(`/users/${post.author}`)"
+             style="width: 30px; height: 30px; border-radius: 50%; float: left; object-fit:cover;">
+        <p class="userId" @click="$router.push(`/users/${post.author}`)">{{post.author}}</p>
         <vs-button
+            @click="toggleWatchListPost(post.imdb_id); post.isWatchList = false"
             circle
             color="rgb(59,89,153)"
             flat
             icon
             style="display: inline-block; float: right; margin-top: 0;"
+            :active="post.isWatchList"
         >
           <i class="iconify" data-icon="bx:bx-bookmark" data-inline="false"></i>
         </vs-button>
         <vs-button
+            @click="togglerLike(post)"
+            circle
+            color="rgb(59,89,153)"
+            flat
+            icon
+            style="display: inline-block; float: right; margin-top: 0;"
+            :active="post.isLiked"
+        >
+          <i class="iconify" data-icon="bx:bx-like" data-inline="false"></i>
+          <p style="color: white; margin-left: 5px;"> {{post.likes}}</p>
+        </vs-button>
+        <vs-button
             circle
             color="rgb(59,89,153)"
             flat
             icon
             style="display: inline-block; float: right; margin-top: 0;"
         >
-          <i class="iconify" data-icon="bx:bx-like" data-inline="false"></i>
-          <p style="color: white; margin-left: 5px;"> 43</p>
+          <i class="iconify" data-icon="bx:bxs-comment-dots" data-inline="false" style="color:white;"></i>
+          <p style="color: white; margin-left: 5px;">0</p>
         </vs-button>
-        <h3>Interstellar</h3>
-        <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;">#spoilers </span>#critic</h6>
+        <h3>{{post.title}}</h3>
+        <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;" v-if="post.spoiler === true">#spoilers </span><span v-if="post.critic === true">#critic</span> </h6>
       </template>
       <template #img>
-        <img id="postImage" v-lazy="'https://www.fanbolt.com/storage/2014/11/interstellar-review.jpg'"
+        <img id="postImage" v-lazy="baseURl + post.poster"
+             @click="$router.push(`/post/${post.title}/${post.id}`)"
              alt="Image Load Error">
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star"></i>
-        <span> 7.3 / 10
+        <span> {{post.score}} / 10
         </span>
-        <p dir="auto">
+        <p dir="auto" class="right-text" v-show="!post.truncated">
           <br>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit ....
+          {{post.body | sanitize}}
+        </p>
+        <p v-show="post.truncated" dir="auto" class="right-text" @click="post.truncated = false">
+          <br>
+          {{post.body | sanitize | truncate( 150, ' ...  more')}}
         </p>
         <vs-button
+            @click="$router.push(`/post/${post.title}/${post.id}`)"
             class="fullPost"
             flat
+            v-if="post.fullPostBtn"
         >
           View full post
         </vs-button>
-        <small style="opacity: 0.3;"><br> 4 hours ago</small>
+        <small style="opacity: 0.3;" v-show="post.past !== 0"><br>{{post.past}} hours ago</small>
+        <small style="opacity: 0.3;" v-show="post.past === 0"><br>Just now </small>
       </template>
     </vs-card>
   </vs-col>
+  </div>
 </template>
 
 <script>
+import  {mapState, mapActions} from 'vuex'
 export default {
   name: "singlePost",
   data() {
     return {}
   },
-  props: ['number']
+  computed:{
+    ...mapState(['baseURl', 'homePosts'])
+  },
+  methods:{
+    ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
+    togglerLike(post){
+      this.toggleLike(post.id)
+      if (post.isLiked){
+        post.likes -= 1
+        post.isLiked= false
+      }
+      else {
+        post.likes += 1
+        post.isLiked = true
+      }
+    }
+  },
+  mounted() {
+     this.getHomePosts()
+}
 }
 </script>
 
 <style scoped>
+@font-face {
+  font-family: 'Nazanin';
+  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
+  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff') format('woff'),
+  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
+  font-weight: normal;
+}
 .home >>> .vs-card {
   background-color: var(--vs-cardback) !important;
   width: 100%;
   max-width: 500px;
   margin: 20px auto;
+  cursor: auto;
 }
 
 .home >>> .vs-card__title {
@@ -82,11 +136,13 @@ export default {
   margin-top: 5px;
   margin-bottom: 30px;
   border-bottom: 1px solid white;
+  cursor: pointer;
 }
 
 .home >>> .vs-card__text {
   color: white;
   text-align: left;
+
 }
 
 .home >>> .vs-button__content svg, .home >>> .vs-button__content span {
@@ -98,6 +154,7 @@ export default {
   width: 100%;
   background-color: var(--vs-mainback);
   min-height: 200px;
+  cursor: pointer;
 }
 
 .home >>> .vs-card:hover img {
@@ -114,5 +171,11 @@ export default {
   margin-left: 40%;
   margin-top: 2rem;
   display: inline;
+}
+.right-text{
+  text-align:right;
+  font-size: 18px;
+  line-height:1.4;
+  font-family: Nazanin;
 }
 </style>

@@ -7,7 +7,7 @@
       </vs-col>
       <vs-col lg="8" sm="12" xs="12">
         <vs-row>
-          <single-post v-for="(post,index)  in (1,3)" :key="index" :number="post"></single-post>
+          <posts/>
         </vs-row>
       </vs-col>
 
@@ -20,10 +20,9 @@
 import fixedHead from "../components/Home/fixedHead";
 import singlePost from '../components/Home/singlePost'
 import Notifications from "./Notifications";
-
 export default {
   name: 'Home',
-  components: {singlePost, fixedHead, Notifications},
+  components: {posts: singlePost, fixedHead, Notifications},
   data() {
     return {
       images: [],

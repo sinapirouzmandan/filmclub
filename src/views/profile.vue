@@ -84,6 +84,6 @@ body, html {
   z-index: 10;
 }
 .loader {
-  margin-top: 40%;
+  margin-top: 30vh;
 }
 </style>

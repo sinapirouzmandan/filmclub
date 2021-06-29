@@ -6,7 +6,7 @@
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
             <div class="B-movie_header">
-              <img v-lazy="post.poster" :alt="post.title" class="B-locandina"/>
+              <img :src="post.poster" :alt="post.title" class="B-locandina"/>
               <h1>{{ post.title }}</h1>
               <span class="B-minutes">{{ post.length }}</span>
               <p class="B-type">{{ post.plot }}</p>

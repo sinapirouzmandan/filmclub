@@ -3,16 +3,13 @@
     <div class="logo">
       <h1>MovieBar</h1>
     </div>
-    <switchExplorer/>
   </nav>
 </template>
 
 <script>
-import switchExplorer from "./switchExplorer";
 
 export default {
-  name: "navbar",
-  components: {switchExplorer}
+  name: "navbar"
 }
 </script>
 
@@ -34,7 +31,7 @@ export default {
 .logo h1 {
   float: left;
   margin-left: 30px;
-  margin-top: 17px;
+  margin-top: 2vh;
   font-family: 'magic', sans-serif;
 }
 </style>

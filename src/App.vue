@@ -22,6 +22,7 @@ head, body {
   overflow: auto;
   overflow: initial;
   margin: 0;
+  overscroll-behavior-y: contain;
 }
 
 .bodyMargin {

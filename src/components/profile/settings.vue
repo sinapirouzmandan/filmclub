@@ -23,12 +23,13 @@
           <!--            </template>-->
           <!--          </vs-switch>-->
         </vs-sidebar-item>
+        <div  @click="update()">
         <vs-sidebar-item id="update">
           <template #icon>
             <i class="iconify" data-icon="bx:bx-cloud-snow"></i>
           </template>
           update
-        </vs-sidebar-item>
+        </vs-sidebar-item></div>
         <vs-sidebar-item id="logout">
           <template #icon>
             <i
@@ -149,6 +150,9 @@ export default {
         }
       });
     },
+    update(){
+    window.location.reload();
+    }
     // changeColorTheme() {
     //   this.$nextTick(() => {
     //     if (this.mode == true) {

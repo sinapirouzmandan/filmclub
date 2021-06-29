@@ -4,64 +4,8 @@ import axios from "axios";
 import qs from 'querystring'
 import router from "../router";
 import swal from 'sweetalert'
-import { openDB } from 'idb'
-// eslint-disable-next-line no-unused-vars
-async function putWatchList(post) {
-    let db = await openDB('movieDB', 2, {
-        upgrade(db) {
-            if (!(db.objectStoreNames.contains('watchList'))) {
-                db.createObjectStore('watchList')
-            }
-            if (!(db.objectStoreNames.contains('user'))) {
-                db.createObjectStore('user')
-            }
-        }
-    });
-    let tx = db.transaction(['watchList'], 'readwrite')
-    let store = tx.objectStore('watchList')
+import * as clientDB from './clientDB'
 
-    await store.put(post, 0)
-    db.close()
-}
-async function getWatchList() {
-    let db = await openDB('movieDB', 2)
-    let tx = db.transaction(['watchList'], 'readwrite')
-    let store = tx.objectStore('watchList')
-    let post = []
-    await store.getAll().then((posts)=>{
-        post = posts[0]
-    });
-    db.close()
-    return post
-}
-async function putUserInfo(user) {
-    let db = await openDB('movieDB', 2, {
-        upgrade(db) {
-            if (!(db.objectStoreNames.contains('watchList'))) {
-                db.createObjectStore('watchList')
-            }
-            if (!(db.objectStoreNames.contains('user'))) {
-                db.createObjectStore('user')
-            }
-        }
-    });
-    let tx = db.transaction('user', 'readwrite')
-    let store = tx.objectStore('user')
-
-    await store.put(user, 0)
-    db.close()
-}
-async function getUser() {
-    let db = await openDB('movieDB', 2)
-    let tx = db.transaction(['user'], 'readonly')
-    let store = tx.objectStore('user')
-    let user = {}
-    await store.getAll().then((data)=>{
-        user = data[0]
-    });
-    db.close()
-    return user
-}
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
@@ -105,7 +49,11 @@ export default new Vuex.Store({
         // followers and followings
         followers:[],
         followings: [],
-        userPosts: []
+        userPosts: [],
+        //single post
+        singlePost: [],
+        // home posts
+        homePosts: []
     },
     getters: {
         watchListLengthCalc(state) {
@@ -244,6 +192,50 @@ export default new Vuex.Store({
         },
         fetchUserPosts (state,payload) {
             state.userPosts = payload
+        },
+        fetchSinglePost (state,payload) {
+            payload.post.body = JSON.parse(payload.post.body)
+            payload.post.username = payload.username
+            payload.post.avatar = payload.avatar
+            payload.post.likes = payload.likes
+            payload.post.comments = payload.comments
+            payload.post.isLiked = payload.isLiked
+            state.singlePost = payload.post
+        },
+        fetchHomePosts (state,payload) {
+            // eslint-disable-next-line no-unused-vars
+            var now = new Date()
+            payload.forEach((post)=>{
+                let paragraph = ''
+                let paragraphIsSet = false
+                let needFullPost = false
+                post.body = JSON.parse(post.body)
+                post.body.forEach((body)=>{
+                    if (body.type === 'paragraph') {
+                        if (!paragraphIsSet) {
+                            paragraph = body.data.text
+                            paragraphIsSet = true
+                        }
+                        else {
+                            needFullPost = true
+                        }
+                    }
+                    else if (body.type === 'header' || body.type === 'image'){
+                        needFullPost = true
+                    }
+                })
+                // eslint-disable-next-line no-unused-vars
+                var postDate = new Date(post.createdAt)
+                var Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()) / 1000 / 60 / 60);
+                post.past = Difference_In_Time
+                post.fullPostBtn = needFullPost
+                post.body = paragraph
+                post.truncated = true
+                post.isWatchList = state.watchListMoviesIDs.includes(post.imdb_id)
+            })
+            state.homePosts = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
         }
     },
     actions: {
@@ -275,7 +267,7 @@ export default new Vuex.Store({
                     }
                 }).catch(function (error) {
                     errors += 1
-                    getWatchList().then((result)=>{
+                    clientDB.getWatchList().then((result)=>{
                         console.log(result)
                         state.watchListMoviesList = result
                     })
@@ -306,10 +298,10 @@ export default new Vuex.Store({
                         dispatch('errorHandler', error)
                     });
                     if (errors === 0) {
-                        await putWatchList(watchListPosts)
+                        await clientDB.putWatchList(watchListPosts)
                     }
                     else {
-                        getWatchList().then((result)=>{
+                        clientDB.getWatchList().then((result)=>{
                             console.log(result)
                             state.watchListMoviesList = result
                         })
@@ -463,7 +455,7 @@ export default new Vuex.Store({
                     commit('toggleProfileLoaded', true)
                     NoErr = true
                 }).catch(function (error) {
-                    getUser().then((result)=>{
+                    clientDB.getUser().then((result)=>{
                         state.userProfile = result
                     })
                     if (!error.response) {
@@ -474,12 +466,12 @@ export default new Vuex.Store({
                     }
                 });
                 if (NoErr){
-                    await putUserInfo(userInf)
+                    await clientDB.putUserInfo(userInf)
                 }
                 commit('fetchProfile', userInf)
             }
         },
-        async updateName({state, commit, dispatch}, name) {
+        async updateName({state, dispatch}, name) {
             const options = {
                 method: 'PUT',
                 url: `${state.baseURl}/users/update/name`,
@@ -491,13 +483,12 @@ export default new Vuex.Store({
                 })
             };
             await axios.request(options).then(function (response) {
-                commit('changeErrMsg', response.data.message)
-                console.log(state.errMassage)
+                console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async updateBio({state, commit, dispatch}, bio) {
+        async updateBio({state, dispatch}, bio) {
             const options = {
                 method: 'PUT',
                 url: `${state.baseURl}/users/update/bio`,
@@ -509,8 +500,7 @@ export default new Vuex.Store({
                 })
             };
             await axios.request(options).then(function (response) {
-                commit('changeErrMsg', response.data.message)
-                console.log(state.errMassage)
+                console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
@@ -756,8 +746,12 @@ export default new Vuex.Store({
                     };
                     await axios.request(options).then((response) => {
                         commit('fetchMyPosts', response.data.posts)
+                        clientDB.putUserPosts(response.data.posts)
                     }).catch(function (error) {
                         dispatch('errorHandler', error)
+                        clientDB.getUserPosts().then((result)=>{
+                            state.myPosts = result
+                        })
                     });
                 }
             }
@@ -765,16 +759,56 @@ export default new Vuex.Store({
         async getUserPosts ({state, dispatch, commit}, username) {
                     const options = {
                         method: 'GET',
-                        url: `${state.baseURl}/posts/posts/${username}`,
-                        headers: {
-                            'authorization': `Bearer ${state.token}`
-                        }
+                        url: `${state.baseURl}/posts/posts/${username}`
                     };
                     await axios.request(options).then((response) => {
                         commit('fetchUserPosts', response.data.posts)
                     }).catch(function (error) {
                         dispatch('errorHandler', error)
                     });
+        },
+        async getSinglePost ({state, dispatch, commit}, id) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/single/${id}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response) => {
+                commit('fetchSinglePost', response.data)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async toggleLike ({state, dispatch}, post_id) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/posts/like`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                },
+                data:{
+                    post_id: post_id
+                }
+            };
+            await axios.request(options).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async getHomePosts ({state, dispatch, commit}) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/home`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response)=>{
+                commit('fetchHomePosts', response.data.docs)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
     },
     modules: {}

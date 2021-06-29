@@ -132,7 +132,6 @@ export default {
     },
     getNotif() {
       if (this.errMassage){
-        setTimeout(() => {
           this.$vs.notification({
             duration: 3000,
             progress: 'auto',
@@ -143,26 +142,39 @@ export default {
           })
           this.isLoading = false
           this.$store.commit('changeErrMsg', null)
-        }, 500)
       }
     },
     sendReq() {
       this.validName()
       if (!(this.isNameEmpty)) {
-        if (this.changedName) {
-          this.isLoading = true
-          this.$store.dispatch('updateName', this.userProfile.name);
-          this.getNotif()
+        if (this.changedName && this.changedBio) {
+          this.$store.dispatch('updateName', this.userProfile.name)
+          this.$store.dispatch('updateBio', this.userProfile.biography);
           this.changedName = false
+          this.changedBio = false
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position: 'top-center',
+            color: '#296186',
+            title: 'Name and Bio updated successfully',
+          })
         }
-        if (this.changedBio) {
-          this.isLoading = true
+        else if (this.changedBio) {
           this.$store.dispatch('updateBio', this.userProfile.biography);
           this.getNotif()
           this.changedBio = false
-        } else if (!(this.changedBio || this.changedName)) {
+        }
+        else if (this.changedName) {
+          this.$store.dispatch('updateName', this.userProfile.name)
+          this.getNotif()
+          this.changedName = false
+        }
+        else if (!(this.changedBio || this.changedName)) {
           this.editPro = false
         }
+        this.editPro = false
       }
     },
     handleProfileUploads(location) {
