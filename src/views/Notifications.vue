@@ -11,10 +11,11 @@
       <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
       <i class="iconify" data-icon="mdi:arrow-up-circle-outline"></i>
     </div>
-    <vs-alert v-for="(notification,index) in notifications" :key="index + Math.random() * 1000">
+    <loading v-if="isLoading"/>
+    <vs-alert v-for="(notification) in notifications" :key="notification.date" :class="notification.isSeen === false ? 'unseen' : ''">
       <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
       <span class="desc">
-    <span v-if="!(notification.customNotif)">{{ notification.commiter }}</span> {{ notification.message }}
+    <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none;">{{ notification.commiter }}</router-link></span> {{ notification.message }}
       </span>
     </vs-alert>
 
@@ -25,26 +26,35 @@
 
 <script>
 import {mapState} from 'vuex'
-
+import loading from '../components/loading'
 export default {
   name: "Notifications",
+  data(){
+    return{
+      isLoading: false
+    }
+  },
   created() {
     this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.loadNotification()
   },
+  components:{loading},
   methods: {
     loadNotification() {
-      this.$store.dispatch('getNotificationList')
+      this.isLoading = true
+      this.$store.dispatch('getNotificationList').then(()=>{
+        this.isLoading=false
+        this.$store.dispatch('setNotificationsSeen')
+      }).catch(()=>{
+        this.isLoading=false
+      })
       this.$forceUpdate()
     }
   },
   props: ['position'],
   computed: {
     ...mapState(['notifications'])
-  },
-  mounted() {
-    this.$store.dispatch('setNotificationsSeen')
   }
 }
 </script>
@@ -52,6 +62,8 @@ export default {
 <style scoped>
 .notif {
   padding: 10px;
+  box-sizing: border-box;
+  overflow-x: scroll;
 }
 
 .notif >>> h4 {
@@ -61,13 +73,14 @@ export default {
 .notif >>> .vs-alert__content__text {
   color: white;
   text-align: left;
-  margin-top: 5px;
-  margin-left: 20px;
+  margin-top: 4px;
+  margin-left: 15px;
   font-size: 14px;
 }
 
 .notif >>> .vs-alert {
   margin-top: 15px;
+  height: auto !important;
 }
 
 .icon {
@@ -83,5 +96,11 @@ export default {
 
 .iconLoad {
   opacity: 0;
+}
+.notif >>> .vs-alert::after{
+  background: rgba(var(--vs-color), 0.1);
+}
+.notif >>> .unseen::after{
+  background: rgba(var(--vs-color), 1);
 }
 </style>

@@ -11,7 +11,7 @@
     <div class="hidden">
       <vs-sidebar v-model="active" :open="sideBar" absolute>
         <template #logo>
-          <img :src="userAvatar" alt="avatar" style="border-radius: 30%"/>
+          <img :src="userAvatar" alt="avatar" style="border-radius: 50%; width:40px; height:40px;"/>
           <div style="width: 100%" @click="sideBar = false">
             <i id="close" class="iconify" data-icon="mdi:close"></i>
           </div>

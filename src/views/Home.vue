@@ -1,14 +1,12 @@
 <template>
   <div class="home bodyMargin">
     <fixedHead/>
-    <vs-row>
-      <vs-col lg="4">
+    <vs-row style="margin-top:3rem;">
+      <vs-col lg="6">
         <Notifications v-if="!isMobile" :position="position"/>
       </vs-col>
-      <vs-col lg="8" sm="12" xs="12">
-        <vs-row>
+      <vs-col lg="6" sm="12" xs="12">
           <posts/>
-        </vs-row>
       </vs-col>
 
     </vs-row>

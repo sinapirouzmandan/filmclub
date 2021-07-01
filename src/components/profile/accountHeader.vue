@@ -13,7 +13,7 @@
     </svg>
     <vs-row class="avatars">
       <vs-col w="3">
-        <vs-avatar badge-color="success" circle size="90">
+        <vs-avatar badge-color="success" circle size="80">
           <img :src="userAvatar" alt="avatar" class="avatar">
           <template v-if="userProfile.role == 'reviewer'" #badge>
             Reviewer
@@ -262,8 +262,8 @@ export default {
 }
 
 .avatar {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
 }
 
@@ -293,8 +293,8 @@ export default {
   z-index: 2;
   margin: auto auto;
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 25px;
+  left: 25px;
   width: 30px;
   height: 30px;
   color: white;

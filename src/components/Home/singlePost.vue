@@ -3,7 +3,7 @@
   <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt">
     <vs-card>
       <template #title>
-        <img :src="baseURl + post.authorAvatar"
+        <img :src="post.authorAvatar ? (baseURl + post.authorAvatar) : alternativeAvatar"
              @click="$router.push(`/users/${post.author}`)"
              style="width: 30px; height: 30px; border-radius: 50%; float: left; object-fit:cover;">
         <p class="userId" @click="$router.push(`/users/${post.author}`)">{{post.author}}</p>
@@ -30,16 +30,6 @@
           <i class="iconify" data-icon="bx:bx-like" data-inline="false"></i>
           <p style="color: white; margin-left: 5px;"> {{post.likes}}</p>
         </vs-button>
-        <vs-button
-            circle
-            color="rgb(59,89,153)"
-            flat
-            icon
-            style="display: inline-block; float: right; margin-top: 0;"
-        >
-          <i class="iconify" data-icon="bx:bxs-comment-dots" data-inline="false" style="color:white;"></i>
-          <p style="color: white; margin-left: 5px;">0</p>
-        </vs-button>
         <h3>{{post.title}}</h3>
         <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;" v-if="post.spoiler === true">#spoilers </span><span v-if="post.critic === true">#critic</span> </h6>
       </template>
@@ -60,11 +50,18 @@
           <br>
           {{post.body | sanitize | truncate( 150, ' ...  more')}}
         </p>
+        <router-link :to="{ name: 'comments', params: {postID: post.id } }">
+          <span style="opacity:0.7;">view all 34 comments</span>
+        </router-link>
+        <br>
         <vs-button
             @click="$router.push(`/post/${post.title}/${post.id}`)"
             class="fullPost"
             flat
             v-if="post.fullPostBtn"
+            color="#293337"
+            style="color:white;"
+            active
         >
           View full post
         </vs-button>
@@ -84,7 +81,7 @@ export default {
     return {}
   },
   computed:{
-    ...mapState(['baseURl', 'homePosts'])
+    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar'])
   },
   methods:{
     ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
@@ -115,6 +112,11 @@ export default {
   url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
   font-weight: normal;
 }
+.home {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
 .home >>> .vs-card {
   background-color: var(--vs-cardback) !important;
   width: 100%;
@@ -142,7 +144,6 @@ export default {
 .home >>> .vs-card__text {
   color: white;
   text-align: left;
-
 }
 
 .home >>> .vs-button__content svg, .home >>> .vs-button__content span {
@@ -168,14 +169,19 @@ export default {
 }
 
 .fullPost {
-  margin-left: 40%;
   margin-top: 2rem;
   display: inline;
+  margin-left: 33%;
 }
 .right-text{
   text-align:right;
-  font-size: 18px;
+  font-size: 19px;
   line-height:1.4;
   font-family: Nazanin;
+  opacity: 1;
+}
+.home >>> a{
+  color:white;
+  text-decoration: none;
 }
 </style>

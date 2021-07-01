@@ -8,7 +8,7 @@
   <div class="header">
     <img :src="baseURl + singlePost.poster" alt="" id="headerImage">
     <vs-avatar circle size="70" id="avatarContainer">
-      <img :src="baseURl + singlePost.avatar" alt="" id="avatarImage">
+      <img :src="userAvatar" alt="" id="avatarImage">
     </vs-avatar>
     <span id="username">{{singlePost.username}}</span>
   </div>
@@ -56,31 +56,79 @@
         >
           {{ followText }}
         </vs-button>
-        <vs-button
-            v-else
+        <div id="reviewer" v-else-if="userProfile.role === 'reviewer'">
+          <vs-button
             color="rgb(70,126,246)"
             gradient
             style="width:100%;"
-            @click="editText='Save';loadEditor(); editMode = true;"
+            :loading="isSaving"
+            :disabled="disableEdit"
+            @click="reviewerEditor();"
+        >
+          {{editText}} /  as reviewer
+        </vs-button>
+          <vs-button
+              v-if="loadedEditor"
+              color="rgb(207,20,60)"
+              style="width:100%;"
+              @click="banAPost"
+          >
+            Ban post
+          </vs-button>
+        </div>
+        <div id="useredit" v-else-if="singlePost.username === userProfile.username">
+        <vs-button
+            color="rgb(70,126,246)"
+            gradient
+            style="width:100%;"
+            :loading="isSaving"
+            :disabled="disableEdit"
+            @click="editText='Save'; editMode = true; loadEditor();"
         >
           {{editText}}
         </vs-button>
+          <vs-button
+              v-if="loadedEditor"
+              color="rgb(207,20,60)"
+              style="width:100%;"
+              @click="deletePost"
+          >
+            Delete post
+          </vs-button>
+        </div>
       </vs-col>
     </vs-row>
   </div>
   <hr>
+  <div class="hashtags" v-if="editMode">
+    <div class="hashtag_item">
+      <vs-checkbox primary v-model="critic">
+        #critic
+      </vs-checkbox>
+    </div>
+    <div class="hashtag_item">
+      <vs-checkbox danger v-model="spoiler">
+        #spoilers
+      </vs-checkbox>
+    </div>
+  </div>
   <div v-show="!editMode">
   <div class="body" id="textBody"  dir="auto">
     <div class="section" v-for="(i, index) in singlePost.body" :key="index">
       <h3 v-if="i.type === 'header'">{{i.data.text | sanitize}}</h3>
       <p class="bodyParagraph" v-else-if="i.type === 'paragraph'">{{i.data.text | sanitize}}</p>
-      <img v-else-if="i.type === 'image'" :src="i.data.file.url" alt="" class="imageItemInBody">
+      <img v-else-if="i.type === 'image'" v-lazy="i.data.file.url" alt="" class="imageItemInBody">
     </div>
   </div>
   <p style="margin-bottom: 5rem; opacity:0; font-size:15px;">margin</p>
   </div>
   <div class="editorContainer" v-show="editMode">
   <div id="editor" dir="rtl" spellcheck="false"></div>
+  </div>
+  <div id="comments">
+    <router-link to="/comments">
+      <span style="opacity:0.7;">view all 34 comments</span>
+    </router-link>
   </div>
 </div>
 </template>
@@ -91,6 +139,7 @@ import {mapActions, mapState} from 'vuex'
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import Header from "@editorjs/header";
+import swal from "sweetalert";
 export default {
   name: "singlePost",
   components: {loading},
@@ -106,14 +155,28 @@ export default {
       isLiked: false,
       likeCount: 0,
       editMode: false,
-      editText: 'Edit Post'
+      editText: 'Edit Post',
+      isSaving: false,
+      loadedEditor: false,
+      disableEdit: false,
+      reason: 'default',
+      critic:false,
+      spoiler: false
     }
   },
   computed:{
-    ...mapState(['singlePost', 'baseURl', 'followStatus', 'errMassage', 'userProfile', 'token'])
+    ...mapState(['singlePost', 'baseURl', 'followStatus', 'errMassage', 'userProfile', 'token', 'alternativeAvatar']),
+    userAvatar() {
+      if (this.userProfile.avatar) {
+        return this.baseURl + this.userProfile.avatar
+      } else {
+        return this.alternativeAvatar
+      }
+    },
   },
   methods: {
-    loadEditor(){
+    loadEditor() {
+      if (this.editMode && !this.loadedEditor) {
       const auth = {
         'authorization': `Bearer ${this.token}`
       }
@@ -133,12 +196,82 @@ export default {
           },
           header: Header
         },
-        data:{
+        data: {
           blocks: this.singlePost.body
         }
       })
+        this.loadedEditor = true;
+    }
+      else if(this.editMode && this.loadedEditor){
+        this.isSaving = true
+        this.editor.save().then((outputData) => {
+            let updateObj = {
+              postID: '',
+              body: outputData,
+              reason: 'default',
+              target: 'default',
+              spoiler: false,
+              critic: false
+            }
+            updateObj.postID = this.singlePost._id
+            updateObj.target = this.singlePost.username
+            updateObj.reason = this.reason
+            updateObj.spoiler = this.spoiler
+            updateObj.critic = this.critic
+            this.$store.dispatch('updatePost', updateObj).then(()=>{
+              if (!this.errMassage){
+                this.isSaving = false
+                this.editMode = false
+                this.editText= 'updated successfully'
+                this.disableEdit = true
+              }
+              else {
+                this.$vs.notification({
+                  duration: 3000,
+                  progress: 'auto',
+                  border: null,
+                  position: 'bottom-center',
+                  color: '#296186',
+                  title: this.errMassage,
+                })
+                this.$store.commit('changeErrMsg', null)
+              }
+            })
+          this.isSaving = false
+        }).catch((err) => {
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position: 'bottom-center',
+            color: '#296186',
+            title: "Can't save your post right now. come back later or refresh the page",
+          })
+          this.isSaving = false
+          this.$store.commit('changeErrMsg', null)
+          console.log(err)
+        });
+      }
     },
-    ...mapActions(['getSinglePost', 'toggleFollow', 'getFollowStatus', 'toggleLike']),
+    reviewerEditor(){
+      if(!this.loadedEditor) {
+        this.reason = ''
+        swal("The reason to edit this post", {
+          content: "input",
+        }).then((value) => {
+          if(value){
+            this.reason = value;
+            this.editText='Save';
+            this.editMode = true;
+            this.loadEditor()
+          }
+        });
+      }
+      else {
+        this.loadEditor()
+      }
+    },
+    ...mapActions(['getSinglePost', 'toggleFollow', 'getFollowStatus', 'toggleLike', 'deleteAPost', 'getMyPosts']),
     getNotif() {
       this.isFollowLoading = false
       if (this.errMassage) {
@@ -198,6 +331,54 @@ export default {
       }
       this.isLiked = !this.isLiked
       this.toggleLike(id)
+    },
+    deletePost() {
+      swal({
+        title: "Are you sure?",
+        text: "This post will be permanently deleted",
+        icon: "warning",
+        buttons: true,
+        dangerMode: false,
+      }).then((willDelete) => {
+        if (willDelete) {
+          let delObj = {
+            postID: this.singlePost._id,
+            reason: 'default',
+            target: 'default'
+          }
+          this.deleteAPost(delObj).then(()=>{
+            this.getMyPosts()
+            this.$router.push('/profile')
+            this.getNotif()
+          }).catch(()=>{
+            this.getNotif()
+          })
+        }
+      });
+    },
+    banAPost(){
+      let delObj = {
+        postID: this.singlePost._id,
+        reason: 'default',
+        target: 'default'
+      }
+      swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: false,
+        root: "",
+      }).then((willDelete) => {
+        if (willDelete) {
+            delObj.reason = this.reason
+            delObj.target = this.singlePost.username
+            this.deleteAPost(delObj).then(()=>{
+              this.getMyPosts()
+              this.$router.push('/profile')
+              this.getNotif()
+            })
+        }
+      });
     }
   },
   created() {
@@ -297,5 +478,21 @@ hr {
 }
 .editorContainer{
   margin: 30px;
+}
+#comments{
+  margin-bottom: 70px;
+}
+.single >>> a{
+  color:white;
+  text-decoration: none;
+}
+.hashtags {
+  margin-top: 4rem;
+}
+.hashtag_item{
+  margin-right: 5%;
+  flex-grow: 3;
+  display: inline-block;
+  text-align: center;
 }
 </style>

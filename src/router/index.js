@@ -78,9 +78,10 @@ const routes = [
         component: () => import(/* webpackPrefetch: true */ "../views/singlePost")
     },
     {
-        path: '/edit/:id',
-        name: 'single-post',
-        component: () => import(/* webpackPrefetch: true */ "../views/singlePost")
+        path: '/comments',
+        name: 'comments',
+        component: () => import(/* webpackPrefetch: true */ "../views/comments"),
+        props: true
     },
     {
         path: "*",

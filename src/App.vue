@@ -9,7 +9,7 @@
 :root {
   --vs-gray-3: 0, 0, 0 !important;
   --vs-mainback: #1A1A1D;
-  --vs-navs: #293337;
+  --vs-navs: #2c2f33;
   --vs-cardback: #121818;
   --vs-buttons: #5B3CC4;
   --vs-main-text: #fff;

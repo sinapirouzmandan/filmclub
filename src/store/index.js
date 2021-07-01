@@ -37,7 +37,6 @@ export default new Vuex.Store({
         myPosts: [],
         isPostsLoaded: false,
         //BOX Office
-        isBoxOfficeLoaded: false,
         boxOfficeList: {
             movies: [],
             series: []
@@ -53,7 +52,9 @@ export default new Vuex.Store({
         //single post
         singlePost: [],
         // home posts
-        homePosts: []
+        homePosts: [],
+        //comments
+        postComments: []
     },
     getters: {
         watchListLengthCalc(state) {
@@ -236,7 +237,16 @@ export default new Vuex.Store({
             state.homePosts = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
-        }
+        },
+        fetchPostComments (state,payload) {
+            const now = new Date();
+            payload.forEach((comment)=>{
+                let commentDate = new Date(comment.createdAt);
+                comment.date = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                state.postComments.push(comment)
+            })
+        },
+
     },
     actions: {
         errorHandler({commit}, error) {
@@ -546,19 +556,15 @@ export default new Vuex.Store({
             });
         },
         async getBoxOfficeList({state, commit, dispatch}) {
-            if (!(state.isBoxOfficeLoaded)) {
                 const options = {
                     method: 'GET',
                     url: `${state.baseURl}/boxoffice`
                 };
                 await axios.request(options).then(function (response) {
                     commit('fetchBoxOffice', response.data.Post)
-                    state.isBoxOfficeLoaded = true
                 }).catch(function (error) {
-                    state.isBoxOfficeLoaded = false
                     dispatch('errorHandler', error)
                 });
-            }
         },
         async getUserById({commit, state, dispatch}, user) {
             let userInfo = []
@@ -806,6 +812,63 @@ export default new Vuex.Store({
             };
             await axios.request(options).then((response)=>{
                 commit('fetchHomePosts', response.data.docs)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async getPostComments ({state, dispatch, commit},postID) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/comments/post/${postID}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response)=>{
+                commit('fetchPostComments', response.data)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async updatePost ({state, dispatch},updateObj) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/posts/edit`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    postID: updateObj.postID,
+                    body: JSON.stringify(updateObj.body.blocks),
+                    reason: updateObj.reason,
+                    target:updateObj.target,
+                    spoiler: updateObj.spoiler,
+                    critic: updateObj.critic
+                })
+            };
+            await axios.request(options).then((response)=>{
+                console.log(response.data.message)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async deleteAPost ({state, dispatch, commit},delObj) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/posts/delete`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    postID: delObj.postID,
+                    reason: delObj.reason,
+                    target:delObj.target,
+                })
+            };
+            await axios.request(options).then((response)=>{
+                commit('changeErrMsg', response.data.message)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });

@@ -17,7 +17,7 @@
             </div>
           </div>
           <!-- -----------------        post background        --------------------- -->
-          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
+          <div :style="{background: `url('${post.poster}')`}" class="B-blur_back B-bright_back"></div>
           <!-- -----------------        ///        --------------------- -->
         </div>
       </vs-col>
@@ -28,7 +28,7 @@
     <hr>
     <vs-row>
       <vs-col v-for="(post,index) in boxOfficeList.series" :key="index" w="12">
-        <div v-if="isSerieLoaded" id="B-bright" class="B-movie_card1">
+        <div v-if="isSerieLoaded" id="B-bright2" class="B-movie_card1">
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
             <div class="B-movie_header1">
@@ -38,7 +38,7 @@
             </div>
           </div>
           <!-- -----------------        post background        --------------------- -->
-          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
+          <div :style="{background: `url('${post.poster}')`}" class="B-blur_back B-bright_back"></div>
           <!-- -----------------        ///        --------------------- -->
         </div>
       </vs-col>
@@ -129,6 +129,9 @@ export default {
   float: left;
   margin-right: 20px;
   height: 120px;
+  width:40vw;
+  max-width: 200px;
+  object-fit: cover;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.5);
 }
 

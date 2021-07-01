@@ -31,7 +31,7 @@ export default {
 .logo h1 {
   float: left;
   margin-left: 30px;
-  margin-top: 2vh;
+  margin-top: 15px;
   font-family: 'magic', sans-serif;
 }
 </style>
