@@ -34,7 +34,7 @@
         <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;" v-if="post.spoiler === true">#spoilers </span><span v-if="post.critic === true">#critic</span> </h6>
       </template>
       <template #img>
-        <img id="postImage" v-lazy="baseURl + post.poster"
+        <img id="postImage" v-lazy="post.poster"
              @click="$router.push(`/post/${post.title}/${post.id}`)"
              alt="Image Load Error">
       </template>
@@ -51,7 +51,7 @@
           {{post.body | sanitize | truncate( 150, ' ...  more')}}
         </p>
         <router-link :to="{ name: 'comments', params: {postID: post.id } }">
-          <span style="opacity:0.7;">view all 34 comments</span>
+          <span style="opacity:0.7;">view all {{post.comments}} comments</span>
         </router-link>
         <br>
         <vs-button

@@ -1,5 +1,8 @@
 <template>
 <div class="single">
+  <div class="back" @click="$router.back()">
+    <i class="iconify" data-icon="bx:bx-arrow-back"></i>
+  </div>
   <div class="overlayLoad" v-if="isLoading">
     <div class="loader">
       <loading/>
@@ -126,8 +129,8 @@
   <div id="editor" dir="rtl" spellcheck="false"></div>
   </div>
   <div id="comments">
-    <router-link to="/comments">
-      <span style="opacity:0.7;">view all 34 comments</span>
+    <router-link :to="{ name: 'comments', params: {postID: singlePost._id } }">
+      <span style="opacity:0.7;">view all {{singlePost.comments}} comments</span>
     </router-link>
   </div>
 </div>
@@ -382,6 +385,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('toggleNavbar', false);
     this.getSinglePost(this.$route.params.id).then(()=>{
       this.isLoading = false
       this.isLiked = this.singlePost.isLiked
@@ -406,6 +410,20 @@ export default {
   url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff') format('woff'),
   url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.ttf') format('truetype');
   font-weight: normal;
+}
+.back {
+  margin-left: 7vw;
+  font-size: 25px;
+  text-align: left;
+  position: absolute;
+  top:20px;
+  background-color: rgba(255, 255, 255, 0.24);
+  width:50px;
+  height:50px;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 50%;
 }
 .header {
   width:100%;

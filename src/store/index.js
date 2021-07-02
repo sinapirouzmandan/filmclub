@@ -240,11 +240,13 @@ export default new Vuex.Store({
         },
         fetchPostComments (state,payload) {
             const now = new Date();
+            let allComments = []
             payload.forEach((comment)=>{
                 let commentDate = new Date(comment.createdAt);
                 comment.date = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
-                state.postComments.push(comment)
+                allComments.push(comment)
             })
+            state.postComments = allComments
         },
 
     },
@@ -808,6 +810,9 @@ export default new Vuex.Store({
                 url: `${state.baseURl}/posts/home`,
                 headers: {
                     'authorization': `Bearer ${state.token}`
+                },
+                params:{
+                    first_date: '2021-07-01T11:17:55.979'
                 }
             };
             await axios.request(options).then((response)=>{
@@ -869,6 +874,34 @@ export default new Vuex.Store({
             };
             await axios.request(options).then((response)=>{
                 commit('changeErrMsg', response.data.message)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async addNewComment ({state, dispatch},comment) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/posts/comment`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    comment: comment.text,
+                    post_id: comment.postID,
+                })
+            };
+            if (comment.parent) {
+                options.data.parent=comment.parent
+            }
+            await axios.request(options).then((response)=>{
+                state.postComments.unshift({
+                    _id:  response.data.comment.id,
+                    content: response.data.comment.content,
+                    user:response.data.comment.user,
+                    date: 0,
+                    specialID: comment.spacialID
+                })
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });

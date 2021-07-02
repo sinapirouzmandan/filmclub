@@ -23,6 +23,7 @@ head, body {
   overflow: initial;
   margin: 0;
   overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
 }
 
 .bodyMargin {

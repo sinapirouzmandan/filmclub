@@ -1,12 +1,12 @@
 <template>
-<div>
+<div id="container">
   <div class="header">
-    <div class="back" @click="$router.push('/profile')">
+    <div class="back" @click="$router.back()">
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <span id="commentHeader">Comments</span>
   </div>
-  <div class="singleComment" v-for="(comment) in postComments" :key="comment._id">
+  <div class="singleComment" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID">
     <vs-avatar class="avatar" circle>
       <img src="" alt="">
     </vs-avatar>
@@ -20,6 +20,12 @@
       </div>
     </div>
   </div>
+  <div class="addNewComment">
+    <div @click="postComment()">
+    <i class="iconify addCommentIcon" data-icon="mdi:message-reply"></i>
+    </div>
+    <vs-input border v-model="commentText" :placeholder="'new comment'" id="commentInput"/>
+  </div>
 </div>
 </template>
 
@@ -27,13 +33,30 @@
 import {mapActions, mapState} from 'vuex'
 export default {
   name: "comments",
+  data(){
+    return {
+      commentText: ''
+    }
+  },
   methods:{
-    ...mapActions(['getPostComments'])
+    ...mapActions(['getPostComments', 'addNewComment']),
+    postComment(){
+      let comment = {
+        text: this.commentText,
+        postID: this.postID,
+        spacialID: 'newComment' + Math.floor(Math.random() * 1000)
+      }
+      this.addNewComment(comment).then(()=>{
+        var element = document.querySelector(`#${comment.spacialID}`);
+        element.scrollIntoView({ behavior: 'smooth', block: 'end'});
+      })
+    }
   },
   computed:{
     ...mapState(['postComments'])
   },
   created() {
+    this.$store.commit('toggleNavbar', false);
     if(this.postID){
       this.getPostComments(this.postID)
     }
@@ -99,5 +122,33 @@ export default {
   opacity:0.7;
   font-size: 13px;
   margin-top:-0.7rem;
+}
+.addNewComment {
+  position:fixed;
+  bottom:0;
+  box-sizing: border-box;
+  height:60px;
+  width:100%;
+  background-color:  var(--vs-navs);
+  display: flex;
+  align-items: center;
+  z-index:2;
+}
+.addCommentIcon {
+  font-size: 18px;
+  margin-left: 20px;
+  border: 1px solid white;
+  border-radius: 50%;
+  padding: 7px;
+}
+#commentInput {
+  width:80%;
+  margin-left: 10px;
+}
+#commentInput>>> .vs-input {
+  color: #d5cccc;
+}
+#container {
+  padding-bottom: 4rem;
 }
 </style>
