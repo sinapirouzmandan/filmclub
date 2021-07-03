@@ -948,6 +948,9 @@ export default new Vuex.Store({
                         user:response.data.comment.user,
                         date: 0,
                         specialID: comment.spacialID,
+                        userId:{
+                            avatar: state.userProfile.avatar
+                        }
                     })
                 }).catch(function (error) {
                     dispatch('errorHandler', error)

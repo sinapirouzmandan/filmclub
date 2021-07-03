@@ -5,43 +5,49 @@
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <span id="commentHeader">Comments</span>
-    <div class="delete">
+    <div class="delete" v-if="selectedOne !== false">
       <i class="iconify" data-icon="mdi:trash-can-outline"></i>
     </div>
+    <div class="close" @click="selectComment(selectedOne)"  v-if="selectedOne !== false">
+      <i class="iconify" data-icon="mdi:close"></i>
+    </div>
   </div>
-  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
+  <loading v-if="isLoading"/>
+  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " v-long-press="500"
+       @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id)">
     <vs-avatar class="avatar" circle>
-      <img src="" alt="">
+      <img style="object-fit: cover; width:100%; height:100%;" :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar" alt="">
     </vs-avatar>
     <div class="body">
-      <p class="commentText"><span class="username">xina0x</span>  {{comment.content}}</p>
+      <p class="commentText"><span class="username">{{ comment.userId.username }}</span>  {{comment.content}}</p>
       <div class="sub">
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${comment.userId.username}` ; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
         <br>
         <div class="replies" @click="loadChilds($event, comment._id, comment._id)">
-          <span>---- view 23 replies</span>
+          <span>---- view replies</span>
         </div>
       </div>
     </div>
-    <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
+    <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="childComment.specialID ? childComment.specialID : childComment._id " v-long-press="500"
+         @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id)" >
       <vs-avatar class="avatar" circle>
-        <img style="object-fit: cover;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="">
+        <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="">
       </vs-avatar>
       <div class="body">
-        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> <span style="color:#6b74a7;"> @xina0x</span>  {{childComment.content}}</p>
+        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> {{childComment.content}}</p>
         <div class="sub">
         <span class="subTexts">
           <span v-if="childComment.date !== 0">{{childComment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='reply to @xina0x'; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
           <div class="replies" @click="loadChilds($event, childComment._id, comment.id)">
-            <span>---- view 23 replies</span>
+            <span>---- view replies</span>
           </div>
         </div>
       </div>
@@ -58,19 +64,29 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+import LongPress from 'vue-directive-long-press'
+import loading from '../components/loading'
 export default {
   name: "comments",
+  components:{
+    loading
+  },
+  directives: {
+    'long-press': LongPress
+  },
   data(){
     return {
+      isLoading: false,
       commentText: '',
       inputPlaceholder: 'New comment',
       reply: false,
       parent: null,
-      upperParent: null
+      upperParent: null,
+      selectedOne: false
     }
   },
   methods:{
-    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent']),
+    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile']),
     postComment(){
       let comment = {
         text: this.commentText,
@@ -96,6 +112,9 @@ export default {
     focus(id){
       document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
     },
+    unfocus(){
+      document.getElementById(this.selectedOne).style.backgroundColor = 'transparent'
+    },
     loadChilds(event, parent, upperParent){
       let parentObj = {
         parent: parent,
@@ -104,19 +123,40 @@ export default {
       this.getCommentsByParent(parentObj).then(()=>{
         event.target.innerHTML = ''
       })
+    },
+    selectComment(id){
+      if (this.userProfile.role == 'reviewer' || id.indexOf('newComment') > -1) {
+        if (this.selectedOne === false) {
+          this.focus(id)
+          this.selectedOne = id
+        } else {
+          this.unfocus()
+          this.selectedOne = false
+        }
+      }
+      else if(this.selectedOne) {
+        this.unfocus()
+        this.selectedOne = false
+      }
     }
   },
   computed:{
-    ...mapState(['postComments', 'baseURl', 'alternativeAvatar']),
+    ...mapState(['postComments', 'baseURl', 'alternativeAvatar', 'userProfile']),
   },
   created() {
+    this.isLoading = true
     this.$store.commit('toggleNavbar', false);
     if(this.postID){
-      this.getPostComments(this.postID)
+      this.getPostComments(this.postID).then(()=>{
+        this.isLoading =false
+      })
     }
     else {
       this.$router.push('/')
     }
+  },
+  mounted() {
+    this.getUserProfile()
   },
   props: {
     postID: {
@@ -143,6 +183,12 @@ export default {
 .delete{
   position:absolute;
   right: 7vw;
+  font-size: 25px;
+  text-align: right;
+}
+.close{
+  position:absolute;
+  right: 20vw;
   font-size: 25px;
   text-align: right;
 }
