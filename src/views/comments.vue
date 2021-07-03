@@ -22,26 +22,26 @@
           <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id; focus(comment._id)">reply</span>
         </span>
         <br>
-        <div class="replies" @click="loadChilds($event)">
+        <div class="replies" @click="loadChilds($event, comment._id)">
           <span>---- view 23 replies</span>
         </div>
-        <div class="singleComment childs hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
-          <vs-avatar class="avatar" circle>
-            <img src="" alt="">
-          </vs-avatar>
-          <div class="body">
-            <p class="commentText"><span class="username">xina0x</span>  {{comment.content}}</p>
-            <div class="sub">
+      </div>
+    </div>
+    <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
+      <vs-avatar class="avatar" circle>
+        <img style="object-fit: cover;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="">
+      </vs-avatar>
+      <div class="body">
+        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> <span style="color:#6b74a7;"> @xina0x</span>  {{childComment.content}}</p>
+        <div class="sub">
         <span class="subTexts">
-          <span v-if="comment.date !== 0">{{comment.date}}</span>
+          <span v-if="childComment.date !== 0">{{childComment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='reply to @xina0x'; parent=comment._id; focus(comment._id)">reply</span>
         </span>
-              <br>
-              <div class="replies" @click="loadChilds($event)">
-                <span>---- view 23 replies</span>
-              </div>
-            </div>
+          <br>
+          <div class="replies" @click="loadChilds($event, childComment._id)">
+            <span>---- view 23 replies</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(['getPostComments', 'addNewComment']),
+    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent']),
     postComment(){
       let comment = {
         text: this.commentText,
@@ -93,12 +93,15 @@ export default {
     focus(id){
       document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
     },
-    loadChilds(event){
-      event.target.innerHTML = ''
+    loadChilds(event, id){
+      console.log(id)
+      this.getCommentsByParent(id).then(()=>{
+        event.target.innerHTML = ''
+      })
     }
   },
   computed:{
-    ...mapState(['postComments'])
+    ...mapState(['postComments', 'baseURl', 'alternativeAvatar']),
   },
   created() {
     this.$store.commit('toggleNavbar', false);
@@ -208,6 +211,7 @@ export default {
   margin-top: 0.5rem;
 }
 .childs {
-  opacity:1 !important;
+  margin-left:10%;
+  width:90%;
 }
 </style>

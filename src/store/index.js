@@ -257,6 +257,7 @@ export default new Vuex.Store({
                     let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
                     comment.date = passed + ' minutes'
                 }
+                comment.child =[]
                 allComments.push(comment)
             })
             state.postComments = allComments.sort((function (a, b) {
@@ -893,17 +894,94 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
+        async addNewComment ({state, dispatch},comment) {
+            if (comment.parent) {
+                let options = {
+                    method: 'POST',
+                    url: `${state.baseURl}/posts/comment`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        comment: comment.text,
+                        post_id: comment.postID,
+                        parent: comment.parent
+                    })
+                };
+                await axios.request(options).then((response)=>{
+                    state.postComments.forEach((item)=>{
+                        console.log(item._id === comment.parent)
+                        if (item._id === comment.parent) {
+                            item.child.unshift({
+                                _id:  response.data.comment.id,
+                                content: response.data.comment.content,
+                                user:response.data.comment.user,
+                                date: 0,
+                                specialID: comment.spacialID,
+                                userId:{
+                                    avatar: state.userProfile.avatar
+                                }
+                            })
+                        }
+                    })
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+            else {
+                let options = {
+                    method: 'POST',
+                    url: `${state.baseURl}/posts/comment`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        comment: comment.text,
+                        post_id: comment.postID,
+                    })
+                };
+                await axios.request(options).then((response)=>{
+                    state.postComments.unshift({
+                        _id:  response.data.comment.id,
+                        content: response.data.comment.content,
+                        user:response.data.comment.user,
+                        date: 0,
+                        specialID: comment.spacialID,
+                    })
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+        },
         async getCommentsByParent ({state, dispatch},parent) {
+            const now = new Date()
             const options = {
-                method: 'POST',
-                url: `${state.baseURl}posts/comments/parent/${parent}`,
+                method: 'GET',
+                url: `${state.baseURl}/posts/comments/parent/${parent}`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
             };
-            await axios.request(options).then(()=>{
-            //todo list
+            await axios.request(options).then((response)=>{
+                state.postComments.forEach((item)=>{
+                    if (item._id === parent) {
+                        response.data.comments.forEach((commentItem)=>{
+                            let commentDate = new Date(commentItem.createdAt);
+                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                            if (passed > 0) {
+                                commentItem.date = passed + ' hours'
+                            }
+                            else {
+                                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                                commentItem.date = passed + ' minutes'
+                            }
+                            item.child.push(commentItem)
+                        })
+                    }
+                })
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
