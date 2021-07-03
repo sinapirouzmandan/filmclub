@@ -65,7 +65,7 @@
         >
           View full post
         </vs-button>
-        <small style="opacity: 0.3;" v-show="post.past !== 0"><br>{{post.past}} hours ago</small>
+        <small style="opacity: 0.3;" v-show="post.past !== 0"><br>{{post.past}}</small>
         <small style="opacity: 0.3;" v-show="post.past === 0"><br>Just now </small>
       </template>
     </vs-card>

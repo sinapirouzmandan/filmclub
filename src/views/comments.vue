@@ -5,8 +5,11 @@
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <span id="commentHeader">Comments</span>
+    <div class="delete">
+      <i class="iconify" data-icon="mdi:trash-can-outline"></i>
+    </div>
   </div>
-  <div class="singleComment" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID">
+  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
     <vs-avatar class="avatar" circle>
       <img src="" alt="">
     </vs-avatar>
@@ -14,9 +17,33 @@
       <p class="commentText"><span class="username">xina0x</span>  {{comment.content}}</p>
       <div class="sub">
         <span class="subTexts">
-          <p v-if="comment.date !== 0">{{comment.date}} hours</p>
-          <p v-else>Just now</p>
+          <span v-if="comment.date !== 0">{{comment.date}}</span>
+          <span v-else>Just now</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id; focus(comment._id)">reply</span>
         </span>
+        <br>
+        <div class="replies" @click="loadChilds($event)">
+          <span>---- view 23 replies</span>
+        </div>
+        <div class="singleComment childs hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " >
+          <vs-avatar class="avatar" circle>
+            <img src="" alt="">
+          </vs-avatar>
+          <div class="body">
+            <p class="commentText"><span class="username">xina0x</span>  {{comment.content}}</p>
+            <div class="sub">
+        <span class="subTexts">
+          <span v-if="comment.date !== 0">{{comment.date}}</span>
+          <span v-else>Just now</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id; focus(comment._id)">reply</span>
+        </span>
+              <br>
+              <div class="replies" @click="loadChilds($event)">
+                <span>---- view 23 replies</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -24,7 +51,7 @@
     <div @click="postComment()">
     <i class="iconify addCommentIcon" data-icon="mdi:message-reply"></i>
     </div>
-    <vs-input border v-model="commentText" :placeholder="'new comment'" id="commentInput"/>
+    <vs-input border v-model="commentText" :placeholder="inputPlaceholder" id="commentInput"/>
   </div>
 </div>
 </template>
@@ -35,7 +62,10 @@ export default {
   name: "comments",
   data(){
     return {
-      commentText: ''
+      commentText: '',
+      inputPlaceholder: 'New comment',
+      reply: false,
+      parent: null
     }
   },
   methods:{
@@ -44,12 +74,27 @@ export default {
       let comment = {
         text: this.commentText,
         postID: this.postID,
-        spacialID: 'newComment' + Math.floor(Math.random() * 1000)
+        spacialID: 'newComment' + Math.floor(Math.random() * 1000),
+        parent: null
       }
-      this.addNewComment(comment).then(()=>{
-        var element = document.querySelector(`#${comment.spacialID}`);
-        element.scrollIntoView({ behavior: 'smooth', block: 'end'});
-      })
+      if (this.reply) {
+        comment.parent=this.parent
+      }
+        this.addNewComment(comment).then(()=>{
+          var element = document.querySelector(`#${comment.spacialID}`);
+          element.scrollIntoView({ behavior: 'smooth', block: 'end'});
+        })
+      this.commentText = ''
+      this.reply = false
+      this.inputPlaceholder = 'New comment'
+      document.getElementById(this.parent).style.backgroundColor = 'transparent'
+      this.parent = null
+    },
+    focus(id){
+      document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
+    },
+    loadChilds(event){
+      event.target.innerHTML = ''
     }
   },
   computed:{
@@ -86,6 +131,12 @@ export default {
   margin-left: 5vw;
   font-size: 25px;
 }
+.delete{
+  position:absolute;
+  right: 7vw;
+  font-size: 25px;
+  text-align: right;
+}
 #commentHeader{
   margin-left:5vw;
   font-size: 20px;
@@ -94,7 +145,7 @@ export default {
   width:100%;
   height:auto;
   box-sizing: border-box;
-  padding: 3px 10px;
+  padding: 10px 10px;
 }
 .avatar{
   float: left;
@@ -150,5 +201,13 @@ export default {
 }
 #container {
   padding-bottom: 4rem;
+}
+.replies {
+  font-size: 14px;
+  opacity:0.5;
+  margin-top: 0.5rem;
+}
+.childs {
+  opacity:1 !important;
 }
 </style>

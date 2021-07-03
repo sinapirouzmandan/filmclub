@@ -228,6 +228,12 @@ export default new Vuex.Store({
                 // eslint-disable-next-line no-unused-vars
                 var postDate = new Date(post.createdAt)
                 var Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()) / 1000 / 60 / 60);
+                if (Difference_In_Time > 0) {
+                    Difference_In_Time = Difference_In_Time + ' hours ago'
+                }
+                else {
+                    Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()) / 1000 / 60) + ' minutes ago'
+                }
                 post.past = Difference_In_Time
                 post.fullPostBtn = needFullPost
                 post.body = paragraph
@@ -243,10 +249,19 @@ export default new Vuex.Store({
             let allComments = []
             payload.forEach((comment)=>{
                 let commentDate = new Date(comment.createdAt);
-                comment.date = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                if (passed > 0) {
+                    comment.date = passed + ' hours'
+                }
+                else {
+                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                    comment.date = passed + ' minutes'
+                }
                 allComments.push(comment)
             })
-            state.postComments = allComments
+            state.postComments = allComments.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
         },
 
     },
@@ -860,7 +875,7 @@ export default new Vuex.Store({
         },
         async deleteAPost ({state, dispatch, commit},delObj) {
             const options = {
-                method: 'POST',
+                method: 'DELETE',
                 url: `${state.baseURl}/posts/delete`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,
@@ -878,30 +893,17 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async addNewComment ({state, dispatch},comment) {
+        async getCommentsByParent ({state, dispatch},parent) {
             const options = {
                 method: 'POST',
-                url: `${state.baseURl}/posts/comment`,
+                url: `${state.baseURl}posts/comments/parent/${parent}`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                data: qs.stringify({
-                    comment: comment.text,
-                    post_id: comment.postID,
-                })
             };
-            if (comment.parent) {
-                options.data.parent=comment.parent
-            }
-            await axios.request(options).then((response)=>{
-                state.postComments.unshift({
-                    _id:  response.data.comment.id,
-                    content: response.data.comment.content,
-                    user:response.data.comment.user,
-                    date: 0,
-                    specialID: comment.spacialID
-                })
+            await axios.request(options).then(()=>{
+            //todo list
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
