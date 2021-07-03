@@ -19,10 +19,10 @@
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='replying to xina0x'; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
         <br>
-        <div class="replies" @click="loadChilds($event, comment._id)">
+        <div class="replies" @click="loadChilds($event, comment._id, comment._id)">
           <span>---- view 23 replies</span>
         </div>
       </div>
@@ -37,10 +37,10 @@
         <span class="subTexts">
           <span v-if="childComment.date !== 0">{{childComment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='reply to @xina0x'; parent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder='reply to @xina0x'; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
-          <div class="replies" @click="loadChilds($event, childComment._id)">
+          <div class="replies" @click="loadChilds($event, childComment._id, comment.id)">
             <span>---- view 23 replies</span>
           </div>
         </div>
@@ -65,7 +65,8 @@ export default {
       commentText: '',
       inputPlaceholder: 'New comment',
       reply: false,
-      parent: null
+      parent: null,
+      upperParent: null
     }
   },
   methods:{
@@ -75,10 +76,12 @@ export default {
         text: this.commentText,
         postID: this.postID,
         spacialID: 'newComment' + Math.floor(Math.random() * 1000),
-        parent: null
+        parent: null,
+        upperParent:null
       }
       if (this.reply) {
         comment.parent=this.parent
+        comment.upperParent=this.upperParent
       }
         this.addNewComment(comment).then(()=>{
           var element = document.querySelector(`#${comment.spacialID}`);
@@ -93,9 +96,12 @@ export default {
     focus(id){
       document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
     },
-    loadChilds(event, id){
-      console.log(id)
-      this.getCommentsByParent(id).then(()=>{
+    loadChilds(event, parent, upperParent){
+      let parentObj = {
+        parent: parent,
+        upperParent:upperParent
+      }
+      this.getCommentsByParent(parentObj).then(()=>{
         event.target.innerHTML = ''
       })
     }

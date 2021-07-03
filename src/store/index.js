@@ -911,8 +911,7 @@ export default new Vuex.Store({
                 };
                 await axios.request(options).then((response)=>{
                     state.postComments.forEach((item)=>{
-                        console.log(item._id === comment.parent)
-                        if (item._id === comment.parent) {
+                        if (item._id === comment.upperParent) {
                             item.child.unshift({
                                 _id:  response.data.comment.id,
                                 content: response.data.comment.content,
@@ -959,7 +958,7 @@ export default new Vuex.Store({
             const now = new Date()
             const options = {
                 method: 'GET',
-                url: `${state.baseURl}/posts/comments/parent/${parent}`,
+                url: `${state.baseURl}/posts/comments/parent/${parent.parent}`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -967,7 +966,7 @@ export default new Vuex.Store({
             };
             await axios.request(options).then((response)=>{
                 state.postComments.forEach((item)=>{
-                    if (item._id === parent) {
+                    if (item._id === parent.upperParent) {
                         response.data.comments.forEach((commentItem)=>{
                             let commentDate = new Date(commentItem.createdAt);
                             let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
@@ -979,6 +978,24 @@ export default new Vuex.Store({
                                 commentItem.date = passed + ' minutes'
                             }
                             item.child.push(commentItem)
+                        })
+                    }
+                    else {
+                        item.child.forEach((subComment)=>{
+                            if (subComment._id === parent.parent) {
+                                response.data.comments.forEach((commentItem)=>{
+                                    let commentDate = new Date(commentItem.createdAt);
+                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                                    if (passed > 0) {
+                                        commentItem.date = passed + ' hours'
+                                    }
+                                    else {
+                                        let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                                        commentItem.date = passed + ' minutes'
+                                    }
+                                    item.child.push(commentItem)
+                                })
+                            }
                         })
                     }
                 })
