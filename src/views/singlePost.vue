@@ -20,6 +20,7 @@
       <vs-col w="6">
         <vs-row>
         <vs-col w="6">
+          <router-link :to="{ name: 'comments', params: {postID: singlePost._id } }">
         <vs-button
             circle
             color="rgb(59,89,153)"
@@ -31,6 +32,7 @@
           <i class="iconify" data-icon="bx:bxs-comment-dots" data-inline="false" style="color:white;"></i>
           <p style="color: white; margin-left: 5px;"> {{singlePost.comments}}</p>
         </vs-button>
+          </router-link>
       </vs-col>
         <vs-col w="6">
           <vs-button
@@ -116,6 +118,11 @@
     </div>
   </div>
   <div v-show="!editMode">
+    <div class="displayHashtags">
+      <span v-if="singlePost.critic">#critic</span>
+      <span v-if="singlePost.spoiler" style="color:red; margin-left: 1rem;">#spoiler</span>
+      <span></span>
+    </div>
   <div class="body" id="textBody"  dir="auto">
     <div class="section" v-for="(i, index) in singlePost.body" :key="index">
       <h3 v-if="i.type === 'header'">{{i.data.text | sanitize}}</h3>
@@ -403,14 +410,6 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Yekan';
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot');
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot?#iefix') format('embedded-opentype'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff') format('woff'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.ttf') format('truetype');
-  font-weight: normal;
-}
 .back {
   margin-left: 7vw;
   font-size: 25px;
@@ -512,5 +511,8 @@ hr {
   flex-grow: 3;
   display: inline-block;
   text-align: center;
+}
+.displayHashtags {
+
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading style="margin-top:20vh;" v-if="isLoading"/>
   <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt">
     <vs-card>
       <template #title>
@@ -75,10 +76,14 @@
 
 <script>
 import  {mapState, mapActions} from 'vuex'
+import loading from '../../components/loading'
 export default {
   name: "singlePost",
+  components: {loading},
   data() {
-    return {}
+    return {
+      isLoading: false
+    }
   },
   computed:{
     ...mapState(['baseURl', 'homePosts', 'alternativeAvatar'])
@@ -98,7 +103,14 @@ export default {
     }
   },
   mounted() {
-     this.getHomePosts()
+     this.getHomePosts().then(()=>{
+       this.isLoading=false
+     }).catch(()=>{
+       this.isLoading = false
+     })
+},
+created() {
+    this.isLoading = true
 }
 }
 </script>

@@ -188,11 +188,15 @@ export default new Vuex.Store({
             state.statitics.posts = payload.posts
         },
         fetchMyPosts (state,payload) {
-            state.myPosts = payload
             state.isPostsLoaded = true
+            state.myPosts = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
         },
         fetchUserPosts (state,payload) {
-            state.userPosts = payload
+            state.userPosts = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
         },
         fetchSinglePost (state,payload) {
             payload.post.body = JSON.parse(payload.post.body)
@@ -227,12 +231,15 @@ export default new Vuex.Store({
                 })
                 // eslint-disable-next-line no-unused-vars
                 var postDate = new Date(post.createdAt)
-                var Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()) / 1000 / 60 / 60);
-                if (Difference_In_Time > 0) {
-                    Difference_In_Time = Difference_In_Time + ' hours ago'
+                var Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
+                if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) + ' days ago'
+                }
+                else if(Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60) + ' hours ago'
                 }
                 else {
-                    Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()) / 1000 / 60) + ' minutes ago'
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 ) + ' minutes ago'
                 }
                 post.past = Difference_In_Time
                 post.fullPostBtn = needFullPost
@@ -920,7 +927,8 @@ export default new Vuex.Store({
                                 specialID: comment.spacialID,
                                 userId:{
                                     avatar: state.userProfile.avatar
-                                }
+                                },
+                                child: []
                             })
                         }
                     })
@@ -950,7 +958,8 @@ export default new Vuex.Store({
                         specialID: comment.spacialID,
                         userId:{
                             avatar: state.userProfile.avatar
-                        }
+                        },
+                        child: []
                     })
                 }).catch(function (error) {
                     dispatch('errorHandler', error)
@@ -1002,6 +1011,24 @@ export default new Vuex.Store({
                         })
                     }
                 })
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async deleteAComment ({state, dispatch},id) {
+            const options = {
+                method: 'DELETE',
+                url: `${state.baseURl}/posts/comment/delete`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    commentID: id
+                })
+            };
+            await axios.request(options).then((response)=>{
+                console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });

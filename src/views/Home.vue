@@ -29,7 +29,7 @@ export default {
         position: 'fixed',
         top: '3rem',
         maxWidth: '550px'
-      }
+      },
     }
   },
   created() {

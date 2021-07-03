@@ -21,7 +21,7 @@ export default {
 
 .loader-centre {
   height: 200px;
-  width: 100vw;
+  width: 98vw;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -5,7 +5,7 @@
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <span id="commentHeader">Comments</span>
-    <div class="delete" v-if="selectedOne !== false">
+    <div class="delete" v-if="selectedOne !== false" @click="deleteComment">
       <i class="iconify" data-icon="mdi:trash-can-outline"></i>
     </div>
     <div class="close" @click="selectComment(selectedOne)"  v-if="selectedOne !== false">
@@ -13,13 +13,13 @@
     </div>
   </div>
   <loading v-if="isLoading"/>
-  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id " v-long-press="500"
-       @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id)">
+  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id ">
     <vs-avatar class="avatar" circle>
       <img style="object-fit: cover; width:100%; height:100%;" :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar" alt="">
     </vs-avatar>
-    <div class="body">
-      <p class="commentText"><span class="username">{{ comment.userId.username }}</span>  {{comment.content}}</p>
+    <div class="body" v-long-press="500"
+         @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
+      <p class="commentText"><span class="username">{{ comment.userId.username }}</span> <span class="yekan">{{comment.content}} </span></p>
       <div class="sub">
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>
@@ -27,13 +27,13 @@
           <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${comment.userId.username}` ; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
         <br>
-        <div class="replies" @click="loadChilds($event, comment._id, comment._id)">
+        <div class="replies" @click="loadChilds($event, comment._id, comment._id)" v-if="comment.hasChild">
           <span>---- view replies</span>
         </div>
       </div>
     </div>
     <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="childComment.specialID ? childComment.specialID : childComment._id " v-long-press="500"
-         @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id)" >
+         @long-press-start="selectComment(childComment.specialID ? childComment.specialID : childComment._id, comment._id)" >
       <vs-avatar class="avatar" circle>
         <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="">
       </vs-avatar>
@@ -46,7 +46,7 @@
           <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
-          <div class="replies" @click="loadChilds($event, childComment._id, comment.id)">
+          <div class="replies" @click="loadChilds($event, childComment._id, comment.id)" v-if="childComment.hasChild">
             <span>---- view replies</span>
           </div>
         </div>
@@ -82,11 +82,12 @@ export default {
       reply: false,
       parent: null,
       upperParent: null,
-      selectedOne: false
+      selectedOne: false,
+      deleteID: ''
     }
   },
   methods:{
-    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile']),
+    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile', 'deleteAComment']),
     postComment(){
       let comment = {
         text: this.commentText,
@@ -124,9 +125,10 @@ export default {
         event.target.innerHTML = ''
       })
     },
-    selectComment(id){
+    selectComment(id, del){
       if (this.userProfile.role == 'reviewer' || id.indexOf('newComment') > -1) {
         if (this.selectedOne === false) {
+          this.deleteID = del
           this.focus(id)
           this.selectedOne = id
         } else {
@@ -138,6 +140,12 @@ export default {
         this.unfocus()
         this.selectedOne = false
       }
+    },
+    deleteComment(){
+        this.deleteAComment(this.deleteID)
+      document.getElementById(this.selectedOne).style.display = 'none'
+      this.selectedOne = false
+      this.deleteID = ''
     }
   },
   computed:{
@@ -250,9 +258,11 @@ export default {
 #commentInput {
   width:80%;
   margin-left: 10px;
+
 }
 #commentInput>>> .vs-input {
   color: #d5cccc;
+  font-size: 15px;
 }
 #container {
   padding-bottom: 4rem;
@@ -265,5 +275,8 @@ export default {
 .childs {
   margin-left:10%;
   width:90%;
+}
+.yekan{
+  font-family:Yekan;
 }
 </style>
