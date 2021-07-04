@@ -9,7 +9,7 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.37:3000',
+        baseURl: 'http://192.168.1.34:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -613,7 +613,7 @@ export default new Vuex.Store({
             });
             commit('fetchUserInfo', userInfo)
         },
-        async toggleFollow({state, dispatch}, user) {
+        async toggleFollow({state, dispatch, commit}, user) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/users/follow/${user}`,
@@ -621,7 +621,9 @@ export default new Vuex.Store({
                     'authorization': `Bearer ${state.token}`
                 }
             };
-            await axios.request(options).catch(function (error) {
+            await axios.request(options).then(()=>{
+                commit('changeErrMsg', null)
+            }).catch(function (error) {
                     dispatch('errorHandler', error)
             });
         },
