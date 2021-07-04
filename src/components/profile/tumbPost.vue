@@ -12,7 +12,7 @@
           </template>
           <template #text>
             <p>
-              {{post.body.replace('nbsp', ' ').replace('& ;', '')}}
+              {{post.body | sanitize}}
             </p>
           </template>
           <template #interactions>

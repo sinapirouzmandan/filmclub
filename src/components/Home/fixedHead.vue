@@ -1,7 +1,7 @@
 <template>
   <nav class="xi-top-head">
     <div class="logo">
-      <h1>MovieBar</h1>
+      <h1>Film Club</h1>
     </div>
   </nav>
 </template>

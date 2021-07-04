@@ -2,7 +2,7 @@
   <div class="settingFather">
     <nav class="xi-top-head">
       <div class="logo">
-        <h1>MovieBar</h1>
+        <h1>Film Club</h1>
       </div>
       <div class="settings" @click="sideBar = !sideBar">
         <i class="iconify" data-icon="mdi:menu"></i>

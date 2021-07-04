@@ -75,21 +75,26 @@
 </template>
 
 <script>
-import  {mapState, mapActions} from 'vuex'
+import  {mapState, mapActions, mapMutations} from 'vuex'
 import loading from '../../components/loading'
+// eslint-disable-next-line no-unused-vars
+import {getHomePostsCache, putHomePosts} from '../../store/clientDB'
 export default {
   name: "singlePost",
   components: {loading},
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      page:1,
+      requestAgain: true
     }
   },
   computed:{
-    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar'])
+    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage'])
   },
   methods:{
     ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
+    ...mapMutations(['fetchHomePostsFromCache']),
     togglerLike(post){
       this.toggleLike(post.id)
       if (post.isLiked){
@@ -100,18 +105,47 @@ export default {
         post.likes += 1
         post.isLiked = true
       }
-    }
+    },
+    getNextPosts() {
+      window.onscroll = () => {
+        let topOfWindow = document.documentElement.scrollTop === 0;
+        if (topOfWindow && this.homeHasNextPage) {
+          let homeObj = {
+            page: this.page,
+            date: localStorage.getItem('lastRetreviedDate')
+          }
+          this.getHomePosts(homeObj).then(()=>{
+            localStorage.setItem('lastRetreviedDate', this.homePosts[0].createdAt)
+            this.page += 1
+            putHomePosts(this.homePosts)
+          })
+        }
+        }
+      }
   },
   mounted() {
-     this.getHomePosts().then(()=>{
-       this.isLoading=false
-     }).catch(()=>{
-       this.isLoading = false
-     })
+    this.getNextPosts()
+    if (localStorage.getItem('firstTimeLoad')) {
+      getHomePostsCache().then((posts)=>{
+        this.fetchHomePostsFromCache(posts)
+      })
+    }
+    else {
+      this.isLoading = true
+      const homeObj = {
+        page: 1
+      }
+      this.getHomePosts(homeObj).then(()=>{
+        window.scrollTo(0,document.body.scrollHeight);
+        this.isLoading=false
+        localStorage.setItem('firstTimeLoad', true)
+        putHomePosts(this.homePosts)
+        localStorage.setItem('lastRetreviedDate', this.homePosts[0].createdAt)
+      }).catch(()=>{
+        this.isLoading = false
+      })
+    }
 },
-created() {
-    this.isLoading = true
-}
 }
 </script>
 

@@ -53,8 +53,10 @@ export default new Vuex.Store({
         singlePost: [],
         // home posts
         homePosts: [],
+        homeHasNextPage: true,
         //comments
-        postComments: []
+        postComments: [],
+        hasNextPage: false
     },
     getters: {
         watchListLengthCalc(state) {
@@ -189,9 +191,12 @@ export default new Vuex.Store({
         },
         fetchMyPosts (state,payload) {
             state.isPostsLoaded = true
-            state.myPosts = payload.sort((function (a, b) {
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            }))
+                state.myPosts = payload.sort((function (a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                }))
+        },
+        fetchHomePostsFromCache (state,payload) {
+            state.homePosts.push(...payload)
         },
         fetchUserPosts (state,payload) {
             state.userPosts = payload.sort((function (a, b) {
@@ -247,14 +252,12 @@ export default new Vuex.Store({
                 post.truncated = true
                 post.isWatchList = state.watchListMoviesIDs.includes(post.imdb_id)
             })
-            state.homePosts = payload.sort((function (a, b) {
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            }))
+            state.homePosts.unshift(...payload)
         },
         fetchPostComments (state,payload) {
             const now = new Date();
-            let allComments = []
-            payload.forEach((comment)=>{
+            state.hasNextPage = payload.hasNextPage
+            payload.docs.forEach((comment)=>{
                 let commentDate = new Date(comment.createdAt);
                 let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
                 if (passed > 0) {
@@ -265,11 +268,8 @@ export default new Vuex.Store({
                     comment.date = passed + ' minutes'
                 }
                 comment.child =[]
-                allComments.push(comment)
+                state.postComments.push(comment)
             })
-            state.postComments = allComments.sort((function (a, b) {
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            }))
         },
 
     },
@@ -829,27 +829,28 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async getHomePosts ({state, dispatch, commit}) {
+        async getHomePosts ({state, dispatch, commit}, homeObj) {
             const options = {
                 method: 'GET',
-                url: `${state.baseURl}/posts/home`,
+                url: `${state.baseURl}/posts/home/${homeObj.page}`,
                 headers: {
                     'authorization': `Bearer ${state.token}`
                 },
                 params:{
-                    first_date: '2021-07-01T11:17:55.979'
+                    first_date: homeObj.date ? homeObj.date : '2021-07-01T11:17:55.979'
                 }
             };
             await axios.request(options).then((response)=>{
                 commit('fetchHomePosts', response.data.docs)
+                state.homeHasNextPage = response.data.hasNextPage
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async getPostComments ({state, dispatch, commit},postID) {
+        async getPostComments ({state, dispatch, commit}, getObj) {
             const options = {
                 method: 'GET',
-                url: `${state.baseURl}/posts/comments/post/${postID}`,
+                url: `${state.baseURl}/posts/comments/post/${getObj.postID}/${getObj.page}`,
                 headers: {
                     'authorization': `Bearer ${state.token}`
                 }
@@ -899,6 +900,7 @@ export default new Vuex.Store({
             };
             await axios.request(options).then((response)=>{
                 commit('changeErrMsg', response.data.message)
+                state.isPostsLoaded = false
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });

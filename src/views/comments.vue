@@ -83,49 +83,50 @@ export default {
       parent: null,
       upperParent: null,
       selectedOne: false,
-      deleteID: ''
+      deleteID: '',
+      page: 2
     }
   },
-  methods:{
+  methods: {
     ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile', 'deleteAComment']),
-    postComment(){
+    postComment() {
       let comment = {
         text: this.commentText,
         postID: this.postID,
         spacialID: 'newComment' + Math.floor(Math.random() * 1000),
         parent: null,
-        upperParent:null
+        upperParent: null
       }
       if (this.reply) {
-        comment.parent=this.parent
-        comment.upperParent=this.upperParent
+        comment.parent = this.parent
+        comment.upperParent = this.upperParent
       }
-        this.addNewComment(comment).then(()=>{
-          var element = document.querySelector(`#${comment.spacialID}`);
-          element.scrollIntoView({ behavior: 'smooth', block: 'end'});
-        })
+      this.addNewComment(comment).then(() => {
+        var element = document.querySelector(`#${comment.spacialID}`);
+        element.scrollIntoView({behavior: 'smooth', block: 'end'});
+      })
       this.commentText = ''
       this.reply = false
       this.inputPlaceholder = 'New comment'
       document.getElementById(this.parent).style.backgroundColor = 'transparent'
       this.parent = null
     },
-    focus(id){
+    focus(id) {
       document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
     },
-    unfocus(){
+    unfocus() {
       document.getElementById(this.selectedOne).style.backgroundColor = 'transparent'
     },
-    loadChilds(event, parent, upperParent){
+    loadChilds(event, parent, upperParent) {
       let parentObj = {
         parent: parent,
-        upperParent:upperParent
+        upperParent: upperParent
       }
-      this.getCommentsByParent(parentObj).then(()=>{
+      this.getCommentsByParent(parentObj).then(() => {
         event.target.innerHTML = ''
       })
     },
-    selectComment(id, del){
+    selectComment(id, del) {
       if (this.userProfile.role == 'reviewer' || id.indexOf('newComment') > -1) {
         if (this.selectedOne === false) {
           this.deleteID = del
@@ -135,28 +136,51 @@ export default {
           this.unfocus()
           this.selectedOne = false
         }
-      }
-      else if(this.selectedOne) {
+      } else if (this.selectedOne) {
         this.unfocus()
         this.selectedOne = false
       }
     },
-    deleteComment(){
-        this.deleteAComment(this.deleteID)
+    deleteComment() {
+      this.deleteAComment(this.deleteID)
       document.getElementById(this.selectedOne).style.display = 'none'
       this.selectedOne = false
       this.deleteID = ''
+    },
+    getMoreComments() {
+      if (this.hasNextPage){
+        window.onscroll = () => {
+          let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+          if (bottomOfWindow) {
+            const getObj = {
+              postID: this.postID,
+              page: this.page
+            }
+            if (this.hasNextPage) {
+              this.getPostComments(getObj).then(() => {
+                this.isLoading = false
+                this.page += 1
+              })
+            }
+          }
+        }
+      }
     }
   },
   computed:{
-    ...mapState(['postComments', 'baseURl', 'alternativeAvatar', 'userProfile']),
+    ...mapState(['postComments', 'baseURl', 'alternativeAvatar', 'userProfile', 'hasNextPage']),
   },
   created() {
     this.isLoading = true
     this.$store.commit('toggleNavbar', false);
     if(this.postID){
-      this.getPostComments(this.postID).then(()=>{
+      const getObj = {
+        postID: this.postID,
+        page: 1
+      }
+      this.getPostComments(getObj).then(()=>{
         this.isLoading =false
+        this.getMoreComments()
       })
     }
     else {

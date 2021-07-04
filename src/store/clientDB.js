@@ -12,6 +12,9 @@ import {openDB} from "idb";
                     if (!(db.objectStoreNames.contains('myPosts'))) {
                         db.createObjectStore('myPosts')
                     }
+                    if (!(db.objectStoreNames.contains('homePosts'))) {
+                        db.createObjectStore('homePosts')
+                    }
                 }
             });
         }
@@ -111,3 +114,34 @@ import {openDB} from "idb";
             console.log(e)
         }
     }
+export async function putHomePosts(posts) {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction('homePosts', 'readwrite')
+        let store = tx.objectStore('homePosts')
+        let slicedPosts = posts.slice(0,10).map((post) => {
+            return post;
+        });
+        await store.put(slicedPosts, 0)
+        db.close()
+    }
+    catch (e){
+        console.log(e)
+    }
+}
+export async function getHomePostsCache() {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction(['homePosts'], 'readonly')
+        let store = tx.objectStore('homePosts')
+        let posts = {}
+        await store.getAll().then((data) => {
+            posts = data[0]
+        });
+        db.close()
+        return posts
+    }
+    catch (e){
+        console.log(e)
+    }
+}
