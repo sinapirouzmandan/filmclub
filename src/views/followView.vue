@@ -23,30 +23,30 @@
   <h1 id="headerFollow">All {{$route.path.replace('/', '')}}</h1>
   <div class="followers"  v-if="$route.path.replace('/', '') === 'followers'">
     <loading v-if="isLoading"/>
-    <div class="user" v-for="(user) in followers" :key="user.followerUsername">
+    <div class="user" v-for="(user) in followers" :key="user._id">
       <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername}`)">
       <vs-avatar circle class="avatarImage">
-        <img :src="alternativeAvatar">
+        <img :src="user.followerUsername.avatar ? (baseURl + user.followerUsername.avatar) : alternativeAvatar" class="fitImage">
       </vs-avatar>
       <div class="singleUser">
-      <p class="nameInSingleUser">{{user.followerUsername}}</p>
+      <p class="nameInSingleUser">{{user.followerUsername.username}}</p>
       </div>
     </div>
     </div>
   </div>
   <div class="followings" v-else>
     <loading v-if="isLoading"/>
-    <div class="user" v-for="(user) in followings" :key="user.followingUsername">
+    <div class="user" v-for="(user) in followings" :key="user._id">
       <div class="unfollow" @click="toggleFollowing(user.followingUsername)">
         <span v-if="!unfollowed.includes(user.followingUsername)">Unfollow</span>
         <span v-else>Follow</span>
       </div>
       <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername}`)">
       <vs-avatar circle class="avatarImage">
-        <img :src="alternativeAvatar">
+        <img :src="user.followingUsername.avatar ? (baseURl + user.followingUsername.avatar) : alternativeAvatar" class="fitImage">
       </vs-avatar>
       <div class="singleUser">
-      <p class="nameInSingleUser">{{user.followingUsername}}</p>
+      <p class="nameInSingleUser">{{user.followingUsername.username}}</p>
       </div>
       </div>
     </div>
@@ -105,7 +105,7 @@ export default {
       }
   },
   computed: {
-    ...mapState(['followers', 'followings', 'userProfile', 'statitics', 'alternativeAvatar']),
+    ...mapState(['followers', 'followings', 'userProfile', 'statitics', 'alternativeAvatar', 'baseURl']),
     isFollower(){
       return this.$route.path.replace('/', '') === 'followers'
     }
@@ -180,6 +180,11 @@ margin-top: 10px;
 }
 .containFullUser{
   width:60%;
+  height: 100%;
+}
+.fitImage{
+  object-fit: cover;
+  width: 100%;
   height: 100%;
 }
 </style>
