@@ -54,6 +54,7 @@ export default new Vuex.Store({
         // home posts
         homePosts: [],
         homeHasNextPage: true,
+        savedPos: false,
         //comments
         postComments: [],
         hasNextPage: false
@@ -194,6 +195,9 @@ export default new Vuex.Store({
                 state.myPosts = payload.sort((function (a, b) {
                     return new Date(b.createdAt) - new Date(a.createdAt);
                 }))
+        },
+        toggleHomeSavedPos (state,payload) {
+            state.savedPos = payload
         },
         fetchHomePostsFromCache (state,payload) {
             state.homePosts.push(...payload)

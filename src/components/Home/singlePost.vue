@@ -94,7 +94,7 @@ export default {
     }
   },
   computed:{
-    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage'])
+    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage', 'savedPos'])
   },
   methods:{
     ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
@@ -122,8 +122,13 @@ export default {
           this.getHomePosts(homeObj).then(()=>{
             this.isLoadingMore = false
             putHomePosts(this.homePosts)
-            let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
-            firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+            if (!this.savedPos) {
+              let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
+              firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+            }
+        else {
+              this.$store.commit('toggleHomeSavedPos', false)
+            }
           })
         }
         }
@@ -151,12 +156,12 @@ export default {
           firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
           setTimeout(()=>{
             this.isLoadingMore = false
-          },500)
+          },1000)
         })
       })
       this.firstMount =false
     }
-    else if(!this.firstMount){
+    else if(localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')){
       this.isLoadingMore = true
       this.page += 1
       let homeObj = {
@@ -172,8 +177,9 @@ export default {
         firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
         setTimeout(()=>{
           this.isLoadingMore = false
-        },500)
+        },1000)
       })
+      this.$store.commit('toggleHomeSavedPos', true)
       this.getNextPosts()
     }
     else {
