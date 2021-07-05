@@ -856,6 +856,7 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).then((response)=>{
+                state.postComments = []
                 commit('fetchPostComments', response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
