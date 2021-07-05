@@ -13,10 +13,12 @@
     </div>
     <loading v-if="isLoading"/>
     <vs-alert v-for="(notification) in notifications" :key="notification.date" :class="notification.isSeen === false ? 'unseen' : ''">
+      <router-link :to="{path: notification.link.url+'/'+notification.link.props }" style="text-decoration: none; height:100%; width:100%;">
       <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
       <span class="desc">
     <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none;">{{ notification.commiter }}</router-link></span> {{ notification.message }}
       </span>
+      </router-link>
     </vs-alert>
 
     <p style="margin-bottom: 9rem; opacity: 0; font-size:15px;">end of content ...</p>

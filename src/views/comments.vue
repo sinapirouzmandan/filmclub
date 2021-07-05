@@ -84,7 +84,8 @@ export default {
       upperParent: null,
       selectedOne: false,
       deleteID: '',
-      page: 2
+      page: 2,
+      postID: ''
     }
   },
   methods: {
@@ -171,9 +172,10 @@ export default {
     ...mapState(['postComments', 'baseURl', 'alternativeAvatar', 'userProfile', 'hasNextPage']),
   },
   created() {
+    this.postID = this.$route.params.postID
     this.isLoading = true
     this.$store.commit('toggleNavbar', false);
-    if(this.postID){
+    if(this.$route.params.postID){
       const getObj = {
         postID: this.postID,
         page: 1
@@ -184,18 +186,12 @@ export default {
       })
     }
     else {
-      this.$router.push('/')
+      // this.$router.push('/')
     }
   },
   mounted() {
     this.getUserProfile()
   },
-  props: {
-    postID: {
-      type: String,
-      required: true
-    }
-  }
 }
 </script>
 

@@ -171,6 +171,7 @@ export default {
                 title: this.errMassage,
               })
               this.$store.commit('changeErrMsg', null)
+              this.isSaving = false
             }
           })
         }
@@ -183,8 +184,9 @@ export default {
             color: '#296186',
             title: 'You should set a header image for your post',
           })
+          this.isSaving = false
         }
-        this.isSaving = false
+
       }).catch(() => {
         this.$vs.notification({
           duration: 3000,

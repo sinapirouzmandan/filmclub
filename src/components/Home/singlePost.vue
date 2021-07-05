@@ -153,7 +153,7 @@ export default {
           const nowLen = this.homePosts.length
           let pointerPos  = nowLen - lastLen
           let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
-          firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+          firstPostOfPacket.scrollIntoView({block: 'end'})
           setTimeout(()=>{
             this.isLoadingMore = false
           },1000)
@@ -174,7 +174,7 @@ export default {
         const nowLen = this.homePosts.length
         let pointerPos  = nowLen - lastLen
         let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
-        firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+        firstPostOfPacket.scrollIntoView({block: 'end'})
         setTimeout(()=>{
           this.isLoadingMore = false
         },1000)

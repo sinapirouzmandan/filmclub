@@ -78,10 +78,9 @@ const routes = [
         component: () => import(/* webpackPrefetch: true */ "../views/singlePost")
     },
     {
-        path: '/comments',
+        path: '/comments/:postID',
         name: 'comments',
         component: () => import(/* webpackPrefetch: true */ "../views/comments"),
-        props: true
     },
     {
         path: "*",
