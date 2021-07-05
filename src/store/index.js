@@ -931,7 +931,8 @@ export default new Vuex.Store({
                                 date: 0,
                                 specialID: comment.spacialID,
                                 userId:{
-                                    avatar: state.userProfile.avatar
+                                    avatar: state.userProfile.avatar,
+                                    username: state.userProfile.username
                                 },
                                 child: []
                             })
