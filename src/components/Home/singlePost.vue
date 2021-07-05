@@ -109,7 +109,7 @@ export default {
     },
     getNextPosts() {
       window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop.toString() <=  (150).toString();
+        let topOfWindow = document.documentElement.scrollTop === 0;
         if (topOfWindow && this.homeHasNextPage) {
           this.page += 1
           let homeObj = {
@@ -117,11 +117,6 @@ export default {
             date: localStorage.getItem('lastRetreviedDate')
           }
           this.getHomePosts(homeObj).then(()=>{
-            let lastRet = this.homePosts[0].createdAt.split('');
-            lastRet[18] = 5
-            lastRet[19] = 9
-            lastRet = lastRet.join('')
-            localStorage.setItem('lastRetreviedDate', lastRet)
             putHomePosts(this.homePosts)
           })
         }
@@ -132,6 +127,12 @@ export default {
   mounted() {
     if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')) {
       getHomePostsCache().then((posts)=>{
+        let lastRet = posts[0].createdAt.split('')
+        lastRet[17] = 5
+        lastRet[18] = 9
+        lastRet = lastRet.join('')
+        lastRet = lastRet.slice(0,22)
+        localStorage.setItem('lastRetreviedDate', lastRet)
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
       })

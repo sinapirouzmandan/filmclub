@@ -832,7 +832,7 @@ export default new Vuex.Store({
         async getHomePosts ({state, dispatch, commit}, homeObj) {
             const options = {
                 method: 'GET',
-                url: `${state.baseURl}/posts/home/${homeObj.page}`,
+                url: `${state.baseURl}/posts/home/${homeObj.page}/`,
                 headers: {
                     'authorization': `Bearer ${state.token}`
                 },
