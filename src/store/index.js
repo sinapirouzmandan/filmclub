@@ -9,7 +9,7 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.34:3000',
+        baseURl: 'http://192.168.1.37:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -863,7 +863,7 @@ export default new Vuex.Store({
         },
         async updatePost ({state, dispatch},updateObj) {
             const options = {
-                method: 'POST',
+                method: 'PUT',
                 url: `${state.baseURl}/posts/edit`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,

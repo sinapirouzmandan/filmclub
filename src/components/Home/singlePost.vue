@@ -85,8 +85,9 @@ export default {
   data() {
     return {
       isLoading: false,
-      page:1,
-      requestAgain: true
+      page:0,
+      requestAgain: true,
+      scrollPosition: null
     }
   },
   computed:{
@@ -108,26 +109,31 @@ export default {
     },
     getNextPosts() {
       window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop === 0;
+        let topOfWindow = document.documentElement.scrollTop.toString() <=  (150).toString();
         if (topOfWindow && this.homeHasNextPage) {
+          this.page += 1
           let homeObj = {
             page: this.page,
             date: localStorage.getItem('lastRetreviedDate')
           }
           this.getHomePosts(homeObj).then(()=>{
-            localStorage.setItem('lastRetreviedDate', this.homePosts[0].createdAt)
-            this.page += 1
+            let lastRet = this.homePosts[0].createdAt.split('');
+            lastRet[18] = 5
+            lastRet[19] = 9
+            lastRet = lastRet.join('')
+            localStorage.setItem('lastRetreviedDate', lastRet)
             putHomePosts(this.homePosts)
           })
         }
         }
-      }
+      },
+
   },
   mounted() {
-    this.getNextPosts()
-    if (localStorage.getItem('firstTimeLoad')) {
+    if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')) {
       getHomePostsCache().then((posts)=>{
         this.fetchHomePostsFromCache(posts)
+        this.getNextPosts()
       })
     }
     else {
@@ -141,6 +147,8 @@ export default {
         localStorage.setItem('firstTimeLoad', true)
         putHomePosts(this.homePosts)
         localStorage.setItem('lastRetreviedDate', this.homePosts[0].createdAt)
+        this.page += 1
+        this.getNextPosts()
       }).catch(()=>{
         this.isLoading = false
       })
