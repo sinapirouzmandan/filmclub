@@ -1,7 +1,8 @@
 <template>
   <div>
     <loading style="margin-top:20vh;" v-if="isLoading"/>
-  <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt">
+    <loading v-if="isLoadingMore"/>
+  <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt" :id="post.id">
     <vs-card>
       <template #title>
         <img :src="post.authorAvatar ? (baseURl + post.authorAvatar) : alternativeAvatar"
@@ -87,7 +88,9 @@ export default {
       isLoading: false,
       page:0,
       requestAgain: true,
-      scrollPosition: null
+      scrollPosition: null,
+      isLoadingMore: false,
+      firstMount: true
     }
   },
   computed:{
@@ -107,17 +110,20 @@ export default {
         post.isLiked = true
       }
     },
-    getNextPosts() {
-      window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop === 0;
-        if (topOfWindow && this.homeHasNextPage) {
+    getNextPosts() {      window.onscroll = () => {
+        let topOfWindow = document.documentElement.scrollTop <= 300;
+        if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
+          this.isLoadingMore = true
           this.page += 1
           let homeObj = {
             page: this.page,
             date: localStorage.getItem('lastRetreviedDate')
           }
           this.getHomePosts(homeObj).then(()=>{
+            this.isLoadingMore = false
             putHomePosts(this.homePosts)
+            let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
+            firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
           })
         }
         }
@@ -125,16 +131,50 @@ export default {
 
   },
   mounted() {
-    if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')) {
+    if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate') && this.homePosts.length === 0) {
       getHomePostsCache().then((posts)=>{
-        let lastRet = posts[0].createdAt.split('')
-        lastRet[17] = 5
-        lastRet[18] = 9
-        lastRet = lastRet.join('')
-        localStorage.setItem('lastRetreviedDate', lastRet)
+        localStorage.setItem('lastRetreviedDate', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
+        this.isLoadingMore = true
+        this.page += 1
+        let homeObj = {
+          page: this.page,
+          date: localStorage.getItem('lastRetreviedDate')
+        }
+        const lastLen = this.homePosts.length
+        this.getHomePosts(homeObj).then(()=>{
+          putHomePosts(this.homePosts)
+          const nowLen = this.homePosts.length
+          let pointerPos  = nowLen - lastLen
+          let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
+          firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+          setTimeout(()=>{
+            this.isLoadingMore = false
+          },500)
+        })
       })
+      this.firstMount =false
+    }
+    else if(!this.firstMount){
+      this.isLoadingMore = true
+      this.page += 1
+      let homeObj = {
+        page: this.page,
+        date: localStorage.getItem('lastRetreviedDate')
+      }
+      const lastLen = this.homePosts.length
+      this.getHomePosts(homeObj).then(()=>{
+        putHomePosts(this.homePosts)
+        const nowLen = this.homePosts.length
+        let pointerPos  = nowLen - lastLen
+        let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
+        firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+        setTimeout(()=>{
+          this.isLoadingMore = false
+        },500)
+      })
+      this.getNextPosts()
     }
     else {
       this.isLoading = true
@@ -143,11 +183,11 @@ export default {
       }
       this.getHomePosts(homeObj).then(()=>{
         window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0,document.body.scrollHeight);
         this.isLoading=false
         localStorage.setItem('firstTimeLoad', true)
         putHomePosts(this.homePosts)
-        localStorage.setItem('lastRetreviedDate', this.homePosts[0].createdAt)
-        this.page += 1
+        localStorage.setItem('lastRetreviedDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.getNextPosts()
       }).catch(()=>{
         this.isLoading = false

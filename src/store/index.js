@@ -213,7 +213,9 @@ export default new Vuex.Store({
             state.singlePost = payload.post
         },
         fetchHomePosts (state,payload) {
-            // eslint-disable-next-line no-unused-vars
+            payload = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
             var now = new Date()
             payload.forEach((post)=>{
                 let paragraph = ''
@@ -253,6 +255,7 @@ export default new Vuex.Store({
                 post.isWatchList = state.watchListMoviesIDs.includes(post.imdb_id)
             })
             state.homePosts.unshift(...payload)
+            state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
         },
         fetchPostComments (state,payload) {
             const now = new Date();
