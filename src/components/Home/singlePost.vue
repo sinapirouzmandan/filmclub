@@ -131,7 +131,6 @@ export default {
         lastRet[17] = 5
         lastRet[18] = 9
         lastRet = lastRet.join('')
-        lastRet = lastRet.slice(0,22)
         localStorage.setItem('lastRetreviedDate', lastRet)
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
