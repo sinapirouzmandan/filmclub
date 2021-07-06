@@ -80,6 +80,7 @@ import  {mapState, mapActions, mapMutations} from 'vuex'
 import loading from '../../components/loading'
 // eslint-disable-next-line no-unused-vars
 import {getHomePostsCache, putHomePosts} from '../../store/clientDB'
+import PullToRefresh from "pulltorefreshjs";
 export default {
   name: "singlePost",
   components: {loading},
@@ -111,7 +112,7 @@ export default {
       }
     },
     getNextPosts() {      window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop <= 300;
+        let topOfWindow = document.documentElement.scrollTop <= 400;
         if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
           this.isLoadingMore = true
           this.page += 1
@@ -133,9 +134,38 @@ export default {
         }
         }
       },
+    latelyLoaded(){
+      this.isLoadingMore = true
+      this.page += 1
+      let homeObj = {
+        page: this.page,
+        date: localStorage.getItem('lastRetreviedDate')
+      }
+      const lastLen = this.homePosts.length
+      this.getHomePosts(homeObj).then(()=>{
+        putHomePosts(this.homePosts)
+        const nowLen = this.homePosts.length
+        let pointerPos  = nowLen - lastLen
+        let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
+        firstPostOfPacket.scrollIntoView({block: 'end'})
+        setTimeout(()=>{
+          this.isLoadingMore = false
+        },1000)
+      })
+      this.$store.commit('toggleHomeSavedPos', true)
+      this.getNextPosts()
+    }
 
   },
   mounted() {
+      var self = this
+      PullToRefresh.init({
+        mainElement: 'body',
+        onRefresh() {
+          self.isLoadingMore = true
+          self.latelyLoaded()
+        }
+      });
     if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate') && this.homePosts.length === 0) {
       getHomePostsCache().then((posts)=>{
         localStorage.setItem('lastRetreviedDate', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
@@ -156,31 +186,13 @@ export default {
           firstPostOfPacket.scrollIntoView({block: 'end'})
           setTimeout(()=>{
             this.isLoadingMore = false
-          },1000)
+          },2000)
         })
       })
       this.firstMount =false
     }
     else if(localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')){
-      this.isLoadingMore = true
-      this.page += 1
-      let homeObj = {
-        page: this.page,
-        date: localStorage.getItem('lastRetreviedDate')
-      }
-      const lastLen = this.homePosts.length
-      this.getHomePosts(homeObj).then(()=>{
-        putHomePosts(this.homePosts)
-        const nowLen = this.homePosts.length
-        let pointerPos  = nowLen - lastLen
-        let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
-        firstPostOfPacket.scrollIntoView({block: 'end'})
-        setTimeout(()=>{
-          this.isLoadingMore = false
-        },1000)
-      })
-      this.$store.commit('toggleHomeSavedPos', true)
-      this.getNextPosts()
+      this.latelyLoaded()
     }
     else {
       this.isLoading = true

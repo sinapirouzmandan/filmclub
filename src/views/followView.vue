@@ -24,7 +24,7 @@
   <div class="followers"  v-if="$route.path.replace('/', '') === 'followers'">
     <loading v-if="isLoading"/>
     <div class="user" v-for="(user) in followers" :key="user._id">
-      <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername}`)">
+      <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername.username}`)">
       <vs-avatar circle class="avatarImage">
         <img :src="user.followerUsername.avatar ? (baseURl + user.followerUsername.avatar) : alternativeAvatar" class="fitImage">
       </vs-avatar>
@@ -41,7 +41,7 @@
         <span v-if="!unfollowed.includes(user.followingUsername)">Unfollow</span>
         <span v-else>Follow</span>
       </div>
-      <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername}`)">
+      <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername.username}`)">
       <vs-avatar circle class="avatarImage">
         <img :src="user.followingUsername.avatar ? (baseURl + user.followingUsername.avatar) : alternativeAvatar" class="fitImage">
       </vs-avatar>

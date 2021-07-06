@@ -185,8 +185,8 @@ export default {
 
 .logo h1 {
   float: right;
-  margin-top: 2vh;
-  margin-right: 5%;
+  margin-top: 3vh;
+  margin-right: 6vw;
   text-align: right;
   font-family: "magic", sans-serif;
 }

@@ -23,6 +23,7 @@
   </div>
 </template>
 <script>
+import PullToRefresh from 'pulltorefreshjs';
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
 import accountHeader from "../components/profile/accountHeader";
@@ -43,6 +44,18 @@ export default {
       this.$store.dispatch('getNotificationList')
     })
     this.$store.dispatch('getCountsInProfile')
+  },
+  mounted() {
+    var self = this
+    PullToRefresh.init({
+      mainElement: 'body',
+      onRefresh() {
+        self.$store.commit('toggleProfileLoaded', false)
+        self.$store.commit('toggleMyPostsLoaded', false)
+        self.$store.dispatch('getUserProfile')
+        self.$store.dispatch('getMyPosts')
+      }
+    });
   },
   computed: {
     ...mapGetters(['notificatonsCalc'])
@@ -86,4 +99,5 @@ body, html {
 .loader {
   margin-top: 30vh;
 }
+
 </style>

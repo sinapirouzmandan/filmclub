@@ -114,7 +114,11 @@ export default {
   }
 }
 </script>
-
+<style>
+.ptr--ptr{
+  background-color: white;
+}
+</style>
 <style scoped>
 .headerH2 {
   margin-top: 1.5rem;

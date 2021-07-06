@@ -40,6 +40,7 @@
 import loading from "../loading";
 import {mapActions, mapState} from 'vuex'
 import swal from 'sweetalert'
+import PullToRefresh from "pulltorefreshjs";
 export default {
   name: "bookmarkPost",
   data() {
@@ -68,6 +69,19 @@ export default {
   created() {
     this.getMoviesList().then(() => {
       this.isLoaded = true
+    });
+  },
+  mounted() {
+    var self = this
+    PullToRefresh.init({
+      mainElement: 'body',
+      onRefresh() {
+        this.isLoaded = false
+        self.$store.commit('toggleWatchListLoaded', false)
+        self.$store.dispatch('getMoviesList').then(()=>{
+          this.isLoaded = true
+        })
+      }
     });
   },
   computed: {

@@ -9,7 +9,7 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.37:3000',
+        baseURl: 'http://192.168.1.35:3000',
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -195,6 +195,9 @@ export default new Vuex.Store({
                 state.myPosts = payload.sort((function (a, b) {
                     return new Date(b.createdAt) - new Date(a.createdAt);
                 }))
+        },
+        toggleMyPostsLoaded (state,payload) {
+            state.isPostsLoaded = payload
         },
         toggleHomeSavedPos (state,payload) {
             state.savedPos = payload
