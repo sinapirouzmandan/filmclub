@@ -195,6 +195,29 @@ export default {
 }
 </script>
 <style scoped>
+.backAvatar {
+  width: 100%;
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 100px;
+  z-index: -4;
+  background-color: #0a0d0e;
+  object-fit: cover;
+}
+.username {
+  margin-top: 15px;
+  width: 100%;
+  text-align: left;
+}
+
+.username i {
+  font-size: 15px;
+}
+
+.username p {
+  width: 100%;
+}
 .avatars {
   margin-top: 110px;
 }

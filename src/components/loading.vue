@@ -21,10 +21,11 @@ export default {
 
 .loader-centre {
   height: 200px;
-  width: 98vw;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .loader-loader {

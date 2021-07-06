@@ -168,8 +168,7 @@ export default {
   }
 }
 </script>
-
-<style>
+<style scoped>
 .backAvatar {
   width: 100%;
   position: absolute;
@@ -193,8 +192,6 @@ export default {
 .username p {
   width: 100%;
 }
-</style>
-<style scoped>
 .avatars {
   margin-top: 50px;
 }
