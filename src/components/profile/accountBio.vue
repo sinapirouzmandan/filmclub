@@ -19,11 +19,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.bioText {
-  margin-top: 1rem;
-  font-size: 15px;
-  max-width: 80%;
-}
-</style>

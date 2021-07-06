@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .bioText {
   margin-top: 1rem;
   font-size: 15px;

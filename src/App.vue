@@ -33,11 +33,9 @@ head, body {
   overscroll-behavior-y: contain;
   scroll-behavior: smooth;
 }
-
 .bodyMargin {
-  margin: 6px;
+  margin: 10px;
 }
-
 ::-webkit-scrollbar {
   width: 4px;
 }

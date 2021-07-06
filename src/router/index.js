@@ -1,10 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Bookmark from "../views/Bookmark";
-import NewPost from "../views/NewPost";
-import postDetail from "../components/NewPost/postDetail";
-import profile from "../views/profile";
 import PullToRefresh from 'pulltorefreshjs';
 
 Vue.use(VueRouter)
@@ -18,12 +14,12 @@ const routes = [
     {
         path: '/profile',
         name: 'profile',
-        component: profile
+        component: () => import(/* webpackPrefetch: true */ '../views/profile')
     },
     {
         path: '/MyList',
         name: 'MyList',
-        component: Bookmark
+        component: () => import(/* webpackPrefetch: true */ '../views/Bookmark')
     },
     {
         //lazy load search component
@@ -39,12 +35,12 @@ const routes = [
     {
         path: '/NewPost',
         name: 'NewPost',
-        component: NewPost
+        component: () => import(/* webpackPrefetch: true */ '../views/NewPost')
     },
     {
         path: '/NewPost/detail',
         name: 'postDetail',
-        component: postDetail,
+        component: () => import(/* webpackPrefetch: true */ '../components/NewPost/postDetail'),
         props: true
     },
     {
@@ -84,7 +80,7 @@ const routes = [
     },
     {
         path: "*",
-        component: () => import('../views/notFound')
+        component: () => import(/* webpackPrefetch: true */ '../views/notFound')
     }
 ]
 

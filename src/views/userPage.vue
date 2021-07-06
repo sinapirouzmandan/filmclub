@@ -10,7 +10,6 @@
 import accountStatus from "../components/userPage/accountStatus";
 import accountBio from "../components/userPage/accountBio";
 import accountHeader from "../components/userPage/accountHeader";
-import posts from '../components/userPage/posts'
 import {mapActions} from "vuex";
 
 export default {
@@ -21,7 +20,8 @@ export default {
     }
   },
   components: {
-    accountStatus, accountBio, accountHeader, posts
+    accountStatus, accountBio, accountHeader,
+    posts: () => import('../components/userPage/posts')
   },
   created() {
     this.$store.commit('changeErrMsg', null)
@@ -33,13 +33,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-body, html {
-  overflow-x: hidden;
-}
-
-.bodyMargin {
-  margin: 10px;
-}
-</style>

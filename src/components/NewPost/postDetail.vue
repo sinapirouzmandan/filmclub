@@ -15,21 +15,21 @@
           specify Post header image
         </vs-button>
       </div>
-      <div v-if="!post.title" class="search">
-        <vs-input
-            v-model="searchMov"
-            color="#5B3CC4"
-            gradient
-            placeholder="Movie or series name"/>
-        <vs-button
-            circle
-            color="#5B3CC4"
-            gradient
-            @click="active = !active; getSearch()"
-        >
-          Search
-        </vs-button>
-      </div>
+    </div>
+    <div v-if="!post.title" class="search">
+      <vs-input
+          v-model="searchMov"
+          color="#5B3CC4"
+          gradient
+          placeholder="Movie or series name"/>
+      <vs-button
+          circle
+          color="#5B3CC4"
+          gradient
+          @click="active = !active; getSearch()"
+      >
+        Search
+      </vs-button>
     </div>
     <h1 v-if="post.title != ''" style="margin-top: 4rem;">{{ post.title }}</h1>
     <div class="rating">
@@ -130,18 +130,18 @@ export default {
     },
     handleProfileUploads() {
       this.file = this.$refs.file.files[0];
-      const preview = document.getElementById('headerSelected');
-      const file = document.querySelector('input[type=file]').files[0];
-      const reader = new FileReader();
+        const preview = document.getElementById('headerSelected');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
 
-      reader.addEventListener("load", function () {
-        // convert image file to base64 string
-        preview.src = reader.result;
-      }, false);
+        reader.addEventListener("load", function () {
+          // convert image file to base64 string
+          preview.src = reader.result;
+        }, false);
 
-      if (file) {
-        reader.readAsDataURL(file);
-      }
+        if (file) {
+          reader.readAsDataURL(file);
+        }
     },
     sharePost(){
       this.$store.commit('changeErrMsg', null)
@@ -249,7 +249,7 @@ export default {
   max-width: 500px;
   height: 250px;
   margin: 0 auto;
-  background: url('https://i.stack.imgur.com/y9DpT.jpg');
+  background: url('../../assets/nullImage.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -297,8 +297,8 @@ h1 {
 }
 
 .search {
-  position: absolute;
-  top: 8.5rem;
+  position: relative;
+  top: 3rem;
   font-size: 70px;
   display: flex;
   justify-content: center;

@@ -169,15 +169,10 @@ export default {
 }
 </script>
 
-<style scoped>
-.avatars {
-  margin-top: 50px;
-}
-
+<style>
 .backAvatar {
   width: 100%;
   position: absolute;
-  top: 0;
   right: 0;
   left: 0;
   height: 100px;
@@ -185,11 +180,6 @@ export default {
   background-color: #0a0d0e;
   object-fit: cover;
 }
-
-.editProfile {
-  margin-top: 60px;
-}
-
 .username {
   margin-top: 15px;
   width: 100%;
@@ -203,7 +193,17 @@ export default {
 .username p {
   width: 100%;
 }
-
+</style>
+<style scoped>
+.avatars {
+  margin-top: 50px;
+}
+.editProfile {
+  margin-top: 60px;
+}
+.backAvatar {
+  top: 0;
+}
 .avatar {
   width: 90px;
   height: 90px;

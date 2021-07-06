@@ -11,6 +11,3 @@ export default {
   name: "accountStatus"
 }
 </script>
-
-<style scoped>
-</style>

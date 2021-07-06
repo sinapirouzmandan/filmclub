@@ -13,7 +13,7 @@
     </div>
     <loading v-if="isLoading"/>
     <vs-alert v-for="(notification) in notifications" :key="notification.date" :class="notification.isSeen === false ? 'unseen' : ''">
-      <router-link :to="{path: notification.link.url+'/'+notification.link.props }" style="text-decoration: none; height:100%; width:100%;">
+      <router-link :to="{path: notification.link.props ? (notification.link.url+'/'+notification.link.props) : notification.link.url }" style="text-decoration: none; height:100%; width:100%;">
       <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
       <span class="desc">
     <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none;">{{ notification.commiter }}</router-link></span> {{ notification.message }}
@@ -41,8 +41,21 @@ export default {
     this.$store.commit('toggleNavbar', true);
     this.loadNotification()
   },
+  mounted() {
+    this.registerPeriodicNewsCheck()
+  },
   components:{loading},
   methods: {
+    async  registerPeriodicNewsCheck() {
+      const registration = await navigator.serviceWorker.ready;
+      try {
+        await registration.periodicSync.register('get-latest-news', {
+          minInterval: 24 * 60 * 60 * 1000,
+        });
+      } catch {
+        console.log('Periodic Sync could not be registered!');
+      }
+    },
     loadNotification() {
       this.isLoading = true
       this.$store.dispatch('getNotificationList').then(()=>{

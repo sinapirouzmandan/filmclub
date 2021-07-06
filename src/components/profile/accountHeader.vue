@@ -194,44 +194,18 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .avatars {
   margin-top: 110px;
 }
-
 .backAvatar {
-  width: 100%;
-  position: absolute;
   top: 50px;
-  right: 0;
-  left: 0;
-  height: 100px;
-  z-index: -4;
-  background-color: #0a0d0e;
-  object-fit: cover;
 }
-
 .editProfile {
   position: absolute;
   margin-top: 60px;
   right: 2.5rem;
 }
-
-.username {
-  margin-top: 15px;
-  width: 100%;
-  text-align: left;
-}
-
-.username i {
-  font-size: 15px;
-}
-
-.username p {
-  width: 100%;
-}
-
 .input-field >>> .vs-input {
   background-color: #171b1d !important;
   color: #d5cccc;
