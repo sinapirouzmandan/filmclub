@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <transition name="fade">
     <splashScreen v-if="splashScreenShow"/>
+    </transition>
     <transition name="slide">
     <router-view/>
     </transition>
@@ -29,7 +31,7 @@ export default {
     this.$vs.setColor('primary', '#5b3cc4')
     setTimeout(()=>{
       this.$store.commit('toggleSplashScreen')
-    },4000)
+    },3000)
   },
   created() {
     this.$store.commit('getTokenFromLocal')
@@ -141,15 +143,14 @@ img {
   transform: translate(-100%, 0);
 }
 
-.slideback-leave-active,
-.slideback-enter-active {
-  transition: 1s;
+.fade-leave-active,
+.fade-enter-active {
+  transition: 0.5s;
 }
-.slideback-enter {
-  transform: translate(-100%, 0);
+.fade-enter {
+  opacity: 1;
 }
-.slideback-leave-to {
-  transform: translate(100%, 0);
+.fade-leave-to {
+  opacity: 0;
 }
-
 </style>
