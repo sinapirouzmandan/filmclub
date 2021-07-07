@@ -51,7 +51,7 @@
       </vs-col>
       <vs-col w="6">
         <vs-button
-            v-if="singlePost.username !== userProfile.username"
+            v-if="singlePost.username !== userProfile.username && userProfile.role !== 'reviewer'"
             :class="border"
             :color="colorBtn"
             :gradient="gradient"

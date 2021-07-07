@@ -6,7 +6,7 @@
       <vs-col w="4">
         <vs-avatar badge-color="success" circle size="90">
           <img :src="userAvatar" alt="avatar" class="avatar" @error="usernameInfo.avatar = '/public/images/avatar.jpg'">
-          <template v-if="usernameInfo.role == 'reviewer'" #badge>
+          <template v-if="usernameInfo.role === 'reviewer'" #badge>
             Reviewer
           </template>
         </vs-avatar>
