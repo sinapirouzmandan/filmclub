@@ -159,7 +159,6 @@ export default {
       this.getNextPosts()
     }
     }
-
   },
   mounted() {
       var self = this
@@ -220,14 +219,7 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Nazanin';
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot?#iefix') format('embedded-opentype'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff') format('woff'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
-  font-weight: normal;
-}
+
 .home {
   display: flex;
   justify-content: center;

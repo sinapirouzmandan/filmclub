@@ -236,14 +236,6 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Yekan';
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot');
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot?#iefix') format('embedded-opentype'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff') format('woff'),
-  url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.ttf') format('truetype');
-  font-weight: normal;
-}
 .headerImage {
   width: 100%;
   max-width: 500px;

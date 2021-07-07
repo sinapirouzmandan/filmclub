@@ -26,7 +26,6 @@
 import PullToRefresh from 'pulltorefreshjs';
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
-import accountHeader from "../components/profile/accountHeader";
 import loading from "../components/loading";
 import {mapGetters} from 'vuex'
 
@@ -34,7 +33,9 @@ export default {
   name: "profile",
   components: {
     tumbPost: () => import('../components/profile/tumbPost'),
-    accountStatus, accountBio, accountHeader, loading
+    accountStatus, accountBio,
+    accountHeader: () => import('../components/profile/accountHeader'),
+    loading
   },
   created() {
     this.$store.commit('toggleNavbar', true);

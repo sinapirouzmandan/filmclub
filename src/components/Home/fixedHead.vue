@@ -14,8 +14,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('http://fonts.cdnfonts.com/css/magic');
-
 .xi-top-head {
   position: fixed;
   top: 0;
@@ -25,7 +23,7 @@ export default {
   width: 100%;
   background-color: var(--vs-navs);
   display: flex;
-  z-index: 999999999;
+  z-index: 9;
 }
 
 .logo h1 {

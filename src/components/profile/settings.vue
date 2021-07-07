@@ -171,8 +171,6 @@ export default {
 </script>
 
 <style scoped>
-@import url("http://fonts.cdnfonts.com/css/magic");
-
 .xi-top-head {
   position: absolute;
   top: 0;

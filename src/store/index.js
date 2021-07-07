@@ -9,7 +9,8 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.35:3000',
+        baseURl: 'http://192.168.1.33:3000',
+        splashScreenShow: true,
         //watchList
         watchListMoviesIDs: [],
         watchListMoviesList: [],
@@ -58,7 +59,7 @@ export default new Vuex.Store({
         homePageNumber: 0,
         //comments
         postComments: [],
-        hasNextPage: false
+        hasNextPage: false,
     },
     getters: {
         watchListLengthCalc(state) {
@@ -78,6 +79,9 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        toggleSplashScreen(state) {
+            state.splashScreenShow = !state.splashScreenShow
+        },
         fetchWatchListMovies(state, payload) {
             state.watchListMoviesList = payload;
         },
@@ -844,6 +848,7 @@ export default new Vuex.Store({
             });
         },
         async getHomePosts ({state, dispatch, commit}, homeObj) {
+            const oneWeekAgo  = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/home/${homeObj.page}/`,
@@ -851,7 +856,7 @@ export default new Vuex.Store({
                     'authorization': `Bearer ${state.token}`
                 },
                 params:{
-                    first_date: homeObj.date ? homeObj.date : '2021-07-01T11:17:55.979'
+                    first_date: homeObj.date ? homeObj.date : oneWeekAgo
                 }
             };
             await axios.request(options).then((response)=>{

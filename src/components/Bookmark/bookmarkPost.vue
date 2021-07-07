@@ -214,8 +214,8 @@ export default {
 @media screen and (max-width: 768px) {
   .B-movie_card {
     width: 95%;
-    margin: 40px auto;
-    min-height: 350px;
+    margin: 30px auto;
+    min-height: 100px;
     height: auto;
   }
 
@@ -225,12 +225,15 @@ export default {
   }
 
   .B-movie_header {
-    margin-top: 85px;
+    margin-top: 20px;
   }
 
   .B-info_section {
     background-color: rgba(255, 255, 255, 0.3);
     display: inline-grid;
+  }
+  .B-movie_card .B-info_section .B-movie_header h1 {
+    font-size: 20px;
   }
 }
 

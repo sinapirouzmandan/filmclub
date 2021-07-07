@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <splashScreen v-if="splashScreenShow"/>
     <transition name="slide">
     <router-view/>
     </transition>
@@ -7,13 +8,61 @@
   </div>
 </template>
 
+<script>
+import navbar from "./components/navbar";
+import splashScreen from "./views/splashScreen";
+import {mapState} from 'vuex'
+
+export default {
+  name: 'App',
+  data() {
+    return {}
+  },
+  components: {
+    navbar,
+    splashScreen
+  },
+  computed: {
+    ...mapState(['showNavbar', 'splashScreenShow'])
+  },
+  mounted() {
+    this.$vs.setColor('primary', '#5b3cc4')
+    setTimeout(()=>{
+      this.$store.commit('toggleSplashScreen')
+    },4000)
+  },
+  created() {
+    this.$store.commit('getTokenFromLocal')
+  }
+}
+</script>
+
+
 <style>
+@font-face {
+  font-family: 'magic';
+  font-style: normal;
+  font-weight: 400;
+  src: local('magic'), url('https://fonts.cdnfonts.com/s/16829/magic dafont.woff') format('woff'),
+  url('./assets/magic-dafont.woff') format('woff');
+  font-display: block;
+}
 @font-face {
   font-family: 'Yekan';
   src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot');
   src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.eot?#iefix') format('embedded-opentype'),
   url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff') format('woff'),
+  url('./assets/Yekan.woff') format('woff'),
   url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.ttf') format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Nazanin';
+  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
+  src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff') format('woff'),
+  url('./assets/Nazanin.woff') format('woff'),
+  url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
   font-weight: normal;
 }
 :root {
@@ -83,7 +132,7 @@ img {
 }
 .slide-leave-active,
 .slide-enter-active {
-  transition: 0.4s;
+  transition: 0.3s;
 }
 .slide-enter {
   transform: translate(100%, 0);
@@ -104,26 +153,3 @@ img {
 }
 
 </style>
-<script>
-import navbar from "./components/navbar";
-import {mapState} from 'vuex'
-
-export default {
-  name: 'App',
-  data() {
-    return {}
-  },
-  components: {
-    navbar
-  },
-  computed: {
-    ...mapState(['showNavbar'])
-  },
-  mounted() {
-    this.$vs.setColor('primary', '#5b3cc4')
-  },
-  created() {
-    this.$store.commit('getTokenFromLocal')
-  }
-}
-</script>
