@@ -5,6 +5,7 @@ import PullToRefresh from 'pulltorefreshjs';
 
 Vue.use(VueRouter)
 let token = localStorage.getItem('token') === null || localStorage.getItem('token') === 'null'
+
 const routes = [
     {
         path: '/',
@@ -95,6 +96,21 @@ const router = new VueRouter({
         }
     }
 })
+const originalPush = router.push
+router.push = function push(location, onResolve, onReject)
+{
+    if (onResolve || onReject) {
+        return originalPush.call(this, location, onResolve, onReject)
+    }
+
+    return originalPush.call(this, location).catch((err) => {
+        if (VueRouter.isNavigationFailure(err)) {
+            return err
+        }
+
+        return Promise.reject(err)
+    })
+}
 router.beforeEach((to, from, next) => {
     PullToRefresh.destroyAll();
     if ((to.name !== 'login' && to.name !== 'signin') && token) next({name: 'login'})

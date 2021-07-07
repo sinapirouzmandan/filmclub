@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <transition name="slide">
     <router-view/>
+    </transition>
     <navbar v-if="showNavbar"></navbar>
   </div>
 </template>
@@ -27,11 +29,10 @@
 head, body {
   background-color: var(--vs-mainback);
   user-select: none;
-  overflow: auto;
-  overflow: initial;
   margin: 0;
   overscroll-behavior-y: contain;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 .bodyMargin {
   margin: 10px;
@@ -80,6 +81,28 @@ img {
 img {
   color: rgba(0, 0, 0, 0) !important;
 }
+.slide-leave-active,
+.slide-enter-active {
+  transition: 0.4s;
+}
+.slide-enter {
+  transform: translate(100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
+}
+
+.slideback-leave-active,
+.slideback-enter-active {
+  transition: 1s;
+}
+.slideback-enter {
+  transform: translate(-100%, 0);
+}
+.slideback-leave-to {
+  transform: translate(100%, 0);
+}
+
 </style>
 <script>
 import navbar from "./components/navbar";

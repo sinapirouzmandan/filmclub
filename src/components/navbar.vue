@@ -5,8 +5,8 @@
         dark
         flat
         icon
-        to="/"
         @click="activeHome = true; activeSearch=false; activeMovie=false;activeBookmark=false;activeUser=false"
+        to="/"
     >
       <i class="iconify" data-icon="bx:bxs-home" data-inline="false"></i>
     </vs-button>
@@ -15,8 +15,8 @@
         dark
         flat
         icon
-        to="/search"
         @click="activeHome = false; activeSearch=true; activeMovie=false;activeBookmark=false;activeUser=false;"
+        to="/search"
     >
       <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
     </vs-button>
@@ -25,8 +25,8 @@
         dark
         flat
         icon
-        to="/NewPost"
         @click="activeHome = false; activeSearch=false; activeMovie=true;activeBookmark=false;activeUser=false"
+        to="/NewPost"
     >
       <i class="iconify" data-icon="mdi:movie-open-plus" data-inline="false"></i>
     </vs-button>
@@ -35,8 +35,8 @@
         dark
         flat
         icon
-        to="/MyList"
         @click="activeHome = false; activeSearch=false; activeMovie=false;activeBookmark=true;activeUser=false"
+        to="/MyList"
     >
       <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
     </vs-button>
@@ -45,8 +45,8 @@
         dark
         flat
         icon
-        to="/profile"
         @click="activeHome = false; activeSearch=false; activeMovie=false;activeBookmark=false;activeUser=true;"
+        to="/profile"
     >
       <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
     </vs-button>

@@ -95,11 +95,11 @@ export default {
     }
   },
   computed:{
-    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage', 'savedPos'])
+    ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage', 'savedPos', 'homePageNumber'])
   },
   methods:{
     ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
-    ...mapMutations(['fetchHomePostsFromCache']),
+    ...mapMutations(['fetchHomePostsFromCache', 'homePageNumberPlus']),
     togglerLike(post){
       this.toggleLike(post.id)
       if (post.isLiked){
@@ -111,13 +111,14 @@ export default {
         post.isLiked = true
       }
     },
-    getNextPosts() {      window.onscroll = () => {
+    getNextPosts() {
+      window.onscroll = () => {
         let topOfWindow = document.documentElement.scrollTop <= 400;
         if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
           this.isLoadingMore = true
-          this.page += 1
+          this.homePageNumberPlus()
           let homeObj = {
-            page: this.page,
+            page: this.homePageNumber,
             date: localStorage.getItem('lastRetreviedDate')
           }
           this.getHomePosts(homeObj).then(()=>{
@@ -134,26 +135,29 @@ export default {
         }
         }
       },
-    latelyLoaded(){
+    latelyLoaded() {
+      localStorage.setItem('lastRetreviedDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+      if (this.isLoadingMore) {
       this.isLoadingMore = true
-      this.page += 1
+      this.homePageNumberPlus()
       let homeObj = {
-        page: this.page,
+        page: 1,
         date: localStorage.getItem('lastRetreviedDate')
       }
       const lastLen = this.homePosts.length
-      this.getHomePosts(homeObj).then(()=>{
+      this.getHomePosts(homeObj).then(() => {
         putHomePosts(this.homePosts)
         const nowLen = this.homePosts.length
-        let pointerPos  = nowLen - lastLen
-        let firstPostOfPacket =  document.getElementById(this.homePosts[pointerPos].id)
+        let pointerPos = nowLen - lastLen
+        let firstPostOfPacket = document.getElementById(this.homePosts[pointerPos].id)
         firstPostOfPacket.scrollIntoView({block: 'end'})
-        setTimeout(()=>{
+        setTimeout(() => {
           this.isLoadingMore = false
-        },1000)
+        }, 1000)
       })
       this.$store.commit('toggleHomeSavedPos', true)
       this.getNextPosts()
+    }
     }
 
   },
@@ -172,9 +176,9 @@ export default {
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
         this.isLoadingMore = true
-        this.page += 1
+        this.homePageNumberPlus()
         let homeObj = {
-          page: this.page,
+          page: this.homePageNumber,
           date: localStorage.getItem('lastRetreviedDate')
         }
         const lastLen = this.homePosts.length

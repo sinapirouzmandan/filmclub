@@ -37,13 +37,11 @@ export default {
     accountStatus, accountBio, accountHeader, loading
   },
   created() {
-    this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.$store.dispatch('getUserProfile').then(() => {
       this.isLoading = false
       this.$store.dispatch('getNotificationList')
     })
-    this.$store.dispatch('getCountsInProfile')
   },
   mounted() {
     var self = this
@@ -56,6 +54,8 @@ export default {
         self.$store.dispatch('getMyPosts')
       }
     });
+    this.$store.commit('changeErrMsg', null)
+    this.$store.dispatch('getCountsInProfile')
   },
   computed: {
     ...mapGetters(['notificatonsCalc'])

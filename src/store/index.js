@@ -55,6 +55,7 @@ export default new Vuex.Store({
         homePosts: [],
         homeHasNextPage: true,
         savedPos: false,
+        homePageNumber: 0,
         //comments
         postComments: [],
         hasNextPage: false
@@ -201,6 +202,9 @@ export default new Vuex.Store({
         },
         toggleHomeSavedPos (state,payload) {
             state.savedPos = payload
+        },
+        homePageNumberPlus(state){
+            state.homePageNumber += 1
         },
         fetchHomePostsFromCache (state,payload) {
             state.homePosts.push(...payload)
