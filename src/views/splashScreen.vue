@@ -32,7 +32,7 @@ export default {
   justify-items: center;
   justify-content: center;
   font-family: magic,serif;
-  z-index: 9999;
+  z-index: 9999999;
 }
 * {
   outline-width: 0;

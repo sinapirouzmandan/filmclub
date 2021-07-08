@@ -35,8 +35,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('http://fonts.cdnfonts.com/css/magic');
-
 .xi-top-head {
   position: fixed;
   top: 0;
@@ -49,11 +47,11 @@ export default {
   justify-content: center;
   align-content: center;
   align-items: center;
-  z-index: 999999999;
+  z-index: 99;
 }
 
 .logo h1 {
-  font-family: 'magic', sans-serif;
+  font-family: magic, sans-serif;
 }
 
 .papa >>> .vs-input {
