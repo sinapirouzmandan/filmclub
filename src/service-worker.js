@@ -22,7 +22,6 @@ workbox.routing.registerRoute(
 self.addEventListener('fetch', function (event) {
     if (event.request.method === 'GET' && event.request.url.indexOf('cdn.inspectlet.com') !== -1) {
         event.respondWith(fetch(event.request));
-        console.log('fetch from inspectlet only online')
         }
     else {
         event.respondWith(
@@ -30,7 +29,6 @@ self.addEventListener('fetch', function (event) {
                 return response || fetch(event.request);
             }),
         );
-        console.log('Cache, falling back to network')
     }
 });
 self.addEventListener("message", msg=>{

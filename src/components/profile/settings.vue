@@ -108,7 +108,6 @@ export default {
     ...mapMutations(["setToken"]),
     ...mapActions(["deleteUser"]),
     logout() {
-      console.log("hi");
       this.setToken(null);
       this.$router.go();
     },

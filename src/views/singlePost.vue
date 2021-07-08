@@ -3,6 +3,9 @@
   <div class="back" @click="$router.back()">
     <i class="iconify" data-icon="bx:bx-arrow-back"></i>
   </div>
+  <div class="back share" @click="sharePost">
+    <i class="iconify" data-icon="mdi:share-variant"></i>
+  </div>
   <div class="overlayLoad" v-if="isLoading">
     <div class="loader">
       <loading/>
@@ -248,7 +251,7 @@ export default {
               }
             })
           this.isSaving = false
-        }).catch((err) => {
+        }).catch(() => {
           this.$vs.notification({
             duration: 3000,
             progress: 'auto',
@@ -259,7 +262,6 @@ export default {
           })
           this.isSaving = false
           this.$store.commit('changeErrMsg', null)
-          console.log(err)
         });
       }
     },
@@ -389,6 +391,56 @@ export default {
             })
         }
       });
+    },
+    sharePost() {
+      if (navigator.share) {
+        navigator.share({
+          title: `Film Club`,
+          text: '🎥 Read this ${this.singlePost.title} Post on filmClub.',
+          url: window.location
+        }).then(() => {
+          console.log('Thanks for sharing!');
+        })
+            .catch(console.error);
+      } else {
+        try {
+          if (window.clipboardData && window.clipboardData.setData) {
+            return window.clipboardData.setData("Text", `🎥 Read this ${this.singlePost.title} Post on filmClub.`);
+
+          }
+          else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+            var textarea = document.createElement("textarea");
+            let location = window.location.href
+            textarea.textContent = `🎥 Read this ${this.singlePost.title} Post on filmClub :\n ${location}`;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              return document.execCommand("copy");
+            }
+            catch (ex) {
+              console.warn("Copy to clipboard failed.", ex);
+              return false;
+            }
+            finally {
+              document.body.removeChild(textarea);
+            }
+          }
+        }
+        catch (e) {
+          alert(e)
+        }
+        finally {
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position: 'bottom-center',
+            color: 'rgba(47,47,47,0.62)',
+            title: ' your device does not support sharing. link copied to clipboard',
+          })
+        }
+      }
     }
   },
   created() {
@@ -481,7 +533,7 @@ hr {
   float:left;
 }
 .section {
-  font-family: Yekan;
+  font-family: Yekan,sans-serif;
   text-align:right;
 }
 .body {
@@ -513,6 +565,10 @@ hr {
   text-align: center;
 }
 .displayHashtags {
-
+margin-top:2rem;
+}
+.share {
+  margin-left: 0;
+  right:2rem;
 }
 </style>

@@ -41,21 +41,8 @@ export default {
     this.$store.commit('toggleNavbar', true);
     this.loadNotification()
   },
-  mounted() {
-    this.registerPeriodicNewsCheck()
-  },
   components:{loading},
   methods: {
-    async  registerPeriodicNewsCheck() {
-      const registration = await navigator.serviceWorker.ready;
-      try {
-        await registration.periodicSync.register('get-latest-news', {
-          minInterval: 24 * 60 * 60 * 1000,
-        });
-      } catch {
-        console.log('Periodic Sync could not be registered!');
-      }
-    },
     loadNotification() {
       this.isLoading = true
       this.$store.dispatch('getNotificationList').then(()=>{

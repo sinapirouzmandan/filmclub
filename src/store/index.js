@@ -68,7 +68,7 @@ export default new Vuex.Store({
         },
         notificatonsCalc(state) {
             let notifications = state.notifications.filter((item) => {
-                return item.isSeen == false
+                return item.isSeen === false
             });
             let len = Object.keys(notifications).length
             if (Number(len) === 0) {
@@ -132,10 +132,9 @@ export default new Vuex.Store({
             state.watchListMoviesIDs = payload
         },
         removeWatchListPost(state, id) {
-            const watch = state.watchListMoviesList.filter((movie) =>
+            state.watchListMoviesList = state.watchListMoviesList.filter((movie) =>
                 movie.id !== id
             )
-            state.watchListMoviesList = watch
         },
         getTokenFromLocal(state) {
             if (state.token == null) {
@@ -146,35 +145,34 @@ export default new Vuex.Store({
         },
         fetchBoxOffice(state, payload) {
             state.boxOfficeList.movies = payload.filter((item) => {
-                return item['classify'] == 'movies'
+                return item['classify'] === 'movies'
             })
             state.boxOfficeList.series = payload.filter((item) => {
-                return item['classify'] == 'series'
+                return item['classify'] === 'series'
             })
         },
         fetchUserInfo(state, payload) {
             state.usernameInfo = payload.user
         },
         fetchSearchUsers(state, payload) {
-            let users = payload.users.map((user) => {
+            state.searchedUsers = payload.users.map((user) => {
                 user.biography = user.biography.slice(0, 45)
                 return user
             })
-            state.searchedUsers = users
         },
         fetchNotifications(state, payload) {
             let notifications = payload.notifications.map((item) => {
                 item.id = Math.floor(Math.random() * 9999999999999)
-                if (item.icon == 'normal') {
+                if (item.icon === 'normal') {
                     item.icon = 'mdi:bell-circle-outline'
                     item.color = 'white'
-                } else if (item.icon == 'danger') {
+                } else if (item.icon === 'danger') {
                     item.icon = 'mdi:alert-circle-outline'
                     item.color = 'red'
-                } else if (item.icon == 'warn') {
+                } else if (item.icon === 'warn') {
                     item.icon = 'mdi:alert-circle-outline'
                     item.color = 'orange'
-                } else if (item.icon == 'success') {
+                } else if (item.icon === 'success') {
                     item.icon = 'mdi:arrow-up-circle-outline'
                     item.color = 'green'
                 }
@@ -231,7 +229,7 @@ export default new Vuex.Store({
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
-            var now = new Date()
+            const now = new Date()
             payload.forEach((post)=>{
                 let paragraph = ''
                 let paragraphIsSet = false
@@ -252,8 +250,8 @@ export default new Vuex.Store({
                     }
                 })
                 // eslint-disable-next-line no-unused-vars
-                var postDate = new Date(post.createdAt)
-                var Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
+                let postDate = new Date(post.createdAt)
+                let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
                 if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
                     Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) + ' days ago'
                 }
@@ -315,13 +313,12 @@ export default new Vuex.Store({
                 };
                 await axios.request(optionsServer).then(function (response) {
                     commit('loadImdbIds', response.data.list)
-                    if (response.data.list.length == 0) {
+                    if (response.data.list.length === 0) {
                         commit('loadImdbIds', ['tt0068646'])
                     }
                 }).catch(function (error) {
                     errors += 1
                     clientDB.getWatchList().then((result)=>{
-                        console.log(result)
                         state.watchListMoviesList = result
                     })
                     if (!error.response) {
@@ -355,7 +352,6 @@ export default new Vuex.Store({
                     }
                     else {
                         clientDB.getWatchList().then((result)=>{
-                            console.log(result)
                             state.watchListMoviesList = result
                         })
                     }
@@ -399,7 +395,7 @@ export default new Vuex.Store({
         async signin({commit, state, dispatch}, user, type) {
             let token = null
             let options = null
-            if (type == 1) {
+            if (type === 1) {
                 options = {
                     method: 'POST',
                     url: `${state.baseURl}/users/login`,
@@ -535,8 +531,8 @@ export default new Vuex.Store({
                     name: name
                 })
             };
-            await axios.request(options).then(function (response) {
-                console.log(response.data)
+            await axios.request(options).then(function () {
+                // console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
@@ -552,8 +548,8 @@ export default new Vuex.Store({
                     bio: bio
                 })
             };
-            await axios.request(options).then(function (response) {
-                console.log(response.data)
+            await axios.request(options).then(function () {
+                // console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
@@ -898,8 +894,8 @@ export default new Vuex.Store({
                     critic: updateObj.critic
                 })
             };
-            await axios.request(options).then((response)=>{
-                console.log(response.data.message)
+            await axios.request(options).then(()=>{
+                // console.log(response.data.message)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
@@ -1052,8 +1048,8 @@ export default new Vuex.Store({
                     commentID: id
                 })
             };
-            await axios.request(options).then((response)=>{
-                console.log(response.data)
+            await axios.request(options).then(()=>{
+                // console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
