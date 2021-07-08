@@ -4,7 +4,7 @@
     <splashScreen v-if="splashScreenShow"/>
     </transition>
     <transition name="slide">
-      
+
     <router-view/>
     </transition>
     <navbar v-if="showNavbar"></navbar>

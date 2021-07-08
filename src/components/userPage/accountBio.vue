@@ -1,7 +1,7 @@
 <template>
   <vs-row>
     <vs-col w="12">
-      <p v-if="usernameInfo.biography != ''" class="bioText" style="text-align: left;white-space: pre-wrap;">
+      <p v-if="usernameInfo.biography" class="bioText" style="text-align: left;white-space: pre-wrap;">
         {{ usernameInfo.biography }}
       </p>
       <p v-else class="bioText" style="text-align: left;white-space: pre-wrap;">
