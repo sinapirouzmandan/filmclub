@@ -26,7 +26,7 @@
     <div class="user" v-for="(user) in followers" :key="user._id">
       <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername.username}`)">
       <vs-avatar circle class="avatarImage">
-        <img :src="user.followerUsername.avatar ? (baseURl + user.followerUsername.avatar) : alternativeAvatar" class="fitImage">
+        <img :src="user.followerUsername.avatar ? (baseURl + user.followerUsername.avatar) : alternativeAvatar" class="fitImage" alt="user avatar">
       </vs-avatar>
       <div class="singleUser">
       <p class="nameInSingleUser">{{user.followerUsername.username}}</p>
@@ -43,7 +43,7 @@
       </div>
       <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername.username}`)">
       <vs-avatar circle class="avatarImage">
-        <img :src="user.followingUsername.avatar ? (baseURl + user.followingUsername.avatar) : alternativeAvatar" class="fitImage">
+        <img :src="user.followingUsername.avatar ? (baseURl + user.followingUsername.avatar) : alternativeAvatar" class="fitImage" alt="user avatar">
       </vs-avatar>
       <div class="singleUser">
       <p class="nameInSingleUser">{{user.followingUsername.username}}</p>

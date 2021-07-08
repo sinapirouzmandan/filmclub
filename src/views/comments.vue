@@ -15,7 +15,7 @@
   <loading v-if="isLoading"/>
   <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id ">
     <vs-avatar class="avatar" circle>
-      <img style="object-fit: cover; width:100%; height:100%;" :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar" alt="">
+      <img style="object-fit: cover; width:100%; height:100%;" :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar" alt="user avatar">
     </vs-avatar>
     <div class="body" v-long-press="500"
          @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
@@ -35,7 +35,7 @@
     <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="childComment.specialID ? childComment.specialID : childComment._id " v-long-press="500"
          @long-press-start="selectComment(childComment.specialID ? childComment.specialID : childComment._id, comment._id)" >
       <vs-avatar class="avatar" circle>
-        <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="">
+        <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
       </vs-avatar>
       <div class="body">
         <p class="commentText"><span class="username">{{childComment.userId.username}}</span> {{childComment.content}}</p>
@@ -57,7 +57,7 @@
     <div @click="postComment()">
     <i class="iconify addCommentIcon" data-icon="mdi:message-reply"></i>
     </div>
-    <vs-input border v-model="commentText" :placeholder="inputPlaceholder" id="commentInput"/>
+    <vs-input border v-model="commentText" :placeholder="inputPlaceholder" id="commentInput"  dir="right"/>
   </div>
 </div>
 </template>
@@ -247,6 +247,7 @@ export default {
 }
 .commentText{
   word-break: break-all;
+  direction: rtl;
 }
 .username {
   font-weight: bold;
@@ -283,6 +284,8 @@ export default {
 #commentInput>>> .vs-input {
   color: #d5cccc;
   font-size: 15px;
+  text-align: right;
+  direction: rtl;
 }
 #container {
   padding-bottom: 4rem;

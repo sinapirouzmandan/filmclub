@@ -8,7 +8,7 @@
             <h3>{{post.title}}</h3>
           </template>
           <template #img>
-            <img v-lazy="post.poster" alt="image">
+            <img v-lazy="post.poster" alt="post poster image">
           </template>
           <template #text>
             <p>

@@ -3,7 +3,7 @@
     <newPostTools @sendThePost="sharePost()" :isLoading="isSaving"/>
     <input ref="file" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads">
     <div class="headerImage">
-      <img id="headerSelected" src="false" v-show="file">
+      <img id="headerSelected" src="false" v-show="file" alt="post header image">
       <svg fill="#5c5c5c" aria-hidden="true" class="changePostHeader"
            viewBox="0 0 24 24">
         <g>

@@ -4,7 +4,7 @@
       <div class="user" @click="$router.push(`/users/${user.username}`)">
         <div class="divider"></div>
         <div class="avatar">
-          <img :src="user.avatar ? (baseURl + user.avatar) : alternativeAvatar" alt="" class="usersAvatar"/>
+          <img :src="user.avatar ? (baseURl + user.avatar) : alternativeAvatar" alt="avatar" class="usersAvatar"/>
         </div>
         <p>
           {{ user.username }}

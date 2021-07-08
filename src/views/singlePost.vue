@@ -9,9 +9,9 @@
     </div>
   </div>
   <div class="header">
-    <img :src="baseURl + singlePost.poster" alt="" id="headerImage">
+    <img :src="baseURl + singlePost.poster" :alt="'header image of movie ' + singlePost.title" id="headerImage">
     <vs-avatar circle size="70" id="avatarContainer">
-      <img :src="userAvatar" alt="" id="avatarImage">
+      <img :src="userAvatar" alt="user avatar" id="avatarImage">
     </vs-avatar>
     <span id="username">{{singlePost.username}}</span>
   </div>
@@ -127,7 +127,7 @@
     <div class="section" v-for="(i, index) in singlePost.body" :key="index">
       <h3 v-if="i.type === 'header'">{{i.data.text | sanitize}}</h3>
       <p class="bodyParagraph" v-else-if="i.type === 'paragraph'">{{i.data.text | sanitize}}</p>
-      <img v-else-if="i.type === 'image'" v-lazy="i.data.file.url" alt="" class="imageItemInBody">
+      <img v-else-if="i.type === 'image'" v-lazy="i.data.file.url" :alt="i.data.caption" class="imageItemInBody">
     </div>
   </div>
   <p style="margin-bottom: 5rem; opacity:0; font-size:15px;">margin</p>

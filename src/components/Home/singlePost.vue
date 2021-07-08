@@ -7,7 +7,7 @@
       <template #title>
         <img :src="post.authorAvatar ? (baseURl + post.authorAvatar) : alternativeAvatar"
              @click="$router.push(`/users/${post.author}`)"
-             style="width: 30px; height: 30px; border-radius: 50%; float: left; object-fit:cover;">
+             style="width: 30px; height: 30px; border-radius: 50%; float: left; object-fit:cover;" alt="user profile">
         <p class="userId" @click="$router.push(`/users/${post.author}`)">{{post.author}}</p>
         <vs-button
             @click="toggleWatchListPost(post.imdb_id); post.isWatchList = false"

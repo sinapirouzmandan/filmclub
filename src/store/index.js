@@ -9,7 +9,7 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://filmclub.ap-1.evennode.com',
+        baseURl: 'http://192.168.1.33:3000',
         splashScreenShow: true,
         //watchList
         watchListMoviesIDs: [],
