@@ -184,11 +184,16 @@ export default {
         this.file = this.$refs.file.files[0];
       }
       if (this.file) {
+        this.$emit('profileChange')
         let formData = new FormData();
         formData.append(location, this.file);
         this.imageInfo.image = formData;
         this.imageInfo.location = location;
-        this.updateProfilePhoto(this.imageInfo)
+        this.updateProfilePhoto(this.imageInfo).then(()=>{
+          this.$emit('profileChange')
+        }).catch(()=>{
+          this.$emit('profileChange')
+        })
       }
     }
   }

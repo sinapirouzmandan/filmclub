@@ -113,7 +113,7 @@ export default {
     },
     getNextPosts() {
       window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop <= 400;
+        let topOfWindow = document.documentElement.scrollTop <= 600;
         if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
           this.isLoadingMore = true
           this.homePageNumberPlus()
@@ -153,7 +153,7 @@ export default {
         firstPostOfPacket.scrollIntoView({block: 'end'})
         setTimeout(() => {
           this.isLoadingMore = false
-        }, 1000)
+        }, 3000)
       })
       this.$store.commit('toggleHomeSavedPos', true)
       this.getNextPosts()
@@ -189,7 +189,7 @@ export default {
           firstPostOfPacket.scrollIntoView({block: 'end'})
           setTimeout(()=>{
             this.isLoadingMore = false
-          },2000)
+          },3000)
         })
       })
       this.firstMount =false

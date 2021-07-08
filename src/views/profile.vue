@@ -5,7 +5,12 @@
       <loading/>
       </div>
     </div>
-    <accountHeader/>
+    <div class="uploadOverlay" v-if="uploadOverlay">
+      <div class="loader">
+        <loading/>
+      </div>
+    </div>
+    <accountHeader @profileChange="uploadOverlay = !uploadOverlay"/>
     <accountBio/>
     <accountStatus/>
     <tumb-post/>
@@ -63,7 +68,8 @@ export default {
   },
   data(){
     return{
-      isLoading: true
+      isLoading: true,
+      uploadOverlay: false
     }
   }
 }
@@ -100,5 +106,13 @@ body, html {
 .loader {
   margin-top: 30vh;
 }
-
+.uploadOverlay{
+  position:fixed;
+  top:0;
+  right:0;
+  background-color: rgba(135, 135, 135, 0.38);
+  width:100%;
+  height:100vh;
+  z-index: 10;
+}
 </style>
