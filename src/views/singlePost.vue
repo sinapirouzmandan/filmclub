@@ -396,7 +396,7 @@ export default {
       if (navigator.share) {
         navigator.share({
           title: `Film Club`,
-          text: '🎥 Read this ${this.singlePost.title} Post on filmClub.',
+          text: `🎥 Read this ${this.singlePost.title} Post on filmClub.`,
           url: window.location
         }).then(() => {
           console.log('Thanks for sharing!');
