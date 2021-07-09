@@ -9,12 +9,12 @@ import * as clientDB from './clientDB'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'http://192.168.1.36:3000',
+        baseURl: 'http://192.168.43.67:3000',
         splashScreenShow: true,
         //watchList
         watchListMoviesIDs: [],
-        watchListMoviesList: [],
         isWatchListLoaded: false,
+        watchListMoviesList: [],
         //AddNewPost
         searchListMoviesList: [],
         endOrLoad: 'Loading content ...',
@@ -62,10 +62,18 @@ export default new Vuex.Store({
         hasNextPage: false,
     },
     getters: {
+        /**
+         * @param state
+         * @returns {number of posts in watchlist}
+         */
         watchListLengthCalc(state) {
             let len = Object.keys(state.watchListMoviesIDs).length
             return Number(len)
         },
+        /**
+         * @param state
+         * @returns {number of notifications that user didn't see them yet}
+         */
         notificatonsCalc(state) {
             let notifications = state.notifications.filter((item) => {
                 return item.isSeen === false
@@ -97,6 +105,12 @@ export default new Vuex.Store({
         toggleNavbar(state, payload) {
             state.showNavbar = payload
         },
+        // ---------------- login part
+        /**
+         * check if token is set and if it's not refresh the page and push to login page
+         * @param state
+         * @param payload
+         */
         setToken(state, payload) {
             state.token = payload
             localStorage.setItem('token', payload)
@@ -119,15 +133,19 @@ export default new Vuex.Store({
         usernameAvailability(state, payload) {
             state.isUserName = payload
         },
+        // ---------------- end of login part
         changeErrMsg(state, payload) {
             state.errMassage = payload
         },
+        // user, it self data fetch
         fetchProfile(state, payload) {
             state.userProfile = payload
         },
         toggleProfileLoaded(state, payload) {
             this.state.isProfileLoaded = payload
         },
+        // end of self user
+        // ---------------- Watch list
         loadImdbIds(state, payload) {
             state.watchListMoviesIDs = payload
         },
@@ -136,6 +154,7 @@ export default new Vuex.Store({
                 movie.id !== id
             )
         },
+        // ---------------- end of watch list
         getTokenFromLocal(state) {
             if (state.token == null) {
                 if (localStorage.getItem('token') !== null || localStorage.getItem('token') !== 'null') {
@@ -151,6 +170,7 @@ export default new Vuex.Store({
                 return item['classify'] === 'series'
             })
         },
+        // ---------------- other users data
         fetchUserInfo(state, payload) {
             state.usernameInfo = payload.user
         },
@@ -188,6 +208,7 @@ export default new Vuex.Store({
         fetchFollowings (state,payload) {
             state.followings = payload
         },
+        // ---------------- List of posts, follower and following counters
         fetchStatitics (state,payload) {
             state.statitics.followings = payload.following
             state.statitics.followers = payload.followers
@@ -226,10 +247,12 @@ export default new Vuex.Store({
             state.singlePost = payload.post
         },
         fetchHomePosts (state,payload) {
+            // ---------------- sort new packet consist of 10 posts based on date
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
             const now = new Date()
+            // ---------------- Check each post if  it needs a ^full post^ button
             payload.forEach((post)=>{
                 let paragraph = ''
                 let paragraphIsSet = false
@@ -249,7 +272,7 @@ export default new Vuex.Store({
                         needFullPost = true
                     }
                 })
-                // eslint-disable-next-line no-unused-vars
+                // ---------------- calculate time passed from post creation
                 let postDate = new Date(post.createdAt)
                 let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
                 if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
@@ -304,6 +327,7 @@ export default new Vuex.Store({
         async getMoviesList({commit, state, dispatch}) {
             let errors = 0
             if (!(state.isWatchListLoaded)) {
+                // ---------------- Firstly we send request to server to get imdb id of movies in watch list
                 const optionsServer = {
                     method: 'GET',
                     url: `${state.baseURl}/watchlist/`,
@@ -314,6 +338,7 @@ export default new Vuex.Store({
                 await axios.request(optionsServer).then(function (response) {
                     commit('loadImdbIds', response.data.list)
                     if (response.data.list.length === 0) {
+                        // ---------------- if watch list is empty we add godfather for ex
                         commit('loadImdbIds', ['tt0068646'])
                     }
                 }).catch(function (error) {
@@ -328,6 +353,7 @@ export default new Vuex.Store({
                 });
                 let watchListPosts = []
                 let id = null
+                // ---------------- for each imdb id we send a request to api of imdb-alt to get movie cast
                 for (id in state.watchListMoviesIDs) {
                     const options = {
                         method: 'GET',
@@ -366,6 +392,11 @@ export default new Vuex.Store({
         },
         async getSearchList({commit, dispatch}, search) {
             let searchListPosts = []
+            /**
+             * We use this api when adding new post to get the new post movie imdb id
+             * and also we use this api for watch list new items
+             * @type {{headers: {"x-rapidapi-key": string, "x-rapidapi-host": string}, method: string, params: {r: string, s, page: string}, url: string}}
+             */
             const options = {
                 method: 'GET',
                 url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
@@ -423,6 +454,7 @@ export default new Vuex.Store({
             commit('setToken', token)
         },
         async signup({commit, state, dispatch}) {
+            // ---------------- End point for new users
             let token = null
             const options = {
                 method: 'POST',
@@ -489,6 +521,16 @@ export default new Vuex.Store({
             });
         },
         async getUserProfile({commit, state}) {
+            /**
+             * api for getting user, it self data
+             * including :
+             * username
+             * avatar
+             * biographi
+             * email
+             * etc
+             * @type {boolean}
+             */
             let NoErr = false
             if (!(state.isProfileLoaded)) {
                 let userInf = []
@@ -555,6 +597,11 @@ export default new Vuex.Store({
             });
         },
         async toggleWatchListPost({state, commit, dispatch}, id) {
+            /**
+             * This  end point controls delete and add of items in watchlist
+             * It gets an IMDB id and toggles it in DB
+             * @type {boolean}
+             */
             state.isWatchListLoaded = false
             const options = {
                 method: 'POST',
@@ -576,6 +623,15 @@ export default new Vuex.Store({
             });
         },
         async deleteUser({state, commit, dispatch}, del) {
+            /**
+             * This api controls two things,
+             * ban account with reviewers and also self delete account
+             * ( The authentication is being controlled by backend server )
+             * if It's a reviewer, target and reason will be set to username/id
+             * and reason will be asked to ban
+             * i it's a normal user target and reason will be ^default^
+             * @type {{headers: {authorization: string}, method: string, data: {reason, password, target}, url: string}}
+             */
             const options = {
                 method: 'DELETE',
                 url: `${state.baseURl}/users/`,
@@ -595,6 +651,11 @@ export default new Vuex.Store({
             });
         },
         async getBoxOfficeList({state, commit, dispatch}) {
+            /**
+             * Box office is in the search tab and will display trending
+             * movies and series
+             * @type {{method: string, url: string}}
+             */
                 const options = {
                     method: 'GET',
                     url: `${state.baseURl}/boxoffice`
@@ -628,6 +689,10 @@ export default new Vuex.Store({
             commit('fetchUserInfo', userInfo)
         },
         async toggleFollow({state, dispatch, commit}, user) {
+            /**
+             * Handle both follow and unfollow
+             * @type {{headers: {authorization: string}, method: string, url: string}}
+             */
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/users/follow/${user}`,
@@ -660,6 +725,12 @@ export default new Vuex.Store({
             });
         },
         async getFollowStatus({state, dispatch}, username) {
+            /**
+             * When opening a new post or visiting a user page
+             * It's obligatory to get the status
+             * of following and change the text and style of follow btn
+             * based on the response
+             */
             if (state.token) {
                 const options = {
                     method: 'GET',
@@ -690,6 +761,10 @@ export default new Vuex.Store({
             });
         },
         async updateProfilePhoto({state, dispatch, commit}, packet) {
+            /**
+             * This endpoint will handle header and profile image of user
+             * @type {{headers: {authorization: string, "Content-Type": string}, method: string, data, url: string}}
+             */
             const options = {
                 method: 'PUT',
                 data: packet.image,
@@ -766,6 +841,9 @@ export default new Vuex.Store({
             }
         },
         async getCountsInProfile({state, dispatch, commit}) {
+            /**
+             * This is exactly like user statistic
+             */
             if (state.token) {
                 const options = {
                     method: 'GET',
@@ -1037,6 +1115,13 @@ export default new Vuex.Store({
             });
         },
         async deleteAComment ({state, dispatch},id) {
+            /**
+             * Delete comment will be available for two groups
+             * 1 -  reviewers can delete every single comment
+             * 2 - Normal user can delete a comment only before he/she leaves the
+             * comments page
+             * @type {{headers: {authorization: string, "Content-Type": string}, method: string, data: string, url: string}}
+             */
             const options = {
                 method: 'DELETE',
                 url: `${state.baseURl}/posts/comment/delete`,

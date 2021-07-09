@@ -571,4 +571,7 @@ margin-top:2rem;
   margin-left: 0;
   right:2rem;
 }
+.followBtn {
+  background-color: rgba(70, 126, 246, 0.22);
+}
 </style>

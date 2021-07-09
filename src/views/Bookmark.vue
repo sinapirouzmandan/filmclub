@@ -1,7 +1,7 @@
 <template>
   <div class="bodyMargin">
     <div class="headerH2">
-      <vs-avatar badge badge-color="success" size="70" style="margin: 0 auto;">
+      <vs-avatar badge badge-color="success" size="70" style="margin: 0 auto;" circle>
         <img :src="userAvatar" alt="avatar" class="profileImg">
         <template #badge>
           {{ watchListLengthCalc }}
@@ -10,9 +10,7 @@
       <h2 style="display: inline-block;">watch list</h2>
     </div>
     <hr>
-    <keep-alive>
       <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
-    </keep-alive>
     <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{ endOrLoad }}</p>
     <vs-button
         circle
@@ -164,5 +162,6 @@ h4 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 </style>
