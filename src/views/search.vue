@@ -14,6 +14,7 @@ import searchFixedHeader from "../components/search/searchFixedHeader";
 import boxOffice from "../components/search/boxOffice";
 import searchUsers from "../components/search/searchUsers";
 import {mapState} from "vuex";
+import PullToRefresh from "pulltorefreshjs";
 
 export default {
   name: "search.vue",
@@ -41,6 +42,11 @@ export default {
   },
   computed: {
     ...mapState(['endOrLoad']),
+  },
+  mounted() {
+    PullToRefresh.init({
+      mainElement: 'body'
+    });
   }
 }
 </script>
