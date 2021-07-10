@@ -19,7 +19,7 @@
     </vs-avatar>
     <div class="body" v-long-press="500"
          @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
-      <p class="commentText"><span class="yekan">{{comment.content}} </span><span class="username">{{ comment.userId.username }}</span> </p>
+      <p><span class="username">{{ comment.userId.username }}</span> <span class="yekan" dir="rtl">{{comment.content}} </span></p>
       <div class="sub">
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>
@@ -53,11 +53,15 @@
       </div>
     </div>
   </div>
-  <div class="addNewComment">
+  <div class="addNewComment" @keypress.enter="postComment">
     <div @click="postComment()">
-    <i class="iconify addCommentIcon" data-icon="mdi:message-reply"></i>
+      <vs-avatar circle size="40" style="margin-left: 0.5rem;">
+        <img :src="userProfile.avatar ? baseURl + userProfile.avatar : alternativeAvatar" alt="user avatar"
+        style="width:100%; height:100%; object-fit: cover;">
+      </vs-avatar>
     </div>
     <vs-input border v-model="commentText" :placeholder="inputPlaceholder" id="commentInput"  dir="right"/>
+    <span class="sendBtn" @click="postComment()">Post</span>
   </div>
 </div>
 </template>
@@ -186,7 +190,7 @@ export default {
       })
     }
     else {
-      // this.$router.push('/')
+      this.$router.push('/')
     }
   },
   mounted() {
@@ -277,7 +281,6 @@ export default {
   padding: 7px;
 }
 #commentInput {
-  width:80%;
   margin-left: 10px;
 
 }
@@ -286,6 +289,10 @@ export default {
   font-size: 15px;
   text-align: right;
   direction: rtl;
+  width:100%;
+}
+.vs-input-parent{
+  width: 65%;
 }
 #container {
   padding-bottom: 4rem;
@@ -301,5 +308,10 @@ export default {
 }
 .yekan{
   font-family:Yekan;
+}
+.sendBtn{
+  font-size: 14px;
+  margin-left: 3%;
+  color: #6f6fff;
 }
 </style>

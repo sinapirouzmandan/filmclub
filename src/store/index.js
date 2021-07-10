@@ -294,6 +294,9 @@ export default new Vuex.Store({
             state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
         },
         fetchPostComments (state,payload) {
+            payload.docs = payload.docs.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
             const now = new Date();
             state.hasNextPage = payload.hasNextPage
             payload.docs.forEach((comment)=>{
@@ -308,6 +311,7 @@ export default new Vuex.Store({
                 }
                 comment.child =[]
                 state.postComments.push(comment)
+                state.postComments = [...new Map(state.postComments.map(item => [item["_id"], item])).values()]
             })
         },
 
@@ -949,7 +953,6 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).then((response)=>{
-                state.postComments = []
                 commit('fetchPostComments', response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
