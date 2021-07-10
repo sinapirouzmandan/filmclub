@@ -952,6 +952,9 @@ export default new Vuex.Store({
                     'authorization': `Bearer ${state.token}`
                 }
             };
+            if (getObj.page === 1) {
+                state.postComments = []
+            }
             await axios.request(options).then((response)=>{
                 commit('fetchPostComments', response.data)
             }).catch(function (error) {
