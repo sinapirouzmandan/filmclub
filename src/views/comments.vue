@@ -19,7 +19,7 @@
     </vs-avatar>
     <div class="body" v-long-press="500"
          @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
-      <p class="commentText"><span class="username">{{ comment.userId.username }}</span> <span class="yekan">{{comment.content}} </span></p>
+      <p class="commentText"><span class="yekan">{{comment.content}} </span><span class="username">{{ comment.userId.username }}</span> </p>
       <div class="sub">
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>

@@ -152,11 +152,12 @@ export default {
           reader.readAsDataURL(file);
         }
     },
-    sharePost(){
+    sharePost() {
+      if (this.checkRate()) {
       this.$store.commit('changeErrMsg', null)
       this.isSaving = true
       this.editor.save().then((outputData) => {
-        if (this.file){
+        if (this.file) {
           let formData = new FormData();
           formData.append('poster', this.file);
           formData.append('body', JSON.stringify(outputData.blocks));
@@ -165,12 +166,11 @@ export default {
           formData.append('critic', this.post.critic);
           formData.append('imdb_id', this.post.imdb_id);
           formData.append('score', this.score);
-          this.$store.dispatch('createNewPost', formData).then(()=>{
-            if (!this.errMassage){
+          this.$store.dispatch('createNewPost', formData).then(() => {
+            if (!this.errMassage) {
               this.isSaving = false
               this.$router.push('/profile')
-            }
-            else {
+            } else {
               this.$vs.notification({
                 duration: 3000,
                 progress: 'auto',
@@ -183,8 +183,7 @@ export default {
               this.isSaving = false
             }
           })
-        }
-        else{
+        } else {
           this.$vs.notification({
             duration: 3000,
             progress: 'auto',
@@ -208,6 +207,7 @@ export default {
         this.isSaving = false
         this.$store.commit('changeErrMsg', null)
       });
+    }
     }
   },
   created() {

@@ -111,7 +111,8 @@ router.push = function push(location, onResolve, onReject)
         return Promise.reject(err)
     })
 }
-router.beforeEach((to, from, next) => {
+
+    router.beforeEach((to, from, next) => {
     PullToRefresh.destroyAll();
     if ((to.name !== 'login' && to.name !== 'signin') && token) next({name: 'login'})
     else if ((to.name === 'login') && !token) {

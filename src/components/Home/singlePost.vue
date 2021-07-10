@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading style="margin-top:20vh;" v-if="isLoading"/>
-    <loading v-if="isLoadingMore"/>
+    <loading v-if="isLoadingMore" style="height:70px;"/>
   <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt" :id="post.id">
     <vs-card>
       <template #title>
