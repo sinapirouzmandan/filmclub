@@ -180,8 +180,8 @@ export default {
   computed:{
     ...mapState(['singlePost', 'baseURl', 'followStatus', 'errMassage', 'userProfile', 'token', 'alternativeAvatar']),
     userAvatar() {
-      if (this.userProfile.avatar) {
-        return this.baseURl + this.userProfile.avatar
+      if (this.singlePost.avatar) {
+        return this.baseURl + this.singlePost.avatar
       } else {
         return this.alternativeAvatar
       }
