@@ -1,6 +1,6 @@
 <template>
 <div class="single">
-  <div class="back" @click="$router.back()">
+  <div class="back" @click="routerBack">
     <i class="iconify" data-icon="bx:bx-arrow-back"></i>
   </div>
   <div class="back share" @click="sharePost">
@@ -153,6 +153,7 @@ import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import Header from "@editorjs/header";
 import swal from "sweetalert";
+import PullToRefresh from "pulltorefreshjs";
 export default {
   name: "singlePost",
   components: {loading},
@@ -441,6 +442,9 @@ export default {
           })
         }
       }
+    },
+    routerBack() {
+      window.history.length !== 0 ? this.$router.back() : this.$router.push('/')
     }
   },
   created() {
@@ -456,7 +460,13 @@ export default {
     });
   },
   mounted() {
-
+    var self = this
+    PullToRefresh.init({
+      mainElement: 'body',
+      onRefresh() {
+        self.getSinglePost(self.$route.params.id)
+      }
+    });
   }
 }
 </script>

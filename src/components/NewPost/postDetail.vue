@@ -123,9 +123,11 @@ export default {
     checkRate() {
       if (1 <= Number(this.score) && Number(this.score) <= 10) {
         this.state = 'success'
+        return true
       } else {
         swal('Score should be between 1  and 10')
         this.state = 'danger'
+        return false
       }
     },
     getSearch() {

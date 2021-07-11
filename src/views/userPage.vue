@@ -11,6 +11,7 @@ import accountStatus from "../components/userPage/accountStatus";
 import accountBio from "../components/userPage/accountBio";
 import accountHeader from "../components/userPage/accountHeader";
 import {mapActions} from "vuex";
+import PullToRefresh from "pulltorefreshjs";
 
 export default {
   name: "userPage",
@@ -27,6 +28,15 @@ export default {
     this.$store.commit('changeErrMsg', null)
     this.$store.commit('toggleNavbar', true);
     this.getUserById(this.username);
+  },
+  mounted() {
+    var self = this
+    PullToRefresh.init({
+      mainElement: 'body',
+      onRefresh() {
+        self.getUserById(self.username);
+      }
+    });
   },
   methods: {
     ...mapActions(['getUserById'])

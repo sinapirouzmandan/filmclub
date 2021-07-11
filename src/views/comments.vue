@@ -38,7 +38,7 @@
         <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
       </vs-avatar>
       <div class="body">
-        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> {{childComment.content}}</p>
+        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
         <div class="sub">
         <span class="subTexts">
           <span v-if="childComment.date !== 0">{{childComment.date}}</span>

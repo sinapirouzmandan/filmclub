@@ -314,7 +314,12 @@ export default new Vuex.Store({
                 state.postComments = [...new Map(state.postComments.map(item => [item["_id"], item])).values()]
             })
         },
-
+        removeDeletedPostFromHome(state, postID) {
+            state.homePosts = state.homePosts.filter(post => post.id !== postID)
+            clientDB.putWatchList(state.homePosts).catch(()=>{
+                console.log("can't access local DB")
+            })
+        }
     },
     actions: {
         errorHandler({commit}, error) {
@@ -907,6 +912,10 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchSinglePost', response.data)
             }).catch(function (error) {
+                if (error.response.status === 404){
+                    commit('removeDeletedPostFromHome', id)
+                    router.push('/postNotFound')
+                }
                 dispatch('errorHandler', error)
             });
         },

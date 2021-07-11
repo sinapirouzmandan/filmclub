@@ -6,7 +6,6 @@ import store from './store'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
 import VueLazyload from 'vue-lazyload'
-
 const loadimage = require('./assets/loading.gif')
 const errorimage = require('./assets/err.gif')
 
@@ -24,10 +23,10 @@ Vue.filter('sanitize', function (text) {
 });
 
 Vue.use(VueLazyload, {
-    preLoad: 5,
+    preLoad: 10,
     error: errorimage,
     loading: loadimage,
-    attempt: 3
+    attempt: 2
 })
 Vue.use(VueLazyload)
 Vue.config.productionTip = false

@@ -44,8 +44,12 @@ export default {
     ...mapState(['endOrLoad']),
   },
   mounted() {
+    let self= this
     PullToRefresh.init({
-      mainElement: 'body'
+      mainElement: 'body',
+      onRefresh() {
+        self.$store.dispatch('getBoxOfficeList')
+      }
     });
   }
 }
