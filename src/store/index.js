@@ -301,13 +301,25 @@ export default new Vuex.Store({
             state.hasNextPage = payload.hasNextPage
             payload.docs.forEach((comment)=>{
                 let commentDate = new Date(comment.createdAt);
-                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
                 if (passed > 0) {
-                    comment.date = passed + ' hours'
+                    comment.date = passed + ' days'
                 }
                 else {
-                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
-                    comment.date = passed + ' minutes'
+                    passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                    if (passed > 0) {
+                        comment.date = passed + ' hours'
+                    }
+                    else {
+                        passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                        if (passed > 0) {
+                            comment.date = passed + ' minutes'
+                        }
+                        else {
+                            passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000)
+                            comment.date = passed + ' seconds'
+                        }
+                    }
                 }
                 comment.child =[]
                 state.postComments.push(comment)

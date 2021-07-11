@@ -37,7 +37,7 @@
       </template>
       <template #img>
         <img id="postImage" v-lazy="post.poster"
-             @click="$router.push(`/post/${post.title}/${post.id}`)"
+             @click="$router.push(`/post/${encodeURIComponent(post.title)}/${post.id}`)"
              alt="Image Load Error">
       </template>
       <template #text>
@@ -57,7 +57,7 @@
         </router-link>
         <br>
         <vs-button
-            @click="$router.push(`/post/${post.title}/${post.id}`)"
+            @click="$router.push(`/post/${encodeURIComponent(post.title)}/${post.id}`)"
             class="fullPost"
             flat
             v-if="post.fullPostBtn"

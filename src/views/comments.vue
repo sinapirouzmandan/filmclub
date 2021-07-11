@@ -38,12 +38,12 @@
         <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
       </vs-avatar>
       <div class="body">
-        <p class="commentText"><span class="username">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
+        <p><span class="username">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
         <div class="sub">
         <span class="subTexts">
           <span v-if="childComment.date !== 0">{{childComment.date}}</span>
           <span v-else>Just now</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
+          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; focusType(); inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
           <div class="replies" @click="loadChilds($event, childComment._id, comment.id)" v-if="childComment.hasChild">
@@ -117,7 +117,14 @@ export default {
       this.parent = null
     },
     focus(id) {
+      if (this.selectedOne) {
+        this.unfocus()
+      }
+      this.selectedOne = id
       document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
+    },
+    focusType() {
+      document.getElementById('commentInput').click()
     },
     unfocus() {
       document.getElementById(this.selectedOne).style.backgroundColor = 'transparent'
@@ -140,6 +147,10 @@ export default {
         } else {
           this.unfocus()
           this.selectedOne = false
+          this.reply=false
+          this.parent = null
+          this.upperParent = null
+          this.inputPlaceholder = 'New Comment'
         }
       } else if (this.selectedOne) {
         this.unfocus()
