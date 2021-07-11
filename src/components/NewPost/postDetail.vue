@@ -1,9 +1,26 @@
 <template>
   <div class="writeBox">
     <newPostTools @sendThePost="sharePost()" :isLoading="isSaving"/>
-    <input ref="file" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads">
-    <div class="headerImage">
-      <img id="headerSelected" src="false" v-show="file" alt="post header image">
+    <div class="centeralize">
+      <croppa
+              :width="browserWidth"
+              placeholder=""
+              :height="200"
+              accept="image/*"
+              :prevent-white-space="true"
+              :remove-button-size="25"
+              remove-button-color="black"
+              v-model="croppaData"
+      />
+    <vs-button
+        class="specifyHeaderBtn"
+        v-if="!file"
+        :active="true"
+        color="#000"
+        flat
+    >
+      specify Post header image
+    </vs-button>
       <svg fill="#5c5c5c" aria-hidden="true" class="changePostHeader"
            viewBox="0 0 24 24">
         <g>
@@ -13,17 +30,6 @@
               d="M12 8.167c-2.68 0-4.86 2.18-4.86 4.86s2.18 4.86 4.86 4.86 4.86-2.18 4.86-4.86-2.18-4.86-4.86-4.86zm2 5.583h-1.25V15c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-1.25H10c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.25V11c0-.414.336-.75.75-.75s.75.336.75.75v1.25H14c.414 0 .75.336.75.75s-.336.75-.75.75z"></path>
         </g>
       </svg>
-      <div class="xinu">
-        <vs-button
-            v-if="!file"
-            :active="true"
-            color="#5B3CC4"
-            flat
-            gradient
-        >
-          specify Post header image
-        </vs-button>
-      </div>
     </div>
     <div v-if="!post.title" class="search">
       <vs-input
@@ -116,7 +122,8 @@ export default {
       file: '',
       editor: null,
       headerImage: '',
-      isSaving: false
+      isSaving: false,
+      croppaData: {}
     }
   },
   methods: {
@@ -159,32 +166,35 @@ export default {
       this.$store.commit('changeErrMsg', null)
       this.isSaving = true
       this.editor.save().then((outputData) => {
-        if (this.file) {
+        if (this.croppaData) {
           let formData = new FormData();
-          formData.append('poster', this.file);
-          formData.append('body', JSON.stringify(outputData.blocks));
-          formData.append('title', this.post.title);
-          formData.append('spoiler', this.post.spoiler);
-          formData.append('critic', this.post.critic);
-          formData.append('imdb_id', this.post.imdb_id);
-          formData.append('score', this.score);
-          this.$store.dispatch('createNewPost', formData).then(() => {
-            if (!this.errMassage) {
-              this.isSaving = false
-              this.$router.push('/profile')
-            } else {
-              this.$vs.notification({
-                duration: 3000,
-                progress: 'auto',
-                border: null,
-                position: 'bottom-center',
-                color: '#296186',
-                title: this.errMassage,
-              })
-              this.$store.commit('changeErrMsg', null)
-              this.isSaving = false
-            }
-          })
+          this.croppaData.generateBlob((image) => {
+            console.log(image)
+            formData.append('poster', image, 'poster.jpg');
+            formData.append('body', JSON.stringify(outputData.blocks));
+            formData.append('title', this.post.title);
+            formData.append('spoiler', this.post.spoiler);
+            formData.append('critic', this.post.critic);
+            formData.append('imdb_id', this.post.imdb_id);
+            formData.append('score', this.score);
+            this.$store.dispatch('createNewPost', formData).then(() => {
+              if (!this.errMassage) {
+                this.isSaving = false
+                this.$router.push('/profile')
+              } else {
+                this.$vs.notification({
+                  duration: 3000,
+                  progress: 'auto',
+                  border: null,
+                  position: 'bottom-center',
+                  color: '#296186',
+                  title: this.errMassage,
+                })
+                this.$store.commit('changeErrMsg', null)
+                this.isSaving = false
+              }
+            })
+          }, 'image/jpg', 1)
         } else {
           this.$vs.notification({
             duration: 3000,
@@ -217,6 +227,9 @@ export default {
   },
   computed: {
     ...mapState(['searchListMoviesList', 'endOrLoad', 'errMassage', 'baseURl', 'token']),
+    browserWidth() {
+      return window.innerWidth
+    }
   },
   mounted() {
     const auth = {
@@ -247,21 +260,8 @@ export default {
 </script>
 
 <style scoped>
-.headerImage {
-  width: 100%;
-  max-width: 500px;
-  height: 250px;
-  margin: 0 auto;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  justify-items: center;
-}
-
-.xinu {
-  margin-top: 230px;
-  color: black;
-  font-size: 20px;
+.specifyHeaderBtn {
+  margin: -1rem auto 0;
 }
 
 .rating {
@@ -336,20 +336,6 @@ h1 {
 h4 {
   color: #c4baba;
 }
-.uploadHeader {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  position: absolute;
-  top: 165px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  height: 250px;
-  width: 100%;
-  background-color: blue;
-  opacity: 0;
-}
 #headerSelected{
 width:100%;
   height:100%;
@@ -383,9 +369,25 @@ p {
   text-align: center;
 }
 .changePostHeader{
-  position: absolute;
   width: 40px;
   height:40px;
-  margin-top: 125px;
+  position: absolute;
+  top: 120px;
+}
+.croppa-container {
+  background: linear-gradient(to bottom right, #717171, #fff);
+  width:100vw;
+  max-width: 500px;
+  height: 200px;
+  margin: 45px auto 0;
+}
+.writeBox >>> .icon-remove{
+  margin-right: 15px;
+  margin-top: 10px;
+}
+centeralize {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
 }
 </style>

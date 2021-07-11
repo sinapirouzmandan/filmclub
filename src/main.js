@@ -6,6 +6,8 @@ import store from './store'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css'
 import VueLazyload from 'vue-lazyload'
+import 'vue-croppa/dist/vue-croppa.css'
+import Croppa from 'vue-croppa'
 const loadimage = require('./assets/loading.gif')
 const errorimage = require('./assets/err.gif')
 
@@ -29,6 +31,7 @@ Vue.use(VueLazyload, {
     attempt: 2
 })
 Vue.use(VueLazyload)
+Vue.use(Croppa)
 Vue.config.productionTip = false
 Vue.use(Vuesax, {
     colors: {

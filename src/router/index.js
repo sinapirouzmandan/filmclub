@@ -80,6 +80,12 @@ const routes = [
         component: () => import(/* webpackPrefetch: true */ "../views/comments"),
     },
     {
+        path: '/change',
+        name: 'change',
+        component: () => import(/* webpackPrefetch: true */ "../views/changeProfiles"),
+        // props: true
+    },
+    {
         path: "*",
         component: () => import(/* webpackPrefetch: true */ '../views/notFound')
     }
