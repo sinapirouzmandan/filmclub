@@ -1,11 +1,11 @@
 <template>
   <div class="writeBox">
     <newPostTools @sendThePost="sharePost()" :isLoading="isSaving"/>
-    <div class="centeralize">
+    <div>
       <croppa
               :width="browserWidth"
               placeholder=""
-              :height="200"
+              :height="220"
               accept="image/*"
               :prevent-white-space="true"
               :remove-button-size="25"
@@ -372,22 +372,18 @@ p {
   width: 40px;
   height:40px;
   position: absolute;
-  top: 120px;
+  top: 130px;
+  right:45%;
 }
 .croppa-container {
   background: linear-gradient(to bottom right, #717171, #fff);
   width:100vw;
   max-width: 500px;
-  height: 200px;
+  height: 220px;
   margin: 45px auto 0;
 }
 .writeBox >>> .icon-remove{
   margin-right: 15px;
   margin-top: 10px;
-}
-centeralize {
-  display: flex;
-  justify-content: center;
-  justify-items: center;
 }
 </style>

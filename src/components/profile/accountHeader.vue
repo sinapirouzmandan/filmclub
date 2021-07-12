@@ -1,7 +1,12 @@
 <template>
   <div id="top" class="topHeader">
     <settings/>
-    <input ref="header" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads('header')">
+    <crop
+        :location="location"
+    v-if="changePro" @close="changePro=false"
+    @profileChange="$emit('profileChange')"/>
+<!--    <input ref="header" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads('header')">-->
+    <div @click="changePro=true; location='header';" class="uploadHeader"></div>
     <img :alt="'header photo posted by ' + userProfile.username" :src="userHeader" class="backAvatar">
     <svg aria-hidden="true" class="changeHeader" fill="white" viewBox="0 0 24 24">
       <g>
@@ -28,7 +33,7 @@
                 d="M12 8.167c-2.68 0-4.86 2.18-4.86 4.86s2.18 4.86 4.86 4.86 4.86-2.18 4.86-4.86-2.18-4.86-4.86-4.86zm2 5.583h-1.25V15c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-1.25H10c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.25V11c0-.414.336-.75.75-.75s.75.336.75.75v1.25H14c.414 0 .75.336.75.75s-.336.75-.75.75z"></path>
           </g>
         </svg>
-        <input ref="file" accept="image/*" class="uploadAvatar" type="file" @change="handleProfileUploads('avatar')">
+        <div class="uploadAvatar" @click="changePro=true; location='avatar';" ></div>
         <div class="username">
           <p>{{ userProfile.name }}</p>
           <i v-if="userProfile.username">@{{ userProfile.username }}</i>
@@ -84,11 +89,12 @@
 
 <script>
 import settings from "./settings";
+import crop from "./crop";
 import {mapActions, mapState} from 'vuex'
 
 export default {
   name: "accountHeader",
-  components: {settings},
+  components: {settings, crop},
   data() {
     return {
       editPro: false,
@@ -97,10 +103,8 @@ export default {
       isLoading: false,
       isNameEmpty: false,
       file: '',
-      imageInfo: {
-        image: '',
-        location: ''
-      }
+      location: null,
+      changePro: false
     }
   },
   computed: {
@@ -178,23 +182,24 @@ export default {
       }
     },
     handleProfileUploads(location) {
+      this.changePro = true
       if (location == 'header') {
         this.file = this.$refs.header.files[0];
       } else {
         this.file = this.$refs.file.files[0];
       }
-      if (this.file) {
-        this.$emit('profileChange')
-        let formData = new FormData();
-        formData.append(location, this.file);
-        this.imageInfo.image = formData;
-        this.imageInfo.location = location;
-        this.updateProfilePhoto(this.imageInfo).then(()=>{
-          this.$emit('profileChange')
-        }).catch(()=>{
-          this.$emit('profileChange')
-        })
-      }
+      // if (this.file) {
+      //   this.$emit('profileChange')
+      //   let formData = new FormData();
+      //   formData.append(location, this.file);
+      //   this.imageInfo.image = formData;
+      //   this.imageInfo.location = location;
+      //   this.updateProfilePhoto(this.imageInfo).then(()=>{
+      //     this.$emit('profileChange')
+      //   }).catch(()=>{
+      //     this.$emit('profileChange')
+      //   })
+      // }
     }
   }
 }
@@ -284,7 +289,7 @@ export default {
   position: absolute;
   top: 50px;
   left: 0;
-  z-index: 5;
+  z-index: 3;
   height: 100px;
   width: 100%;
   background-color: blue;

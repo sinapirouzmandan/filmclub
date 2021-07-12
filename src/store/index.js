@@ -1107,13 +1107,19 @@ export default new Vuex.Store({
                     if (item._id === parent.upperParent) {
                         response.data.comments.forEach((commentItem)=>{
                             let commentDate = new Date(commentItem.createdAt);
-                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
                             if (passed > 0) {
-                                commentItem.date = passed + ' hours'
+                                commentItem.date = passed + ' days'
                             }
                             else {
-                                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
-                                commentItem.date = passed + ' minutes'
+                                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                                if (passed > 0) {
+                                    commentItem.date = passed + ' hours'
+                                }
+                            else {
+                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                                    commentItem.date = passed + ' minutes'
+                                }
                             }
                             item.child.push(commentItem)
                         })
@@ -1123,13 +1129,19 @@ export default new Vuex.Store({
                             if (subComment._id === parent.parent) {
                                 response.data.comments.forEach((commentItem)=>{
                                     let commentDate = new Date(commentItem.createdAt);
-                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
                                     if (passed > 0) {
-                                        commentItem.date = passed + ' hours'
+                                        commentItem.date = passed + ' days'
                                     }
                                     else {
-                                        let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
-                                        commentItem.date = passed + ' minutes'
+                                        let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
+                                        if (passed > 0) {
+                                            commentItem.date = passed + ' hours'
+                                        }
+                                        else {
+                                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
+                                            commentItem.date = passed + ' minutes'
+                                        }
                                     }
                                     item.child.push(commentItem)
                                 })

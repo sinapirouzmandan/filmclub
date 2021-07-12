@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: "404.vue",
+  name: "pageNotFound",
   created() {
     this.$store.commit('toggleNavbar', true);
   }
