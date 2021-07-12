@@ -278,7 +278,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 4;
   height: 90px;
   width: 90px;
   background-color: blue;
