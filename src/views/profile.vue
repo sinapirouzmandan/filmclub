@@ -31,15 +31,17 @@
 import PullToRefresh from 'pulltorefreshjs';
 import accountStatus from "../components/profile/accountStatus";
 import accountBio from "../components/profile/accountBio";
+import accountHeader from "../components/profile/accountHeader";
+import tumbPost from "../components/profile/tumbPost";
 import loading from "../components/loading";
 import {mapGetters} from 'vuex'
 
 export default {
   name: "profile",
   components: {
-    tumbPost: () => import('../components/profile/tumbPost'),
+    tumbPost,
     accountStatus, accountBio,
-    accountHeader: () => import('../components/profile/accountHeader'),
+    accountHeader,
     loading
   },
   created() {

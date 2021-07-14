@@ -52,7 +52,7 @@ export default {
             this.$emit('profileChange')
             this.$emit('close')
           })
-      }, 'image/jpg', 1)
+      }, 'image/jpg', 0.7)
     }
     }
   },

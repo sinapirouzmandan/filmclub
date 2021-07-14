@@ -7,7 +7,7 @@
 
     <router-view/>
     </transition>
-    <navbar v-if="showNavbar"></navbar>
+    <navbar v-show="showNavbar"></navbar>
   </div>
 </template>
 

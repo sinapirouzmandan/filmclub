@@ -194,7 +194,7 @@ export default {
                 this.isSaving = false
               }
             })
-          }, 'image/jpg', 1)
+          }, 'image/jpg', 0.7)
         } else {
           this.$vs.notification({
             duration: 3000,
@@ -278,14 +278,15 @@ h1 {
 }
 
 .editorContainer {
-  width: 85%;
+  width: 100%;
   min-height: 500px;
   height: auto;
   margin-top: 2rem;
   margin-left: auto;
   margin-right: auto;
-  padding: 25px;
+  padding: 30px;
   text-align: right;
+  box-sizing: border-box;
 }
 
 .margin-2 {

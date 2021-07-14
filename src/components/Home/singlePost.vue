@@ -23,14 +23,26 @@
         <vs-button
             @click="togglerLike(post)"
             circle
-            color="rgb(59,89,153)"
+            color="rgb(255,0,0)"
             flat
             icon
             style="display: inline-block; float: right; margin-top: 0;"
             :active="post.isLiked"
         >
-          <i class="iconify" data-icon="bx:bx-like" data-inline="false"></i>
+          <i class="iconify" data-icon="mdi:heart-multiple" data-inline="false"></i>
           <p style="color: white; margin-left: 5px;"> {{post.likes}}</p>
+        </vs-button>
+        <vs-button
+            @click="$router.push(`/comments/${post.id}`)"
+            circle
+            color="rgb(59,89,153)"
+            flat
+            icon
+            style="display: inline-block; float: right; margin-top: 0;"
+            active
+        >
+          <i class="iconify" data-icon="mdi:comment-processing-outline" data-inline="false"></i>
+          <p style="color: white; margin-left: 5px;"> {{post.comments}}</p>
         </vs-button>
         <h3>{{post.title}}</h3>
         <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;" v-if="post.spoiler === true">#spoilers </span><span v-if="post.critic === true">#critic</span> </h6>
@@ -41,8 +53,8 @@
              alt="Image Load Error">
       </template>
       <template #text>
-        <i class="iconify" data-icon="bx:bxs-star"></i>
-        <span> {{post.score}} / 10
+        <i class="iconify" data-icon="bx:bxs-star" style="color: #fff356;"></i>
+        <span style="color: #fff356;"> {{post.score}} / 10
         </span>
         <p dir="auto" class="right-text" v-show="!post.truncated">
           <br>
@@ -119,7 +131,7 @@ export default {
           this.homePageNumberPlus()
           let homeObj = {
             page: this.homePageNumber,
-            date: localStorage.getItem('lastRetreviedDate')
+            date: localStorage.getItem('lastPostInCacheDate')
           }
           this.getHomePosts(homeObj).then(()=>{
             this.isLoadingMore = false
@@ -136,13 +148,13 @@ export default {
         }
       },
     latelyLoaded() {
-      localStorage.setItem('lastRetreviedDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+      localStorage.setItem('lastPostInCacheDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
       if (this.isLoadingMore) {
       this.isLoadingMore = true
       this.homePageNumberPlus()
       let homeObj = {
         page: 1,
-        date: localStorage.getItem('lastRetreviedDate')
+        date: localStorage.getItem('lastPostInCacheDate')
       }
       const lastLen = this.homePosts.length
       this.getHomePosts(homeObj).then(() => {
@@ -169,16 +181,16 @@ export default {
           self.latelyLoaded()
         }
       });
-    if (localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate') && this.homePosts.length === 0) {
+    if (localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate') && this.homePosts.length === 0) {
       getHomePostsCache().then((posts)=>{
-        localStorage.setItem('lastRetreviedDate', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        localStorage.setItem('lastPostInCacheDate', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
         this.isLoadingMore = true
         this.homePageNumberPlus()
         let homeObj = {
           page: this.homePageNumber,
-          date: localStorage.getItem('lastRetreviedDate')
+          date: localStorage.getItem('lastPostInCacheDate')
         }
         const lastLen = this.homePosts.length
         this.getHomePosts(homeObj).then(()=>{
@@ -194,7 +206,7 @@ export default {
       })
       this.firstMount =false
     }
-    else if(localStorage.getItem('firstTimeLoad') && localStorage.getItem('lastRetreviedDate')){
+    else if(localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate')){
       this.latelyLoaded()
     }
     else {
@@ -206,9 +218,9 @@ export default {
         window.scrollTo(0,document.body.scrollHeight);
         window.scrollTo(0,document.body.scrollHeight);
         this.isLoading=false
-        localStorage.setItem('firstTimeLoad', true)
+        localStorage.setItem('firstTimeLoaded', true)
         putHomePosts(this.homePosts)
-        localStorage.setItem('lastRetreviedDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        localStorage.setItem('lastPostInCacheDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.getNextPosts()
       }).catch(()=>{
         this.isLoading = false

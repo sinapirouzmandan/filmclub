@@ -540,11 +540,10 @@ hr {
   width:100%;
   height:auto;
   max-width:600px;
-  float:left;
+  margin: 1rem auto;
 }
 .section {
   font-family: Yekan,sans-serif;
-  text-align:right;
 }
 .body {
   margin-top:2rem;
