@@ -11,12 +11,12 @@
       <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
       <i class="iconify" data-icon="mdi:arrow-up-circle-outline"></i>
     </div>
-    <loading v-if="isLoading"/>
+    <loading v-if="isLoading" style="height:30px;"/>
     <vs-alert v-for="(notification) in notifications" :key="notification.date" :class="notification.isSeen === false ? 'unseen' : ''">
       <router-link :to="{path: notification.link.props ? (notification.link.url+'/'+notification.link.props) : notification.link.url }" style="text-decoration: none; height:100%; width:100%;">
       <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
       <span class="desc">
-    <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none;">{{ notification.commiter }}</router-link></span> {{ notification.message }}
+    <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none; font-weight: 700;">@{{ notification.commiter }}</router-link></span> {{ notification.message }}
       </span>
       </router-link>
     </vs-alert>
@@ -83,6 +83,7 @@ export default {
 .notif >>> .vs-alert {
   margin-top: 15px;
   height: auto !important;
+  background-color: transparent;
 }
 
 .icon {
@@ -100,7 +101,7 @@ export default {
   opacity: 0;
 }
 .notif >>> .vs-alert::after{
-  background: rgba(var(--vs-color), 0.1);
+  background: rgba(var(--vs-color), 0.2);
 }
 .notif >>> .unseen::after{
   background: rgba(var(--vs-color), 1);

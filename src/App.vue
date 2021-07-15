@@ -30,13 +30,20 @@ export default {
   },
   mounted() {
     this.$vs.setColor('primary', '#5b3cc4')
-    setTimeout(()=>{
+    if (window.matchMedia('(display-mode: standalone)').matches) {
       this.$store.commit('toggleSplashScreen')
-    },3000)
+    }
+    else {
+      setTimeout(()=>{
+        this.$store.commit('toggleSplashScreen')
+      },3000)
+    }
+
   },
   created() {
     this.$store.commit('getTokenFromLocal')
-  }
+    }
+
 }
 </script>
 

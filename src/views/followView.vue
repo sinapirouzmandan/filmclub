@@ -37,7 +37,7 @@
   <div class="followings" v-else>
     <loading v-if="isLoading"/>
     <div class="user" v-for="(user) in followings" :key="user._id">
-      <div class="unfollow" @click="toggleFollowing(user.followingUsername)">
+      <div class="unfollow" @click="toggleFollowing(user.followingUsername.username)">
         <span v-if="!unfollowed.includes(user.followingUsername)">Unfollow</span>
         <span v-else>Follow</span>
       </div>
