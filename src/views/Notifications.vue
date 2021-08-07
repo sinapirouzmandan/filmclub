@@ -78,6 +78,7 @@ export default {
   margin-top: 4px;
   margin-left: 15px;
   font-size: 14px;
+  font-family: Yekan;
 }
 
 .notif >>> .vs-alert {

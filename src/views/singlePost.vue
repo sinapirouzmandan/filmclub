@@ -1,11 +1,13 @@
 <template>
 <div class="single">
+  <div id="blur">
   <div class="back" @click="routerBack">
     <i class="iconify" data-icon="bx:bx-arrow-back"></i>
   </div>
-  <div class="back share" @click="sharePost">
-    <i class="iconify" data-icon="mdi:share-variant"></i>
+  <div class="back share" @click.prevent="showOptions">
+    <i class="iconify" data-icon="mdi:dots-vertical"></i>
   </div>
+    <div @click="hideOptions">
   <div class="overlayLoad" v-if="isLoading">
     <div class="loader">
       <loading/>
@@ -13,10 +15,10 @@
   </div>
   <div class="header">
     <img :src="baseURl + singlePost.poster" :alt="'header image of movie ' + singlePost.title" id="headerImage">
-    <vs-avatar circle size="70" id="avatarContainer">
+    <vs-avatar circle size="70" id="avatarContainer" @click="$router.push(`/users/${singlePost.username}`)">
       <img :src="userAvatar" alt="user avatar" id="avatarImage">
     </vs-avatar>
-    <span id="username">{{singlePost.username}}</span>
+    <span id="username" @click="$router.push(`/users/${singlePost.username}`)">{{singlePost.username}}</span>
   </div>
   <div class="interactions">
     <vs-row>
@@ -41,12 +43,13 @@
           <vs-button
               @click="toggle_Like(singlePost._id)"
               circle
-              color="#F08080"
+              danger
               icon
-              style="width: 50px; height: 50px; margin-top: -5px;"
+              :class="backgroundCol"
+              style="width: 50px; height: 50px; margin-top: -5px; border: 1px solid red;"
               :active="isLiked"
           >
-            <i class="iconify" data-icon="bx:bx-heart" data-inline="false" style="color:white;"></i>
+            <i class="iconify" data-icon="bx:bx-heart" data-inline="false"></i>
             <p style="color: white; margin-left: 5px;"> {{ likeCount }}</p>
           </vs-button>
         </vs-col>
@@ -143,6 +146,38 @@
       <span style="opacity:0.7;">view all {{singlePost.comments}} comments</span>
     </router-link>
   </div>
+  </div>
+  </div>
+  <div id="options">
+      <h3>{{singlePost.title}}</h3>
+    <div class="sections">
+      <div class="share" @click="sharePost(); hideOptions()">
+        <p>Share Post</p>
+      </div>
+<div class="report" @click="reportActive=true; hideOptions()">
+      <p>Report</p>
+</div>
+    </div>
+  </div>
+  <vs-dialog blur v-model="reportActive">
+    <template #header>
+      <h4 class="not-margin">
+        Why are you reporting this Post
+      </h4>
+    </template>
+        <div class="reportItem" @click="reportPost()">
+          It's spam
+        </div>
+        <div class="reportItem" @click="reportPost()">
+          I just don't like it
+        </div>
+        <div class="reportItem" @click="reportPost()">
+          Hate speech or symbols
+        </div>
+        <div class="reportItem" @click="reportPost()">
+          request review for other reasons
+        </div>
+  </vs-dialog>
 </div>
 </template>
 
@@ -175,7 +210,8 @@ export default {
       disableEdit: false,
       reason: 'default',
       critic:false,
-      spoiler: false
+      spoiler: false,
+      reportActive:false
     }
   },
   computed:{
@@ -187,6 +223,14 @@ export default {
         return this.alternativeAvatar
       }
     },
+    backgroundCol() {
+      if (!this.isLiked) {
+        return 'transparent'
+      }
+      else {
+        return 'redBack'
+      }
+    }
   },
   methods: {
     loadEditor() {
@@ -444,7 +488,26 @@ export default {
       }
     },
     routerBack() {
-      window.history.length !== 0 ? this.$router.back() : this.$router.push('/')
+     this.$router.push('/')
+    },
+    showOptions(){
+      document.getElementById('options').style.transform = 'translateY(0)'
+      document.getElementById('blur').style.filter='brightness(0.8)'
+    },
+    hideOptions() {
+      document.getElementById('options').style.transform = 'translateY(30vh)'
+      document.getElementById('blur').style.filter='brightness(1)'
+    },
+    reportPost() {
+      this.reportActive=false
+      this.$vs.notification({
+        duration: 3000,
+        progress: 'auto',
+        border: null,
+        position: 'bottom-center',
+        color: '#296186',
+        title: 'Thanks for your report we will investigate on the problem soon',
+      })
     }
   },
   created() {
@@ -582,5 +645,45 @@ margin-top:2rem;
 }
 .followBtn {
   background-color: rgba(70, 126, 246, 0.22);
+}
+.transparent{
+  background-color: transparent;
+}
+.redBack{
+  background-color: red;
+}
+#options{
+  position: fixed;
+  bottom: 0;
+  right:0;
+  width:100%;
+  height: 30vh;
+  z-index:10;
+  background-color: var(--vs-navs);
+  font-size:1rem;
+  transform: translateY(30vh);
+  transition: 0.1s;
+}
+.sections{
+  text-align: left;
+  font-size: 17px;
+  font-weight: 500;
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+#blur {
+  filter: brightness(1);
+  transition: 0.1s;
+}
+.reportItem{
+  width:100%;
+  height:40px;
+  color: #d9d9d9;
+  text-align: left;
+}
+.reportTxt{
+  color: #d9d9d9;
+  text-align: left;
+  font-size: 14px;
 }
 </style>

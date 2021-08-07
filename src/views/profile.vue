@@ -14,9 +14,12 @@
     <accountBio/>
     <accountStatus/>
     <tumb-post/>
+
+
+
     <vs-button
         circle
-        class="notifIcon"
+        :class="notifIcon"
         color="#000"
         floating
         icon
@@ -66,7 +69,15 @@ export default {
     this.$store.dispatch('getCountsInProfile')
   },
   computed: {
-    ...mapGetters(['notificatonsCalc'])
+    ...mapGetters(['notificatonsCalc']),
+    notifIcon() {
+      if (!this.notificatonsCalc) {
+        return 'notifIcon'
+      }
+      else {
+        return 'notifIcon-active'
+      }
+    }
   },
   data(){
     return{
@@ -95,6 +106,16 @@ body, html {
   color: #fff;
   box-shadow: none;
   border: 1px solid white;
+}
+.notifIcon-active {
+  position: absolute;
+  z-index: 9;
+  top: 167px;
+  right: 1rem;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: none;
+  border: 2px solid yellow;
 }
 .overlayLoad{
   position:fixed;

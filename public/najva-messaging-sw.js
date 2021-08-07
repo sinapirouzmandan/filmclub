@@ -1,0 +1,1 @@
+importScripts('https://van.najva.com/static/js/scripts/filmclub599-website-29136-1d616353-f876-473a-a625-b8f9780890f3-service-worker.js');

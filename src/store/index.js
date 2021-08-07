@@ -28,6 +28,7 @@ export default new Vuex.Store({
         isUserNameAvailable: false,
         errMassage: null,
         userProfile: '',
+        version: 0,
         isProfileLoaded: false,
         notifications: [],
         statitics: {
@@ -55,8 +56,11 @@ export default new Vuex.Store({
         // home posts
         homePosts: [],
         homeHasNextPage: true,
+        homeHasPrevPage: true,
         savedPos: false,
         homePageNumber: 0,
+        homeReversePageNumber: 1,
+        homeReversePageDate: null,
         //comments
         postComments: [],
         hasNextPage: false,
@@ -115,7 +119,7 @@ export default new Vuex.Store({
             state.token = payload
             localStorage.setItem('token', payload)
             if (payload != null) {
-                router.go()
+                window.location.reload()
             }
         },
         setUserMail(state, user) {
@@ -201,6 +205,7 @@ export default new Vuex.Store({
             state.notifications = notifications.sort((function (a, b) {
                 return new Date(b.date) - new Date(a.date);
             }))
+            state.notifications = [...new Map(state.notifications.map(item => [item["commiter"] + item["message"], item])).values()]
         },
         fetchFollowers(state,payload) {
             state.followers = payload
@@ -229,10 +234,29 @@ export default new Vuex.Store({
         homePageNumberPlus(state){
             state.homePageNumber += 1
         },
+        homePageReverseNumberPlus(state){
+            state.homeReversePageNumber += 1
+        },
         fetchHomePostsFromCache (state,payload) {
             state.homePosts.push(...payload)
         },
+        updateCachePosts (state,payload) {
+            // payload.forEach((post) =>{
+            //     let index = state.homePosts.findIndex((homePost) => homePost.id === post.id)
+            //     console.log("index" + index)
+            //     state.homePosts[index]['likes'] = post.likes
+            //     state.homePosts[index]['comments'] = post.comments
+            //     state.homePosts[index]['isLiked'] = post.isLiked
+            // })
+            state.homePosts.forEach((post)=>{
+                let index = payload.findIndex((payloadPost)=> payloadPost.id === post.id)
+                post.likes = payload[index]['likes']
+                post.comments =   payload[index]['comments']
+                post.isLiked = payload[index]['isLiked']
+            })
+        },
         fetchUserPosts (state,payload) {
+            state.userPosts = []
             state.userPosts = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
@@ -257,21 +281,36 @@ export default new Vuex.Store({
                 let paragraph = ''
                 let paragraphIsSet = false
                 let needFullPost = false
+                let hasImageOrHeader = false
+                let allTxtLen = 0
+                let generalText = ''
                 post.body = JSON.parse(post.body)
                 post.body.forEach((body)=>{
                     if (body.type === 'paragraph') {
                         if (!paragraphIsSet) {
                             paragraph = body.data.text
                             paragraphIsSet = true
+                            allTxtLen += body.data.text.length
+                            generalText +=  "\n" + body.data.text
                         }
                         else {
                             needFullPost = true
+                            allTxtLen += body.data.text.length
+                            generalText += "\n" + body.data.text
                         }
                     }
                     else if (body.type === 'header' || body.type === 'image'){
                         needFullPost = true
+                        hasImageOrHeader = true
                     }
                 })
+                if (allTxtLen < 300 && !hasImageOrHeader) {
+                    needFullPost = false
+                    paragraph = generalText
+                }
+                else if(needFullPost) {
+                    paragraph += '...'
+                }
                 // ---------------- calculate time passed from post creation
                 let postDate = new Date(post.createdAt)
                 let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
@@ -291,6 +330,68 @@ export default new Vuex.Store({
                 post.isWatchList = state.watchListMoviesIDs.includes(post.imdb_id)
             })
             state.homePosts.unshift(...payload)
+            state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
+        },
+        fetchOlderHomePosts (state,payload) {
+            // ---------------- sort new packet consist of 10 posts based on date
+            payload = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
+            const now = new Date()
+            // ---------------- Check each post if  it needs a ^full post^ button
+            payload.forEach((post)=>{
+                let paragraph = ''
+                let paragraphIsSet = false
+                let needFullPost = false
+                let hasImageOrHeader = false
+                let allTxtLen = 0
+                let generalText = ''
+                post.body = JSON.parse(post.body)
+                post.body.forEach((body)=>{
+                    if (body.type === 'paragraph') {
+                        if (!paragraphIsSet) {
+                            paragraph = body.data.text
+                            paragraphIsSet = true
+                            allTxtLen += body.data.text.length
+                            generalText +=  "\n" + body.data.text
+                        }
+                        else {
+                            needFullPost = true
+                            allTxtLen += body.data.text.length
+                            generalText += "\n" + body.data.text
+                        }
+                    }
+                    else if (body.type === 'header' || body.type === 'image'){
+                        needFullPost = true
+                        hasImageOrHeader = true
+                    }
+                })
+                if (allTxtLen < 300 && !hasImageOrHeader) {
+                    needFullPost = false
+                    paragraph = generalText
+                }
+                else if(needFullPost) {
+                    paragraph += '...'
+                }
+                // ---------------- calculate time passed from post creation
+                let postDate = new Date(post.createdAt)
+                let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
+                if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) + ' days ago'
+                }
+                else if(Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60) + ' hours ago'
+                }
+                else {
+                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 ) + ' minutes ago'
+                }
+                post.past = Difference_In_Time
+                post.fullPostBtn = needFullPost
+                post.body = paragraph
+                post.truncated = true
+                post.isWatchList = state.watchListMoviesIDs.includes(post.imdb_id)
+            })
+            state.homePosts.push(...payload)
             state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
         },
         fetchPostComments (state,payload) {
@@ -328,7 +429,7 @@ export default new Vuex.Store({
         },
         removeDeletedPostFromHome(state, postID) {
             state.homePosts = state.homePosts.filter(post => post.id !== postID)
-            clientDB.putWatchList(state.homePosts).catch(()=>{
+            clientDB.putHomePosts(state.homePosts).catch(()=>{
                 console.log("can't access local DB")
             })
         }
@@ -360,7 +461,7 @@ export default new Vuex.Store({
                     commit('loadImdbIds', response.data.list)
                     if (response.data.list.length === 0) {
                         // ---------------- if watch list is empty we add godfather for ex
-                        commit('loadImdbIds', ['tt0068646'])
+                        state.watchListMoviesIDs.push('tt0068646')
                     }
                 }).catch(function (error) {
                     errors += 1
@@ -566,6 +667,7 @@ export default new Vuex.Store({
                     userInf = response.data
                     commit('toggleProfileLoaded', true)
                     NoErr = true
+                    state.version +=1
                 }).catch(function (error) {
                     clientDB.getUser().then((result)=>{
                         state.userProfile = result
@@ -574,7 +676,7 @@ export default new Vuex.Store({
                         swal("Can't connect to server, check your internet connection")
                     } else {
                         commit('setToken', null)
-                        router.go(0)
+                        window.location.reload()
                     }
                 });
                 if (NoErr){
@@ -947,7 +1049,7 @@ export default new Vuex.Store({
             });
         },
         async getHomePosts ({state, dispatch, commit}, homeObj) {
-            const oneWeekAgo  = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+           let oneWeekAgo  = '2021-07-09T15:19:28.750Z'
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/home/${homeObj.page}/`,
@@ -961,6 +1063,48 @@ export default new Vuex.Store({
             await axios.request(options).then((response)=>{
                 commit('fetchHomePosts', response.data.docs)
                 state.homeHasNextPage = response.data.hasNextPage
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async getOlderHomePosts ({state, dispatch, commit}, homeObj) {
+            if (!state.homeReversePageDate){
+                state.homeReversePageDate = homeObj.date
+                console.log('change')
+            }
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/home_asc/${state.homeReversePageNumber}/`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                },
+                params: {
+                    first_date: state.homeReversePageDate
+                }
+            };
+            if (state.homeHasPrevPage) {
+            await axios.request(options).then((response) => {
+                commit('fetchOlderHomePosts', response.data.docs)
+                state.homeHasPrevPage = response.data.hasNextPage
+                commit('homePageReverseNumberPlus')
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        }
+        },
+        async refreshCachePostsStatus ({state, dispatch, commit}, postIDs) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/posts/refresh_cache`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                },
+                data: {
+                    posts: JSON.stringify(postIDs)
+                }
+            };
+            await axios.request(options).then((response)=>{
+                commit('updateCachePosts', response.data.updates)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });

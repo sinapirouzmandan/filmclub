@@ -228,7 +228,12 @@ export default {
   computed: {
     ...mapState(['searchListMoviesList', 'endOrLoad', 'errMassage', 'baseURl', 'token']),
     browserWidth() {
-      return window.innerWidth
+      if (window.innerWidth < 500) {
+        return window.innerWidth
+      }
+      else {
+        return 500
+      }
     }
   },
   mounted() {

@@ -1,15 +1,21 @@
 <template>
 <div id="container">
   <div class="header">
-    <div class="back" @click="$router.back()">
+    <div class="back" @click="$router.push(`/post/post/${$route.params.postID}`)">
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <span id="commentHeader">Comments</span>
-    <div class="delete" v-if="selectedOne !== false" @click="deleteComment">
+    <div class="delete" v-if="selectedOne !== false&& !canReport" @click="deleteComment">
       <i class="iconify" data-icon="mdi:trash-can-outline"></i>
     </div>
-    <div class="close" @click="selectComment(selectedOne)"  v-if="selectedOne !== false">
+    <div class="close" @click="selectComment(selectedOne)"  v-if="selectedOne !== false && !canReport">
       <i class="iconify" data-icon="mdi:close"></i>
+    </div>
+    <div class="close" @click="selectComment(lastSelectedForReport)"  v-if="canReport">
+      <i class="iconify" data-icon="mdi:close"></i>
+    </div>
+    <div class="delete" v-if="canReport" @click="reportComment">
+      <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
     </div>
   </div>
   <loading v-if="isLoading"/>
@@ -19,7 +25,7 @@
     </vs-avatar>
     <div class="body" v-long-press="500"
          @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
-      <p><span class="username">{{ comment.userId.username }}</span> <span class="yekan" dir="rtl">{{comment.content}} </span></p>
+      <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{ comment.userId.username }}</span> <span class="yekan" dir="rtl">{{comment.content}} </span></p>
       <div class="sub">
         <span class="subTexts">
           <span v-if="comment.date !== 0">{{comment.date}}</span>
@@ -38,7 +44,7 @@
         <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
       </vs-avatar>
       <div class="body">
-        <p><span class="username">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
+        <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
         <div class="sub">
         <span class="subTexts">
           <span v-if="childComment.date !== 0">{{childComment.date}}</span>
@@ -89,7 +95,9 @@ export default {
       selectedOne: false,
       deleteID: '',
       page: 2,
-      postID: ''
+      postID: '',
+      canReport: false,
+      lastSelectedForReport: null
     }
   },
   methods: {
@@ -139,7 +147,7 @@ export default {
       })
     },
     selectComment(id, del) {
-      if (this.userProfile.role == 'reviewer' || id.indexOf('newComment') > -1) {
+      if ((this.userProfile.role == 'reviewer' || id.indexOf('newComment') > -1) && !this.canReport) {
         if (this.selectedOne === false) {
           this.deleteID = del
           this.focus(id)
@@ -155,6 +163,20 @@ export default {
       } else if (this.selectedOne) {
         this.unfocus()
         this.selectedOne = false
+      }
+      else {
+        if (this.canReport) {
+          this.selectedOne=this.lastSelectedForReport
+          this.unfocus()
+          this.selectedOne=false
+          this.canReport=false
+        }
+        else {
+          document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
+          this.canReport=true
+          this.lastSelectedForReport = id
+        }
+
       }
     },
     deleteComment() {
@@ -181,6 +203,17 @@ export default {
           }
         }
       }
+    },
+    reportComment() {
+      this.selectComment(this.lastSelectedForReport)
+      this.$vs.notification({
+        duration: 2000,
+        progress: 'auto',
+        border: null,
+        position: 'top-center',
+        color: '#296186',
+        title: 'Comment reported successfully',
+      })
     }
   },
   computed:{

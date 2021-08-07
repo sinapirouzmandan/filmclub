@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="auto">
   <head>
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-5W6TZ85');</script>
+      <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -10,25 +17,43 @@
             content="black-translucent">
       <meta name="description" content="Film club, first social media for cinema lovers">
       <meta name="keywords" content="movie,series,FilmClub,film">
-      <link rel="canonical" href="https://htmlcheatsheet.com/seo/" />
+      <link rel="canonical" href="https://filmclub.top" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Film Club</title>
       <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
       <!-- Chrome, Firefox OS and Opera -->
-	  <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png?v=2">
-	  <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png?v=2">
-	  <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png?v=2">
-<link rel="manifest" href="/img/icons/site.webmanifest?v=3">
-<link rel="mask-icon" href="/img/icons/safari-pinned-tab.svg?v=2" color="#5bbad5">
-<link rel="shortcut icon" href="/img/icons/favicon.ico?v=2">
-<meta name="msapplication-TileColor" content="#2b5797">
-<meta name="msapplication-TileImage" content="/img/icons/mstile-144x144.png?v=2">
-<meta name="msapplication-config" content="/img/icons/browserconfig.xml?v=2">
-      <meta name="theme-color" content="#1A1A1D">
+	  <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png?v=6">
+	  <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png?v=6">
+      <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png?v=6">
+      <link rel="manifest" href="/img/icons/site.webmanifest?v=6">
+      <link rel="mask-icon" href="/img/icons/safari-pinned-tab.svg?v=6" color="#49595e">
+      <link rel="shortcut icon" href="/img/icons/favicon.ico?v=6">
+      <meta name="msapplication-TileColor" content="#2b5797">
+      <meta name="msapplication-config" content="/img/icons/browserconfig.xml?v=6">
+      <meta name="theme-color" content="#2f2f2f">
       <!-- Windows Phone -->
       <meta name="msapplication-navbutton-color" content="#000">
       <!-- iOS Safari -->
       <meta name="apple-mobile-web-app-status-bar-style" content="#000">
+      <!-- Najva Push Notification -->
+      <script type="text/javascript">
+          (function(){
+              var now = new Date();
+              var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
+                  "0" + now.getHours();
+              var head = document.getElementsByTagName("head")[0];
+              var link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = "https://app.najva.com/static/css/local-messaging.css" + "?v=" + version;
+              head.appendChild(link);
+              var script = document.createElement("script");
+              script.type = "text/javascript";
+              script.async = true;
+              script.src = "https://app.najva.com/static/js/scripts/filmclub599-website-29136-1d616353-f876-473a-a625-b8f9780890f3.js" + "?v=" + version;
+              head.appendChild(script);
+          })()
+      </script>
+      <!-- END NAJVA PUSH NOTIFICATION -->
       <!-- Begin Inspectlet Asynchronous Code -->
 <script type="text/javascript">
 (function() {
@@ -40,8 +65,29 @@ setTimeout(ldinsp, 0);
 })();
 </script>
 <!-- End Inspectlet Asynchronous Code -->
+      <!-- Matomo -->
+      <script>
+          var _paq = window._paq = window._paq || [];
+          /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+          _paq.push(['trackPageView']);
+          _paq.push(['trackAllContentImpressions']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+              var u="//analytics.filmclub.top/";
+              _paq.push(['setTrackerUrl', u+'matomo.php']);
+              _paq.push(['setSiteId', '1']);
+              _paq.push(['enableHeartBeatTimer', 30]);
+              var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+              g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+          })();
+      </script>
+      <!-- End Matomo Code -->
   </head>
   <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5W6TZ85"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

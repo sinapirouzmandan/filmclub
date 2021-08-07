@@ -6,12 +6,13 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
       <h2>username & password</h2>
-      <vs-input v-model="user.username" border label-placeholder="username">
+      <vs-input v-model="user.username" border label-placeholder="username" @change="user.username = user.username.replace(/\s/g, '');">
         <template #icon>
           <i class='iconify' data-icon="mdi:user"></i>
         </template>
       </vs-input>
       <vs-input v-model="user.password" :progress="getProgress" label-placeholder="password"
+                @change="user.password = user.password.replace(/\s/g, '');"
                 style="margin-top: 1.5rem;">
         <template #icon>
           <i class='iconify' data-icon="mdi:password"></i>
@@ -22,7 +23,7 @@
           class="next"
           color="#5b3cc4"
           gradient
-          @click="sendInfo"
+          @click.prevent="sendInfo"
       >
         done <i class="iconify" data-icon="mdi:send-circle"></i>
       </vs-button>
@@ -81,6 +82,10 @@ export default {
     validUsername() {
       if (this.user.username === '' || this.user.password === '') {
         this.errMsg = 'Please  fill both fields'
+        return true
+      }
+      else if(this.user.username.length <=3) {
+        this.errMsg = 'username should be at list 4 characters'
         return true
       }
     },

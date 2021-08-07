@@ -1,4 +1,9 @@
 import {openDB} from "idb";
+    async  function errorHandler() {
+        alert("We can't access your storage right now. you're post will not be available offline. check if your storage is not full" +
+            "please close the app and open again if you think now you have free storage")
+        localStorage.clear()
+    }
     async function connectToDB() {
         try {
             return openDB('movieDB', 2, {
@@ -19,7 +24,7 @@ import {openDB} from "idb";
             });
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
     export async function putWatchList(post) {
@@ -32,7 +37,7 @@ import {openDB} from "idb";
             db.close()
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 
@@ -49,7 +54,7 @@ import {openDB} from "idb";
             return post
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 
@@ -63,7 +68,7 @@ import {openDB} from "idb";
             db.close()
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 
@@ -80,7 +85,7 @@ import {openDB} from "idb";
             return user
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 
@@ -94,7 +99,7 @@ import {openDB} from "idb";
             db.close()
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 
@@ -111,7 +116,7 @@ import {openDB} from "idb";
             return posts
         }
         catch (e){
-            console.log(e)
+            await errorHandler()
         }
     }
 export async function putHomePosts(posts) {
@@ -126,7 +131,7 @@ export async function putHomePosts(posts) {
         db.close()
     }
     catch (e){
-        console.log(e)
+        await errorHandler()
     }
 }
 export async function getHomePostsCache() {
@@ -142,6 +147,6 @@ export async function getHomePostsCache() {
         return posts
     }
     catch (e){
-        console.log(e)
+        await errorHandler()
     }
 }

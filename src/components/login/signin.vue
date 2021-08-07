@@ -4,12 +4,12 @@
     <div class="username">
       <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
       <h2>Login</h2>
-      <vs-input v-model="user.userName" border placeholder="email or username">
+      <vs-input v-model="user.userName" border placeholder="email or username" @change="user.userName = user.userName.replace(/\s/g, '');">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-user"></i>
         </template>
       </vs-input>
-      <vs-input v-model="user.password" border class="password" placeholder="password">
+      <vs-input v-model="user.password" border class="password" placeholder="password" @change="user.password = user.password.replace(/\s/g, '');">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-key"></i>
         </template>
@@ -19,7 +19,7 @@
           class="next"
           color="#5B3CC4"
           gradient
-          @click="login"
+          @click.prevent="login"
       >
         <i class="iconify" data-icon="bx:bx-log-in"></i> signin
       </vs-button>

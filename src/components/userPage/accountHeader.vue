@@ -1,7 +1,73 @@
 <template>
   <div id="top" class="topHeader">
+    <vs-dialog  blur v-model="reportActive">
+      <template #header>
+        <h4 class="not-margin">
+          Report A User
+        </h4>
+      </template>
+      <ul>
+        <li>
+          <div class="reportItem" @click="reportPostOrComment = true">
+            Report post or comments
+          </div>
+        </li>
+        <li>
+          <div class="reportItem" @click="reportAccount=true">
+            Report account
+          </div>
+        </li>
+      </ul>
+    </vs-dialog>
+    <vs-dialog blur v-model="reportPostOrComment">
+      <template #header>
+        <h5 class="not-margin">
+          Report a post or comment
+        </h5>
+      </template>
+      <ul>
+        <li>
+          <p class="reportTxt">If you want to report a post or comment go to the post and select report for the specific post.</p>
+        </li>
+        <li>
+          <p class="reportTxt">Also you can report any comment by selecting the comment and choosing report.</p>
+        </li>
+      </ul>
+    </vs-dialog>
+    <vs-dialog blur v-model="reportAccount">
+      <template #header>
+        <h4 class="not-margin">
+          Why are you reporting this account
+        </h4>
+      </template>
+      <ul>
+        <li>
+          <div class="reportItem" @click="reportUser()">
+            Its posting content that shouldn't be on Film Club
+          </div>
+        </li>
+        <li>
+          <div class="reportItem" style="margin-top:15px;" @click="reportUser()">
+            It's pretending to be some one else
+          </div>
+        </li>
+        <li>
+          <div class="reportItem" @click="reportUser()">
+            It's spam
+          </div>
+        </li>
+        <li>
+          <div class="reportItem" @click="reportUser()">
+            request review for other reasons
+          </div>
+        </li>
+      </ul>
+    </vs-dialog>
     <img :alt="'header photo posted by ' + $route.params.user" :src="userHeader" class="backAvatar"
          @error="usernameInfo.header = '/public/images/header.jpg'">
+    <div class="report" @click="reportActive = true">
+      <i class="iconify" data-icon="mdi:dots-vertical"></i>
+    </div>
     <vs-row class="avatars">
       <vs-col w="4">
         <vs-avatar badge-color="success" circle size="90">
@@ -60,7 +126,10 @@ export default {
         password: 'defaultpass',
         target: null,
         reason: null
-      }
+      },
+      reportActive: false,
+      reportPostOrComment: false,
+      reportAccount: false
     }
   },
   computed: {
@@ -81,6 +150,19 @@ export default {
     }
   },
   methods: {
+    reportUser() {
+      this.reportActive=false
+      this.reportPostOrComment=false
+      this.reportAccount=false
+      this.$vs.notification({
+        duration: 3000,
+        progress: 'auto',
+        border: null,
+        position: 'top-center',
+        color: '#296186',
+        title: 'Thanks for your report we will investigate on the problem soon',
+      })
+    },
     getNotif() {
       this.isLoading = false
       if (this.errMassage) {
@@ -209,5 +291,27 @@ export default {
 
 .followBtn {
   background-color: rgba(70, 126, 246, 0.22);
+}
+.report {
+  position: absolute;
+  right: 2rem;
+  top:1rem;
+  font-size: 27px;
+  background-color: rgba(163, 163, 163, 0.45);
+  padding: 2px;
+  width:27px;
+  height: 27px;
+  border-radius: 50%;
+}
+.reportItem{
+  width:100%;
+  height:40px;
+  color: #d9d9d9;
+  text-align: left;
+}
+.reportTxt{
+  color: #d9d9d9;
+  text-align: left;
+  font-size: 14px;
 }
 </style>

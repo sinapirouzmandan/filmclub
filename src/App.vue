@@ -42,6 +42,18 @@ export default {
   },
   created() {
     this.$store.commit('getTokenFromLocal')
+    //compatibility test
+    let indexedDb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    if (!indexedDb) {
+      this.$vs.notification({
+        duration: 7000,
+        progress: 'auto',
+        border: null,
+        position: 'bottom-center',
+        color: '#5b3cc4',
+        title: "You're browser does not support our platform. get the latest version of chrome or firefox. \n If you still face any problem contact us at support@filmclub.top",
+      })
+    }
     }
 
 }
@@ -84,10 +96,12 @@ export default {
   --vs-main-text: #fff;
   --vs-nav-icons: blue;
 }
-
+.linkified {
+  color: #bccdea;
+  text-decoration: none;
+}
 head, body {
   background-color: var(--vs-mainback);
-  user-select: none;
   margin: 0;
   overscroll-behavior-y: contain;
   scroll-behavior: smooth;

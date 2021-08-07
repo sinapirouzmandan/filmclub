@@ -10,7 +10,7 @@
       </vs-col>
 
     </vs-row>
-    <p style="margin-bottom: 35px; opacity: 0.1; font-size:15px;">end of content ...</p>
+    <p style="margin-bottom: 30px; opacity: 0.1; font-size:15px;">end of content ...</p>
   </div>
 </template>
 
@@ -38,6 +38,9 @@ export default {
       this.isMobile = false
     }
     this.$store.commit('toggleNavbar', true);
+  },
+  mounted() {
+    this.$store.dispatch('getUserProfile')
   }
 }
 </script>

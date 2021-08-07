@@ -19,7 +19,7 @@
     <vs-row class="avatars">
       <vs-col w="3">
         <vs-avatar badge-color="success" circle size="80">
-          <img :src="userAvatar" alt="avatar" class="avatar">
+          <img :src="userAvatar + '?ver=' + version" alt="avatar" class="avatar">
           <template v-if="userProfile.role == 'reviewer'" #badge>
             Reviewer
           </template>
@@ -70,7 +70,7 @@
         <vs-avatar class="bioIcon">
           <i class="iconify" data-icon="bx:bxs-info-circle"></i>
         </vs-avatar>
-        <textarea id="bio" v-model="userProfile.biography" class="vs-input text-input bioEdit" placeholder="Biographi"
+        <textarea id="bio" v-model="userProfile.biography" class="vs-input text-input bioEdit" placeholder="Biography"
                   rows="5" @change="changedBio = true">
         </textarea>
       </div>
@@ -108,7 +108,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userProfile', 'errMassage', 'alternativeAvatar', 'alternativeHeader', 'baseURl']),
+    ...mapState(['userProfile', 'errMassage', 'alternativeAvatar', 'alternativeHeader', 'baseURl', 'version']),
     userAvatar() {
       if (this.userProfile.avatar) {
         return this.baseURl + this.userProfile.avatar
@@ -118,7 +118,7 @@ export default {
     },
     userHeader() {
       if (this.userProfile.header) {
-        return this.baseURl + this.userProfile.header
+        return this.baseURl + this.userProfile.header + '?ver=' + this.version
       } else {
         return this.alternativeHeader
       }

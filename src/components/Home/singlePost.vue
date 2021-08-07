@@ -74,7 +74,7 @@
             flat
             v-if="post.fullPostBtn"
             color="#293337"
-            style="color:white;"
+            style="color:yellow;"
             active
         >
           View full post
@@ -84,6 +84,7 @@
       </template>
     </vs-card>
   </vs-col>
+    <loading v-if="loadingBottom" style="height:70px;"/>
   </div>
 </template>
 
@@ -103,14 +104,16 @@ export default {
       requestAgain: true,
       scrollPosition: null,
       isLoadingMore: false,
-      firstMount: true
+      firstMount: true,
+      loadingBottom: false,
+      loadingMoreBottom: false
     }
   },
   computed:{
     ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage', 'savedPos', 'homePageNumber'])
   },
   methods:{
-    ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike']),
+    ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike', "refreshCachePostsStatus", 'getOlderHomePosts']),
     ...mapMutations(['fetchHomePostsFromCache', 'homePageNumberPlus']),
     togglerLike(post){
       this.toggleLike(post.id)
@@ -125,36 +128,53 @@ export default {
     },
     getNextPosts() {
       window.onscroll = () => {
-        let topOfWindow = document.documentElement.scrollTop <= 600;
-        if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
-          this.isLoadingMore = true
-          this.homePageNumberPlus()
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight > document.documentElement.offsetHeight - 100;
+        if (localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate-v2') && bottomOfWindow && !this.loadingMoreBottom) {
+          this.loadingBottom = true
+          this.loadingMoreBottom= true
           let homeObj = {
-            page: this.homePageNumber,
-            date: localStorage.getItem('lastPostInCacheDate')
+            date: this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? b : a)).createdAt.slice(0,24)
           }
-          this.getHomePosts(homeObj).then(()=>{
-            this.isLoadingMore = false
-            putHomePosts(this.homePosts)
-            if (!this.savedPos) {
-              let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
-              firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
-            }
-        else {
-              this.$store.commit('toggleHomeSavedPos', false)
-            }
+          this.getOlderHomePosts(homeObj).then(()=>{
+            this.loadingBottom=false
+            this.loadingMoreBottom=false
+          }).catch(()=>{
+            this.loadingBottom = false
+            this.loadingMoreBottom=false
           })
+        }
+        else {
+          let topOfWindow = document.documentElement.scrollTop <= 600;
+          if (topOfWindow && this.homeHasNextPage && !this.isLoadingMore) {
+            this.isLoadingMore = true
+            this.homePageNumberPlus()
+            let homeObj = {
+              page: this.homePageNumber,
+              date: localStorage.getItem('lastPostInCacheDate-v2')
+            }
+            this.getHomePosts(homeObj).then(()=>{
+              this.isLoadingMore = false
+              putHomePosts(this.homePosts)
+              if (!this.savedPos) {
+                let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
+                firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+              }
+              else {
+                this.$store.commit('toggleHomeSavedPos', false)
+              }
+            })
+          }
         }
         }
       },
     latelyLoaded() {
-      localStorage.setItem('lastPostInCacheDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+      localStorage.setItem('lastPostInCacheDate-v2', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
       if (this.isLoadingMore) {
       this.isLoadingMore = true
       this.homePageNumberPlus()
       let homeObj = {
         page: 1,
-        date: localStorage.getItem('lastPostInCacheDate')
+        date: localStorage.getItem('lastPostInCacheDate-v2')
       }
       const lastLen = this.homePosts.length
       this.getHomePosts(homeObj).then(() => {
@@ -170,6 +190,11 @@ export default {
       this.$store.commit('toggleHomeSavedPos', true)
       this.getNextPosts()
     }
+    },
+    async refreshCache() {
+      let postIDs = []
+      await this.homePosts.slice(0,10).map(post => postIDs.push(post.id))
+      await this.refreshCachePostsStatus(postIDs)
     }
   },
   mounted() {
@@ -181,18 +206,19 @@ export default {
           self.latelyLoaded()
         }
       });
-    if (localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate') && this.homePosts.length === 0) {
+    if (localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate-v2') && this.homePosts.length === 0) {
       getHomePostsCache().then((posts)=>{
-        localStorage.setItem('lastPostInCacheDate', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        localStorage.setItem('lastPostInCacheDate-v2', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
         this.isLoadingMore = true
         this.homePageNumberPlus()
         let homeObj = {
           page: this.homePageNumber,
-          date: localStorage.getItem('lastPostInCacheDate')
+          date: localStorage.getItem('lastPostInCacheDate-v2')
         }
         const lastLen = this.homePosts.length
+        this.refreshCache()
         this.getHomePosts(homeObj).then(()=>{
           putHomePosts(this.homePosts)
           const nowLen = this.homePosts.length
@@ -203,10 +229,14 @@ export default {
             this.isLoadingMore = false
           },3000)
         })
+      }).catch(()=>{
+        alert("We can't access your storage right now. you're post will not be available offline. check if your storage is not full" +
+            "please close the app and open again if you think now you have free storage")
+        localStorage.clear()
       })
       this.firstMount =false
     }
-    else if(localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate')){
+    else if(localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate-v2')){
       this.latelyLoaded()
     }
     else {
@@ -220,7 +250,7 @@ export default {
         this.isLoading=false
         localStorage.setItem('firstTimeLoaded', true)
         putHomePosts(this.homePosts)
-        localStorage.setItem('lastPostInCacheDate', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        localStorage.setItem('lastPostInCacheDate-v2', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
         this.getNextPosts()
       }).catch(()=>{
         this.isLoading = false
@@ -295,10 +325,13 @@ export default {
 }
 .right-text{
   text-align:right;
-  font-size: 19px;
+  font-size: 17px;
   line-height:1.4;
-  font-family: Nazanin;
+  font-family: Yekan;
   opacity: 1;
+  font-weight: 300;
+  line-height: 1.8;
+  white-space: pre-line;
 }
 .home >>> a{
   color:white;

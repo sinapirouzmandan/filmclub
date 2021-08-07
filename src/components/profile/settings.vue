@@ -30,6 +30,16 @@
           </template>
           update
         </vs-sidebar-item></div>
+        <vs-sidebar-item id="download">
+          <template #icon>
+            <i
+                class="iconify"
+                data-icon="bx:bx-download"
+                @click="downloadTab"
+            ></i>
+          </template>
+          <span @click="downloadTab">Download app</span>
+        </vs-sidebar-item>
         <vs-sidebar-item id="logout">
           <template #icon>
             <i
@@ -109,7 +119,7 @@ export default {
     ...mapActions(["deleteUser"]),
     logout() {
       this.setToken(null);
-      this.$router.go();
+      window.location.reload()
     },
     getNotif() {
       if (this.errMassage) {
@@ -151,6 +161,9 @@ export default {
     },
     update(){
     window.location.reload();
+    },
+    downloadTab() {
+      window.open('https://download.filmclub.top', '_blank');
     }
     // changeColorTheme() {
     //   this.$nextTick(() => {

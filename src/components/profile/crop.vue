@@ -10,13 +10,13 @@
       <croppa
           id="croppaImage"
           v-model="croppa"
-          disable-click-to-choose
           :width="browserWidth"
           placeholder=""
           :height="location === 'header' ? 100 : browserWidth"
           accept="image/*"
           :prevent-white-space="true"
           :remove-button-size="25"
+          @new-image="isValid=true"
           remove-button-color="black"/>
     </div>
 </div>
@@ -30,18 +30,19 @@ export default {
   data() {
     return {
       croppa: null,
-      firstShow:true
+      firstShow:true,
+      isValid: false
     }
   },
   methods: {
     ...mapActions(['updateProfilePhoto', 'getUserProfile']),
     sendImage() {
-      if (this.croppa) {
+      if (this.isValid) {
         this.$emit('profileChange')
         this.firstShow =false
       this.croppa.generateBlob((image) => {
           let formData = new FormData();
-          formData.append(this.location, image);
+          formData.append(this.location, image, 'profile.jpg');
           let imageInfo = []
           imageInfo.image = formData;
           imageInfo.location = this.location;
