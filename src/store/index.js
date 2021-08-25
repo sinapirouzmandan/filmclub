@@ -5,11 +5,20 @@ import qs from 'querystring'
 import router from "../router";
 import swal from 'sweetalert'
 import * as clientDB from './clientDB'
-
+let botPattern = "(googlebot/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+let re = new RegExp(botPattern, 'i');
+let userAgent = navigator.userAgent;
+if (re.test(userAgent)) {
+    axios.interceptors.request.use(function (config) {
+        const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpib3QiLCJlbWFpbCI6ImJvdEBib3QuYm90IiwibmFtZSI6ImJvdCBhY2Nlc3MiLCJpYXQiOjE2Mjk0Nzk2OTl9.L2oNitBKRLt-vZkkSpHV1vVPZYpg3CA4pT7xYv5xlq4';
+        config.headers.authorization =  token;
+        return config;
+    });
+}
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        baseURl: 'https://api.filmclub.top/',
+        baseURl: 'https://api.filmclub.top',
         splashScreenShow: true,
         //watchList
         watchListMoviesIDs: [],
@@ -47,6 +56,8 @@ export default new Vuex.Store({
         usernameInfo: [],
         searchedUsers: [],
         followStatus: null,
+        userFollowers: null,
+        userFollowings: null,
         // followers and followings
         followers:[],
         followings: [],
@@ -61,9 +72,13 @@ export default new Vuex.Store({
         homePageNumber: 0,
         homeReversePageNumber: 1,
         homeReversePageDate: null,
+        lastDateFromServer: '',
         //comments
         postComments: [],
         hasNextPage: false,
+        usernameInfoFollow: [],
+        //likers
+        likers: []
     },
     getters: {
         /**
@@ -141,6 +156,9 @@ export default new Vuex.Store({
         changeErrMsg(state, payload) {
             state.errMassage = payload
         },
+        botLogin(state) {
+            state.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpib3QiLCJlbWFpbCI6ImJvdEBib3QuYm90IiwibmFtZSI6ImJvdCBhY2Nlc3MiLCJpYXQiOjE2Mjk0Nzk2OTl9.L2oNitBKRLt-vZkkSpHV1vVPZYpg3CA4pT7xYv5xlq4'
+        },
         // user, it self data fetch
         fetchProfile(state, payload) {
             state.userProfile = payload
@@ -160,7 +178,13 @@ export default new Vuex.Store({
         },
         // ---------------- end of watch list
         getTokenFromLocal(state) {
-            if (state.token == null) {
+            let botPattern = "(googlebot/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+            let re = new RegExp(botPattern, 'i');
+            let userAgent = navigator.userAgent;
+            if (re.test(userAgent)) {
+                state.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpib3QiLCJlbWFpbCI6ImJvdEBib3QuYm90IiwibmFtZSI6ImJvdCBhY2Nlc3MiLCJpYXQiOjE2Mjk0Nzk2OTl9.L2oNitBKRLt-vZkkSpHV1vVPZYpg3CA4pT7xYv5xlq4'
+            }
+            else if (state.token == null) {
                 if (localStorage.getItem('token') !== null || localStorage.getItem('token') !== 'null') {
                     state.token = localStorage.getItem('token')
                 }
@@ -212,6 +236,12 @@ export default new Vuex.Store({
         },
         fetchFollowings (state,payload) {
             state.followings = payload
+        },
+        fetchUserFollowers(state,payload) {
+            state.userFollowers = payload
+        },
+        fetchUserFollowings (state,payload) {
+            state.userFollowings = payload
         },
         // ---------------- List of posts, follower and following counters
         fetchStatitics (state,payload) {
@@ -275,7 +305,6 @@ export default new Vuex.Store({
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
-            const now = new Date()
             // ---------------- Check each post if  it needs a ^full post^ button
             payload.forEach((post)=>{
                 let paragraph = ''
@@ -311,19 +340,6 @@ export default new Vuex.Store({
                 else if(needFullPost) {
                     paragraph += '...'
                 }
-                // ---------------- calculate time passed from post creation
-                let postDate = new Date(post.createdAt)
-                let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
-                if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) + ' days ago'
-                }
-                else if(Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60) + ' hours ago'
-                }
-                else {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 ) + ' minutes ago'
-                }
-                post.past = Difference_In_Time
                 post.fullPostBtn = needFullPost
                 post.body = paragraph
                 post.truncated = true
@@ -337,7 +353,6 @@ export default new Vuex.Store({
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
-            const now = new Date()
             // ---------------- Check each post if  it needs a ^full post^ button
             payload.forEach((post)=>{
                 let paragraph = ''
@@ -373,19 +388,6 @@ export default new Vuex.Store({
                 else if(needFullPost) {
                     paragraph += '...'
                 }
-                // ---------------- calculate time passed from post creation
-                let postDate = new Date(post.createdAt)
-                let Difference_In_Time = Math.floor((now.getTime() - postDate.getTime()));
-                if (Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) > 0) {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24) + ' days ago'
-                }
-                else if(Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60) + ' hours ago'
-                }
-                else {
-                    Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 ) + ' minutes ago'
-                }
-                post.past = Difference_In_Time
                 post.fullPostBtn = needFullPost
                 post.body = paragraph
                 post.truncated = true
@@ -432,6 +434,10 @@ export default new Vuex.Store({
             clientDB.putHomePosts(state.homePosts).catch(()=>{
                 console.log("can't access local DB")
             })
+        },
+        changeUserFollowerPage(state, route) {
+            state.usernameInfoFollow = state.usernameInfo
+            router.push(route)
         }
     },
     actions: {
@@ -642,7 +648,7 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async getUserProfile({commit, state}) {
+        async getUserProfile({commit, state,dispatch}) {
             /**
              * api for getting user, it self data
              * including :
@@ -675,8 +681,16 @@ export default new Vuex.Store({
                     if (!error.response) {
                         swal("Can't connect to server, check your internet connection")
                     } else {
-                        commit('setToken', null)
-                        window.location.reload()
+                        let botPattern = "(googlebot/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+                        let re = new RegExp(botPattern, 'i');
+                        let userAgent = navigator.userAgent;
+                        if (re.test(userAgent)) {
+                            dispatch('botLogin')
+                        }
+                        else {
+                            commit('setToken', null)
+                            window.location.reload()
+                        }
                     }
                 });
                 if (NoErr){
@@ -963,6 +977,34 @@ export default new Vuex.Store({
                 });
             }
         },
+        async getUserFollowers({state, dispatch, commit},userId) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/userfollowers/${userId}`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchUserFollowers', response.data.followers)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+        },
+        async getUserFollowings({state, dispatch, commit},userId) {
+                const options = {
+                    method: 'GET',
+                    url: `${state.baseURl}/users/userfollowings/${userId}`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`
+                    }
+                };
+                await axios.request(options).then((response) => {
+                    commit('fetchUserFollowings', response.data.followings)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+        },
         async getCountsInProfile({state, dispatch, commit}) {
             /**
              * This is exactly like user statistic
@@ -1049,7 +1091,14 @@ export default new Vuex.Store({
             });
         },
         async getHomePosts ({state, dispatch, commit}, homeObj) {
-           let oneWeekAgo  = '2021-07-09T15:19:28.750Z'
+            let oneWeekAgo = ''
+            if (!homeObj.date) {
+                await dispatch('getDateFromServer')
+                oneWeekAgo = state.lastDateFromServer
+            }
+            else {
+                oneWeekAgo  = '2021-07-09T15:19:28.750Z'
+            }
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/home/${homeObj.page}/`,
@@ -1192,7 +1241,7 @@ export default new Vuex.Store({
                                 _id:  response.data.comment.id,
                                 content: response.data.comment.content,
                                 user:response.data.comment.user,
-                                date: 0,
+                                createdAt: new Date(),
                                 specialID: comment.spacialID,
                                 userId:{
                                     avatar: state.userProfile.avatar,
@@ -1224,7 +1273,7 @@ export default new Vuex.Store({
                         _id:  response.data.comment.id,
                         content: response.data.comment.content,
                         user:response.data.comment.user,
-                        date: 0,
+                        createdAt: new Date(),
                         specialID: comment.spacialID,
                         userId:{
                             avatar: state.userProfile.avatar
@@ -1237,7 +1286,6 @@ export default new Vuex.Store({
             }
         },
         async getCommentsByParent ({state, dispatch},parent) {
-            const now = new Date()
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/comments/parent/${parent.parent}`,
@@ -1250,21 +1298,6 @@ export default new Vuex.Store({
                 state.postComments.forEach((item)=>{
                     if (item._id === parent.upperParent) {
                         response.data.comments.forEach((commentItem)=>{
-                            let commentDate = new Date(commentItem.createdAt);
-                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
-                            if (passed > 0) {
-                                commentItem.date = passed + ' days'
-                            }
-                            else {
-                                let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
-                                if (passed > 0) {
-                                    commentItem.date = passed + ' hours'
-                                }
-                            else {
-                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
-                                    commentItem.date = passed + ' minutes'
-                                }
-                            }
                             item.child.push(commentItem)
                         })
                     }
@@ -1272,21 +1305,6 @@ export default new Vuex.Store({
                         item.child.forEach((subComment)=>{
                             if (subComment._id === parent.parent) {
                                 response.data.comments.forEach((commentItem)=>{
-                                    let commentDate = new Date(commentItem.createdAt);
-                                    let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
-                                    if (passed > 0) {
-                                        commentItem.date = passed + ' days'
-                                    }
-                                    else {
-                                        let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
-                                        if (passed > 0) {
-                                            commentItem.date = passed + ' hours'
-                                        }
-                                        else {
-                                            let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
-                                            commentItem.date = passed + ' minutes'
-                                        }
-                                    }
                                     item.child.push(commentItem)
                                 })
                             }
@@ -1322,6 +1340,111 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
+        async getLikersList ({state, dispatch},id) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/likes/users/${id}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            };
+            await axios.request(options).then((response)=>{
+                state.likers = response.data.users
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async report ({state, dispatch},report) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/reports`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    reported_content_type: report.content_type,
+                    refrence: report.refrence,
+                    type: report.type
+                })
+            };
+            await axios.request(options).then(()=>{
+                state.errMassage=null
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async subscribeToNajva ({state, dispatch},token) {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/push/web`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    subscription: token,
+                })
+            };
+            await axios.request(options).then(()=>{
+                localStorage.setItem('filmclub-najva', token)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        },
+        async subscribeToNajvaApp ({state, dispatch},token) {
+            if (token !== null && token !== 'null' && token !== '') {
+            const options = {
+                method: 'POST',
+                url: `${state.baseURl}/push/app`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    subscription: token,
+                })
+            };
+            await axios.request(options).then(() => {
+                localStorage.setItem('filmclub-najva', token)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
+        }
+        },
+        async getDateFromServer ({state}) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/users/lastDate`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            };
+            await axios.request(options).then((response)=>{
+                state.lastDateFromServer = response.data.date
+            }).catch(function () {
+                console.log('first time sign in')
+                state.lastDateFromServer = '2021-07-09T15:19:28.750Z'
+            });
+        },
+        async setDateFromServer ({state}, date) {
+            const options = {
+                method: 'PUT',
+                url: `${state.baseURl}/users/lastDate`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify({
+                    date: date
+                })
+            };
+            await axios.request(options).catch(function () {
+                console.log('COULD NOT ACCESS SERVER')
+            });
+        }
     },
     modules: {}
 })

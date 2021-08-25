@@ -49,9 +49,10 @@
               style="width: 50px; height: 50px; margin-top: -5px; border: 1px solid red;"
               :active="isLiked"
           >
-            <i class="iconify" data-icon="bx:bx-heart" data-inline="false"></i>
-            <p style="color: white; margin-left: 5px;"> {{ likeCount }}</p>
+            <i class="iconify" data-icon="bx:bxs-heart" data-inline="false" style="font-size: 20px;"></i>
           </vs-button>
+          <br>
+          <div style="width:55px; text-align: center; font-weight: 700; margin-top:-10px; font-size: 14px;" @click="$router.push(`/likes/${singlePost._id}`)">{{ likeCount }} likes</div>
         </vs-col>
         </vs-row>
       </vs-col>
@@ -111,6 +112,7 @@
     </vs-row>
   </div>
   <hr>
+      <h1 style="font-size: 20px;">{{singlePost.title}}</h1>
   <div class="hashtags" v-if="editMode">
     <div class="hashtag_item">
       <vs-checkbox primary v-model="critic">
@@ -133,7 +135,11 @@
     <div class="section" v-for="(i, index) in singlePost.body" :key="index">
       <h3 v-if="i.type === 'header'">{{i.data.text | sanitize}}</h3>
       <p class="bodyParagraph" v-else-if="i.type === 'paragraph'">{{i.data.text | sanitize}}</p>
-      <img v-else-if="i.type === 'image'" v-lazy="i.data.file.url" :alt="i.data.caption" class="imageItemInBody">
+      <figure v-else-if="i.type === 'image'">
+        <img v-lazy="i.data.file.url" :alt="i.data.caption" class="imageItemInBody">
+        <figcaption>{{i.data.caption | sanitize}}</figcaption>
+      </figure>
+
     </div>
   </div>
   <p style="margin-bottom: 5rem; opacity:0; font-size:15px;">margin</p>
@@ -165,16 +171,16 @@
         Why are you reporting this Post
       </h4>
     </template>
-        <div class="reportItem" @click="reportPost()">
+        <div class="reportItem" @click="reportPost(3)">
           It's spam
         </div>
-        <div class="reportItem" @click="reportPost()">
+        <div class="reportItem" @click="reportPost(0)">
           I just don't like it
         </div>
-        <div class="reportItem" @click="reportPost()">
+        <div class="reportItem" @click="reportPost(2)">
           Hate speech or symbols
         </div>
-        <div class="reportItem" @click="reportPost()">
+        <div class="reportItem" @click="reportPost(1)">
           request review for other reasons
         </div>
   </vs-dialog>
@@ -191,6 +197,24 @@ import swal from "sweetalert";
 import PullToRefresh from "pulltorefreshjs";
 export default {
   name: "singlePost",
+  metaInfo() {
+  return {
+    title: this.singlePost.title,
+    titleTemplate: '%s | FilmClub',
+    meta: [
+      {
+        vmid: "keyword",
+        name: "keyword",
+        content: `${this.singlePost.title}, ${this.singlePost.authorId.username} `,
+      },
+      {
+        vmid: "description",
+        name: "description",
+        content: `A movie post about ${this.singlePost.title} movie and written by ${this.singlePost.authorId.username} `,
+      }
+    ],
+  }
+},
   components: {loading},
   data(){
     return {
@@ -211,7 +235,7 @@ export default {
       reason: 'default',
       critic:false,
       spoiler: false,
-      reportActive:false
+      reportActive:false,
     }
   },
   computed:{
@@ -328,7 +352,7 @@ export default {
         this.loadEditor()
       }
     },
-    ...mapActions(['getSinglePost', 'toggleFollow', 'getFollowStatus', 'toggleLike', 'deleteAPost', 'getMyPosts']),
+    ...mapActions(['getSinglePost', 'toggleFollow', 'getFollowStatus', 'toggleLike', 'deleteAPost', 'getMyPosts', 'report']),
     getNotif() {
       this.isFollowLoading = false
       if (this.errMassage) {
@@ -498,7 +522,13 @@ export default {
       document.getElementById('options').style.transform = 'translateY(30vh)'
       document.getElementById('blur').style.filter='brightness(1)'
     },
-    reportPost() {
+    reportPost(type) {
+      const report = {
+        content_type: 'Post',
+        refrence: this.singlePost._id,
+        type: type
+      }
+      this.report(report)
       this.reportActive=false
       this.$vs.notification({
         duration: 3000,
@@ -609,13 +639,17 @@ hr {
   font-family: Yekan,sans-serif;
 }
 .body {
-  margin-top:2rem;
+  margin-top:-1rem;
   padding:15px;
 }
 .bodyParagraph, .single >>> .ce-paragraph{
   font-size: 18px;
   line-height:2;
   text-align:right;
+  font-family: Yekan;
+}
+h3{
+  font-family: Yekan;
 }
 .editorContainer{
   margin: 30px;

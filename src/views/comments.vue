@@ -14,7 +14,7 @@
     <div class="close" @click="selectComment(lastSelectedForReport)"  v-if="canReport">
       <i class="iconify" data-icon="mdi:close"></i>
     </div>
-    <div class="delete" v-if="canReport" @click="reportComment">
+    <div class="delete" v-if="canReport" @click="reportComment(0)">
       <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
     </div>
   </div>
@@ -28,8 +28,7 @@
       <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{ comment.userId.username }}</span> <span class="yekan" dir="rtl">{{comment.content}} </span></p>
       <div class="sub">
         <span class="subTexts">
-          <span v-if="comment.date !== 0">{{comment.date}}</span>
-          <span v-else>Just now</span>
+          <span>{{comment.createdAt | dateToString}}</span>
           <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${comment.userId.username}` ; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
         <br>
@@ -44,11 +43,10 @@
         <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
       </vs-avatar>
       <div class="body">
-        <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{childComment.userId.username}}</span> <span dir="rtl">{{childComment.content}}</span></p>
+        <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{childComment.userId.username}}</span> <span class="yekan" dir="rtl">{{childComment.content}}</span></p>
         <div class="sub">
         <span class="subTexts">
-          <span v-if="childComment.date !== 0">{{childComment.date}}</span>
-          <span v-else>Just now</span>
+          <span>{{childComment.createdAt | dateToString}}</span>
           <span style="margin-left: 10%; display: inline-block;" @click="reply=true; focusType(); inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
@@ -78,6 +76,10 @@ import LongPress from 'vue-directive-long-press'
 import loading from '../components/loading'
 export default {
   name: "comments",
+  metaInfo: {
+    title: 'Comments',
+    titleTemplate: '%s | FilmClub'
+  },
   components:{
     loading
   },
@@ -101,7 +103,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile', 'deleteAComment']),
+    ...mapActions(['getPostComments', 'addNewComment', 'getCommentsByParent', 'getUserProfile', 'deleteAComment', 'report']),
     postComment() {
       let comment = {
         text: this.commentText,
@@ -204,7 +206,13 @@ export default {
         }
       }
     },
-    reportComment() {
+    reportComment(type) {
+      const report = {
+        content_type: 'Comment',
+        refrence: this.lastSelectedForReport,
+        type: type
+      }
+      this.report(report)
       this.selectComment(this.lastSelectedForReport)
       this.$vs.notification({
         duration: 2000,

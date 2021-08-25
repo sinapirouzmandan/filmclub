@@ -20,6 +20,10 @@ import singlePost from '../components/Home/singlePost'
 import Notifications from "./Notifications";
 export default {
   name: 'Home',
+  metaInfo: {
+    title: 'Home',
+    titleTemplate: '%s | FilmClub'
+  },
   components: {posts: singlePost, fixedHead, Notifications},
   data() {
     return {
@@ -40,7 +44,9 @@ export default {
     this.$store.commit('toggleNavbar', true);
   },
   mounted() {
-    this.$store.dispatch('getUserProfile')
+    this.$store.dispatch('getUserProfile').then(()=>{
+      this.$store.dispatch('getNotificationList')
+    })
   }
 }
 </script>

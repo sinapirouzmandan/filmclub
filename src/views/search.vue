@@ -18,6 +18,10 @@ import PullToRefresh from "pulltorefreshjs";
 
 export default {
   name: "search.vue",
+  metaInfo: {
+    title: 'Search',
+    titleTemplate: '%s | FilmClub'
+  },
   data() {
     return {
       searchBox: boxOffice,

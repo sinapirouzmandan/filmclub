@@ -1,6 +1,6 @@
 <template>
   <div class="writeBox">
-    <newPostTools @sendThePost="sharePost()" :isLoading="isSaving"/>
+    <newPostTools @sendThePost="sharePost()" @saveAsDraft="saveDraft()" :isLoading="isSaving"/>
     <div>
       <croppa
               :width="browserWidth"
@@ -46,7 +46,9 @@
         Search
       </vs-button>
     </div>
-    <h1 v-if="post.title != ''" style="margin-top: 4rem;">{{ post.title }}</h1>
+    <div  @click="post.title=false; post.imdb_id=null" v-if="post.title != ''">
+    <h1 style="margin-top: 4rem;">{{ post.title }}<span class="iconify" data-icon="mdi:close" style="color:red;"></span> </h1>
+    </div>
     <div class="rating">
       <vs-row>
       </vs-row>
@@ -102,6 +104,7 @@ import EditorJS from '@editorjs/editorjs';
 import ImageTool from '@editorjs/image';
 import Header from '@editorjs/header';
 import {mapState} from 'vuex'
+import PullToRefresh from "pulltorefreshjs";
 
 export default {
   name: "postDetail",
@@ -220,6 +223,42 @@ export default {
         this.$store.commit('changeErrMsg', null)
       });
     }
+    },
+    saveDraft() {
+      if (this.post.imdb_id) {
+        let draftData = {
+          body: [],
+          title: '',
+          imdb_id: ''
+        }
+        this.editor.save().then((outputData) => {
+          draftData.body = outputData
+          draftData.title= this.post.title
+          draftData.imdb_id = this.post.imdb_id
+          localStorage.setItem('draftPost', JSON.stringify(draftData))
+          this.$router.back()
+        }).catch(() => {
+          this.$vs.notification({
+            duration: 3000,
+            progress: 'auto',
+            border: null,
+            position: 'bottom-center',
+            color: '#296186',
+            title: "Can't save post to draft",
+          })
+          this.$store.commit('changeErrMsg', null)
+        });
+      }
+      else {
+        this.$vs.notification({
+          duration: 3000,
+          progress: 'auto',
+          border: null,
+          position: 'bottom-center',
+          color: '#296186',
+          title: "You didn't write anything to save !",
+        })
+      }
     }
   },
   created() {
@@ -240,25 +279,57 @@ export default {
     const auth = {
       'authorization': `Bearer ${this.token}`
     }
-    // eslint-disable-next-line no-unused-vars
-    this.editor = new EditorJS({
-      holder: 'editor',
-      placeholder: 'Write here ...',
-      tools: {
-        image: {
-          class: ImageTool,
-          config: {
-            additionalRequestHeaders: auth,
-            endpoints: {
-              byFile: `${this.baseURl}/posts/editorjs/upload/by_file`,
+    const draftFromLocalStorage = localStorage.getItem('draftPost')
+    if (draftFromLocalStorage !== null) {
+      this.post.imdb_id = JSON.parse(draftFromLocalStorage).imdb_id
+      this.post.title = JSON.parse(draftFromLocalStorage).title
+      // eslint-disable-next-line no-unused-vars
+      this.editor = new EditorJS({
+        holder: 'editor',
+        placeholder: 'Write here ...',
+        tools: {
+          image: {
+            class: ImageTool,
+            config: {
+              additionalRequestHeaders: auth,
+              endpoints: {
+                byFile: `${this.baseURl}/posts/editorjs/upload/by_file`,
+              }
             }
-          }
+          },
+          header: Header
         },
-        header: Header
-      }
-    })
+        data: {
+          blocks: JSON.parse(draftFromLocalStorage).body.blocks
+        }
+      })
+      localStorage.removeItem('draftPost')
+    }
+    else {
+      this.editor = new EditorJS({
+        holder: 'editor',
+        placeholder: 'Write here ...',
+        tools: {
+          image: {
+            class: ImageTool,
+            config: {
+              additionalRequestHeaders: auth,
+              endpoints: {
+                byFile: `${this.baseURl}/posts/editorjs/upload/by_file`,
+              }
+            }
+          },
+          header: Header
+        }
+      })
+    }
     // eslint-disable-next-line no-unused-vars
-
+      PullToRefresh.init({
+        mainElement: 'body',
+        onRefresh() {
+          console.log('refresh')
+        }
+      });
   },
   components: {newPostTools}
 }
@@ -382,7 +453,7 @@ p {
   right:45%;
 }
 .croppa-container {
-  background: linear-gradient(to bottom right, #717171, #fff);
+  background: linear-gradient(to bottom right, #efe7c7, #fff);
   width:100vw;
   max-width: 500px;
   height: 220px;

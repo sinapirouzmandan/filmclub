@@ -1,7 +1,8 @@
 <template>
   <div class="container bodyMargin">
     <div v-for="(user, index) in searchedUsers" :key="index">
-      <div class="user" @click="$router.push(`/users/${user.username}`)">
+      <router-link :to="'/users/' + user.username" class="whiteTxt">
+      <div class="user">
         <div class="divider"></div>
         <div class="avatar">
           <img :src="user.avatar ? (baseURl + user.avatar) : alternativeAvatar" alt="avatar" class="usersAvatar"/>
@@ -13,6 +14,7 @@
         </p>
         <div class="divider bottom"></div>
       </div>
+      </router-link>
     </div>
     <loading v-if="isLoading"/>
   </div>
@@ -84,5 +86,9 @@ export default {
   border-radius: 50%;
   height: 100%;
   object-fit: cover;
+}
+.whiteTxt{
+  color:white;
+  font-weight: 550;
 }
 </style>

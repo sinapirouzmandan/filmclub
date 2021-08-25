@@ -5,10 +5,11 @@
   <vs-col class="home" justify="space-around" w="12" v-for="(post) in homePosts" :key="post.createdAt" :id="post.id">
     <vs-card>
       <template #title>
+        <router-link :to="'/users/' + post.author">
         <img :src="post.authorAvatar ? (baseURl + post.authorAvatar) : alternativeAvatar"
-             @click="$router.push(`/users/${post.author}`)"
              style="width: 30px; height: 30px; border-radius: 50%; float: left; object-fit:cover;" alt="user profile">
-        <p class="userId" @click="$router.push(`/users/${post.author}`)">{{post.author}}</p>
+        <p class="userId">{{post.author}}</p>
+        </router-link>
         <vs-button
             @click="toggleWatchListPost(post.imdb_id); post.isWatchList = false"
             circle
@@ -32,8 +33,8 @@
           <i class="iconify" data-icon="mdi:heart-multiple" data-inline="false"></i>
           <p style="color: white; margin-left: 5px;"> {{post.likes}}</p>
         </vs-button>
+        <router-link :to="'/comments/' + post.id">
         <vs-button
-            @click="$router.push(`/comments/${post.id}`)"
             circle
             color="rgb(59,89,153)"
             flat
@@ -44,13 +45,15 @@
           <i class="iconify" data-icon="mdi:comment-processing-outline" data-inline="false"></i>
           <p style="color: white; margin-left: 5px;"> {{post.comments}}</p>
         </vs-button>
+        </router-link>
         <h3>{{post.title}}</h3>
         <h6 style="margin-top: 10px; font-size: 15px;"><span style="color: crimson;" v-if="post.spoiler === true">#spoilers </span><span v-if="post.critic === true">#critic</span> </h6>
       </template>
       <template #img>
+        <router-link :to="'/post/' + encodeURIComponent(post.title) + '/' + post.id">
         <img id="postImage" v-lazy="post.poster"
-             @click="$router.push(`/post/${encodeURIComponent(post.title)}/${post.id}`)"
              alt="Image Load Error">
+        </router-link>
       </template>
       <template #text>
         <i class="iconify" data-icon="bx:bxs-star" style="color: #fff356;"></i>
@@ -68,8 +71,8 @@
           <span style="opacity:0.7;">view all {{post.comments}} comments</span>
         </router-link>
         <br>
+        <router-link :to="'/post/' + encodeURIComponent(post.title) + '/' + post.id">
         <vs-button
-            @click="$router.push(`/post/${encodeURIComponent(post.title)}/${post.id}`)"
             class="fullPost"
             flat
             v-if="post.fullPostBtn"
@@ -79,8 +82,8 @@
         >
           View full post
         </vs-button>
-        <small style="opacity: 0.3;" v-show="post.past !== 0"><br>{{post.past}}</small>
-        <small style="opacity: 0.3;" v-show="post.past === 0"><br>Just now </small>
+        </router-link>
+        <small style="opacity: 0.3;"><br>{{post.createdAt | dateToString}}</small>
       </template>
     </vs-card>
   </vs-col>
@@ -113,7 +116,7 @@ export default {
     ...mapState(['baseURl', 'homePosts', 'alternativeAvatar', 'homeHasNextPage', 'savedPos', 'homePageNumber'])
   },
   methods:{
-    ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike', "refreshCachePostsStatus", 'getOlderHomePosts']),
+    ...mapActions(['getHomePosts', 'toggleWatchListPost', 'toggleLike', "refreshCachePostsStatus", 'getOlderHomePosts', 'setDateFromServer']),
     ...mapMutations(['fetchHomePostsFromCache', 'homePageNumberPlus']),
     togglerLike(post){
       this.toggleLike(post.id)
@@ -153,11 +156,13 @@ export default {
               date: localStorage.getItem('lastPostInCacheDate-v2')
             }
             this.getHomePosts(homeObj).then(()=>{
-              this.isLoadingMore = false
+              setTimeout(()=>{
+                this.isLoadingMore = false
+              },3000)
               putHomePosts(this.homePosts)
               if (!this.savedPos) {
                 let firstPostOfPacket =  document.getElementById(this.homePosts[9].id)
-                firstPostOfPacket.scrollIntoView({behavior: 'smooth', block: 'end'})
+                firstPostOfPacket.scrollIntoView({block: 'end'})
               }
               else {
                 this.$store.commit('toggleHomeSavedPos', false)
@@ -168,7 +173,9 @@ export default {
         }
       },
     latelyLoaded() {
-      localStorage.setItem('lastPostInCacheDate-v2', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+      let latest = this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24)
+      localStorage.setItem('lastPostInCacheDate-v2', latest)
+      this.setDateFromServer(latest)
       if (this.isLoadingMore) {
       this.isLoadingMore = true
       this.homePageNumberPlus()
@@ -208,7 +215,9 @@ export default {
       });
     if (localStorage.getItem('firstTimeLoaded') && localStorage.getItem('lastPostInCacheDate-v2') && this.homePosts.length === 0) {
       getHomePostsCache().then((posts)=>{
-        localStorage.setItem('lastPostInCacheDate-v2', posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        let latest = posts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24)
+        localStorage.setItem('lastPostInCacheDate-v2', latest)
+        this.setDateFromServer(latest)
         this.fetchHomePostsFromCache(posts)
         this.getNextPosts()
         this.isLoadingMore = true
@@ -246,11 +255,12 @@ export default {
       }
       this.getHomePosts(homeObj).then(()=>{
         window.scrollTo(0,document.body.scrollHeight);
-        window.scrollTo(0,document.body.scrollHeight);
         this.isLoading=false
         localStorage.setItem('firstTimeLoaded', true)
         putHomePosts(this.homePosts)
-        localStorage.setItem('lastPostInCacheDate-v2', this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24))
+        let letest = this.homePosts.reduce((a, b) => (a.createdAt > b.createdAt ? a : b)).createdAt.slice(0,24)
+        localStorage.setItem('lastPostInCacheDate-v2', letest)
+        this.setDateFromServer(letest)
         this.getNextPosts()
       }).catch(()=>{
         this.isLoading = false

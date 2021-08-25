@@ -1,60 +1,61 @@
 <template>
   <nav class="xi-bottom-navbar">
+    <router-link to="/" class="nav-a">
     <vs-button
-        :active="activeHome"
+        :active="$route.name === 'Home'"
         dark
         flat
         icon
-        @click="activeHome = true; activeSearch=false; activeMovie=false;activeBookmark=false;activeUser=false"
-        to="/"
     >
       <i class="iconify" data-icon="bx:bxs-home" data-inline="false"></i>
     </vs-button>
+    </router-link>
+    <router-link to="/search" class="nav-a">
     <vs-button
-        :active="activeSearch"
+        :active="$route.name === 'search'"
         dark
         flat
         icon
-        @click="activeHome = false; activeSearch=true; activeMovie=false;activeBookmark=false;activeUser=false;"
-        to="/search"
     >
       <i class="iconify" data-icon="bx:bx-search-alt" data-inline="false"></i>
     </vs-button>
+    </router-link>
+    <router-link to="/NewPost" class="nav-a">
     <vs-button
-        :active="activeMovie"
+        :active="$route.name === 'NewPost'"
         dark
         flat
         icon
-        @click="activeHome = false; activeSearch=false; activeMovie=true;activeBookmark=false;activeUser=false"
-        to="/NewPost"
     >
       <i class="iconify" data-icon="mdi:movie-open-plus" data-inline="false"></i>
     </vs-button>
+    </router-link>
+    <router-link  to="/MyList" class="nav-a">
     <vs-button
-        :active="activeBookmark"
+        :active="$route.name === 'MyList'"
         dark
         flat
         icon
-        @click="activeHome = false; activeSearch=false; activeMovie=false;activeBookmark=true;activeUser=false"
-        to="/MyList"
     >
-      <i class="iconify" data-icon="bx:bxs-bookmark-star" data-inline="false"></i>
+      <i class="iconify" data-icon="bx:bxs-bookmark" data-inline="false"></i>
     </vs-button>
+    </router-link>
+    <router-link to="/profile" class="nav-a">
     <vs-button
-        :active="activeUser"
+        :active="$route.name === 'profile'"
         dark
         flat
         icon
-        @click="activeHome = false; activeSearch=false; activeMovie=false;activeBookmark=false;activeUser=true;"
-        to="/profile"
     >
+      <div class="badge" v-show="notificatonsCalc"></div>
       <i class="iconify" data-icon="bx-bxs-user" data-inline="false"></i>
     </vs-button>
-
+    </router-link>
   </nav>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   name: "navbar",
   data() {
@@ -65,6 +66,9 @@ export default {
       activeUser: false,
       activeHome: false
     }
+  },
+  computed:{
+    ...mapGetters(['notificatonsCalc'])
   }
 }
 </script>
@@ -85,7 +89,6 @@ export default {
 }
 
 .vs-button {
-  flex-grow: 1;
   text-align: center;
   font-size: 30px;
   display: flex;
@@ -103,5 +106,27 @@ export default {
 .vs-button--active {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
   transition: 0.5s;
+}
+.nav-a{
+  flex-grow: 2.4;
+  display: flex;
+  justify-content: center;
+}
+.badge{
+  position: absolute;
+  width:7px;
+  height: 7px;
+  border-radius: 50%;
+  bottom: 27px;
+  margin-left:25px;
+  animation: badge  2s linear infinite;
+}
+@keyframes badge {
+  0%{
+    background-color: var(--vs-navs);
+  }
+  100%{
+    background-color: white;
+  }
 }
 </style>

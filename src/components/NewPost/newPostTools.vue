@@ -1,14 +1,21 @@
 <template>
   <div class="tools">
     <div class="top-tools">
-      <vs-row>
-        <vs-col w="2">
-          <div @click="back">
+          <div @click="back" id="backDiv">
             <i class='iconify close' data-icon="mdi:close"></i>
           </div>
-        </vs-col>
-        <vs-col w="6"></vs-col>
-        <vs-col w="4">
+      <div class="space"></div>
+      <div class="buttons">
+        <vs-button
+            @click="$emit('saveAsDraft')"
+            animation-type="vertical"
+            class="sendPost"
+            color="#999898"
+            flat
+            gradient
+        >
+          draft
+        </vs-button>
           <vs-button
               @click="isLoading === false ? $emit('sendThePost') : console.log('wait')"
               animation-type="vertical"
@@ -17,11 +24,11 @@
               :loading="isLoading"
               color="#5b3cc4"
               gradient
+              id="saveBtn"
           >
             share
           </vs-button>
-        </vs-col>
-      </vs-row>
+      </div>
     </div>
   </div>
 </template>
@@ -80,5 +87,21 @@ export default {
   margin-right: 15%;
   margin-top: 7px;
   width:50%;
+}
+#saveBtn{
+  float: right;
+  position: relative;
+  right:0;
+}
+.buttons{
+  width:45%;
+  background-color: #1e2023;
+  display: flex;
+  position: absolute;
+  right:0;
+  float: right;
+}
+.space{
+  width:45%;
 }
 </style>

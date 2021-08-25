@@ -1,29 +1,29 @@
 <template>
 <div id="follow">
   <div class="header">
-    <div class="back" @click="$router.push('/profile')">
+    <div class="back" @click="$router.back()">
       <i class="iconify" data-icon="bx:bx-arrow-back"></i>
     </div>
     <div class="username">
-      <p style="text-align: left;">{{userProfile.username}}</p>
+      <p style="text-align: left;">{{usernameInfoFollow.username}}</p>
     </div>
     <vs-row class="tabs">
       <vs-col w="6" :class="{'border-bottom': isFollower}" style="padding:12px; font-size: 15px; margin-bottom: 10px;">
-        <span @click="$router.push('/followers'); isLoading=true; getFollow(0)">
-                {{statitics.followers}} followers
+        <span @click="$router.push('/userFollowers'); isLoading=true; getFollow(0)">
+                {{usernameInfoFollow.followers}} followers
         </span>
       </vs-col>
       <vs-col w="6" :class="{'border-bottom': !isFollower}" style="padding:12px; font-size: 15px; margin-bottom: 10px;">
-        <span @click="$router.push('/followings'); isLoading=true; getFollow(1)">
-                {{statitics.followings}} followings
+        <span @click="$router.push('/userFollowings'); isLoading=true; getFollow(1)">
+                {{usernameInfoFollow.followings}} followings
         </span>
       </vs-col>
     </vs-row>
   </div>
-  <h1 id="headerFollow">All {{$route.path.replace('/', '')}}</h1>
-  <div class="followers"  v-if="$route.path.replace('/', '') === 'followers'">
+  <h1 id="headerFollow">All {{$route.path.replace('/user', '')}}</h1>
+  <div class="followers"  v-show="isFollower">
     <loading v-if="isLoading"/>
-    <div class="user" v-for="(user) in followers" :key="user._id">
+    <div class="user" v-for="(user) in userFollowers" :key="user._id">
       <div class="containFullUser" @click="$router.push(`/users/${user.followerUsername.username}`)">
       <vs-avatar circle class="avatarImage">
         <img :src="user.followerUsername.avatar ? (baseURl + user.followerUsername.avatar) : alternativeAvatar" class="fitImage" alt="user avatar">
@@ -34,13 +34,9 @@
     </div>
     </div>
   </div>
-  <div class="followings" v-else>
+  <div class="followings" v-show="!isFollower">
     <loading v-if="isLoading"/>
-    <div class="user" v-for="(user) in followings" :key="user._id">
-      <div class="unfollow" @click="toggleFollowing(user.followingUsername.username)">
-        <span v-if="!unfollowed.includes(user.followingUsername.username)">Unfollow</span>
-        <span v-else>Follow</span>
-      </div>
+    <div class="user" v-for="(user) in userFollowings" :key="user._id">
       <div class="containFullUser" @click="$router.push(`/users/${user.followingUsername.username}`)">
       <vs-avatar circle class="avatarImage">
         <img :src="user.followingUsername.avatar ? (baseURl + user.followingUsername.avatar) : alternativeAvatar" class="fitImage" alt="user avatar">
@@ -61,64 +57,50 @@ import PullToRefresh from "pulltorefreshjs";
 export default {
   name: "followView",
   metaInfo: {
-    title: 'Followers',
+    title: 'Followings',
     titleTemplate: '%s | FilmClub'
   },
   data () {
     return {
-      unfollowed: [],
       isLoading: false
     }
   },
   components: {loading},
+  computed: {
+    ...mapState(['usernameInfo', 'userFollowings', 'userFollowers', 'alternativeAvatar', 'baseURl', 'usernameInfoFollow']),
+    isFollower(){
+      return this.$route.path.replace('/user', '') === 'Followers'
+    }
+  },
   methods: {
-    ...mapActions(['getFollowers', 'getFollowings',  'getUserProfile', 'toggleFollow']),
+    ...mapActions(['getUserFollowers', 'getUserFollowings',  'getUserProfile', 'toggleFollow']),
     getFollow(val){
       if (val || (val=== 0 || val === 1)) {
         if (val === 0){
-          this.getFollowers().then(()=>{
+          this.getUserFollowers(this.usernameInfoFollow.id).then(()=>{
             this.isLoading = false
           })
         }
         else if (val === 1) {
-          this.getFollowings().then(()=>{
+          this.getUserFollowings(this.usernameInfoFollow.id).then(()=>{
             this.isLoading= false
           })
         }
       }
-      else if (this.$route.path.replace('/', '') === 'followers'){
-        this.getFollowers().then(()=>{
+      else if (this.$route.path.replace('/user', '') === 'Followers'){
+        this.getUserFollowers(this.usernameInfoFollow.id).then(()=>{
           this.isLoading= false
         })
       }
       else {
-        this.getFollowings().then(()=>{
+        this.getUserFollowings(this.usernameInfoFollow.id).then(()=>{
           this.isLoading= false
         })
       }
     },
-    toggleFollowing(value){
-      this.toggleFollow(value)
-      if (this.unfollowed.includes(value)){
-        this.unfollowed =  this.unfollowed.filter(function(item){
-          return item != value;
-        });
-      }
-      else {
-        this.unfollowed.push(value)
-      }
-      }
-  },
-  computed: {
-    ...mapState(['followers', 'followings', 'userProfile', 'statitics', 'alternativeAvatar', 'baseURl']),
-    isFollower(){
-      return this.$route.path.replace('/', '') === 'followers'
-    }
   },
   mounted(){
     this.isLoading = true
-    this.$store.dispatch('getCountsInProfile')
-    this.getUserProfile()
     this.getFollow()
     PullToRefresh.init({
       mainElement: 'body',

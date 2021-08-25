@@ -23,6 +23,10 @@
 <script>
 export default {
   name: "pageNotFound",
+  metaInfo: {
+    title: 'page not found',
+    titleTemplate: '%s | FilmClub'
+  },
   created() {
     this.$store.commit('toggleNavbar', true);
   }

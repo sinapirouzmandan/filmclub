@@ -73,6 +73,10 @@ import {mapActions, mapGetters, mapState} from 'vuex'
 
 export default {
   name: "Bookmark",
+  metaInfo: {
+    title: 'WatchList',
+    titleTemplate: '%s | FilmClub'
+  },
   components: {
     bookmarkPost
   },

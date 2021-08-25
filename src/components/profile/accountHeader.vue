@@ -35,7 +35,7 @@
         </svg>
         <div class="uploadAvatar" @click="changePro=true; location='avatar';" ></div>
         <div class="username">
-          <p>{{ userProfile.name }}</p>
+          <h1 style="font-size: 17px;">{{ userProfile.name }}</h1>
           <i v-if="userProfile.username">@{{ userProfile.username }}</i>
         </div>
       </vs-col>

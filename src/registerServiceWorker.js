@@ -22,10 +22,10 @@ if (process.env.NODE_ENV === 'production') {
     // eslint-disable-next-line no-unused-vars
     updated(registration) {
       console.log('New content is available; please refresh.')
-      alert('content will be updated in 1 minute. please save any unsaved work.')
+      alert('content will be updated in 10 seconds. please save any unsaved work.')
       setTimeout(() => {
         registration.waiting.postMessage({action: "skipWaiting"})
-      }, 60000)
+      }, 10000)
     },
     offline() {
       console.log('No internet connection found. App is running in offline mode.')

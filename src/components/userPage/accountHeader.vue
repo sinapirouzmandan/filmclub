@@ -42,22 +42,22 @@
       </template>
       <ul>
         <li>
-          <div class="reportItem" @click="reportUser()">
+          <div class="reportItem" @click="reportUser(3)">
             Its posting content that shouldn't be on Film Club
           </div>
         </li>
         <li>
-          <div class="reportItem" style="margin-top:15px;" @click="reportUser()">
+          <div class="reportItem" style="margin-top:15px;" @click="reportUser(2)">
             It's pretending to be some one else
           </div>
         </li>
         <li>
-          <div class="reportItem" @click="reportUser()">
+          <div class="reportItem" @click="reportUser(1)">
             It's spam
           </div>
         </li>
         <li>
-          <div class="reportItem" @click="reportUser()">
+          <div class="reportItem" @click="reportUser(1)">
             request review for other reasons
           </div>
         </li>
@@ -77,7 +77,7 @@
           </template>
         </vs-avatar>
         <div class="username">
-          <p>{{ usernameInfo.name }}</p>
+          <h1 style="font-size: 17px;">{{ usernameInfo.name }}</h1>
           <small>@{{ $route.params.user }}</small>
         </div>
       </vs-col>
@@ -114,6 +114,24 @@ import swal from "sweetalert";
 
 export default {
   name: "accountHeader",
+  metaInfo() {
+    return {
+      title: this.$route.params.user,
+      titleTemplate: '%s | FilmClub',
+      meta: [
+        {
+          vmid: "keyword",
+          name: "keyword",
+          content: `${this.usernameInfo.name}, ${this.$route.params.user} `,
+        },
+        {
+          vmid: "description",
+          name: "description",
+          content: `User page of ${this.usernameInfo.name} with the username of ${this.$route.params.user} and his biography : ${this.usernameInfo.biography} `,
+        }
+      ],
+    }
+  },
   data() {
     return {
       colorBtn: 'rgb(70,126,246)',
@@ -150,10 +168,16 @@ export default {
     }
   },
   methods: {
-    reportUser() {
+    reportUser(type) {
       this.reportActive=false
       this.reportPostOrComment=false
       this.reportAccount=false
+      const report = {
+        content_type: 'Account',
+        refrence: this.$route.params.user,
+        type: type
+      }
+      this.report(report)
       this.$vs.notification({
         duration: 3000,
         progress: 'auto',
@@ -177,7 +201,7 @@ export default {
         this.$store.commit('changeErrMsg', null)
       }
     },
-    ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus']),
+    ...mapActions(['toggleFollow', 'deleteUser', 'getFollowStatus', 'report']),
     follow() {
       this.isLoading = true
       this.toggleFollow(this.$route.params.user).then(() => {

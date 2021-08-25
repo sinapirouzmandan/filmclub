@@ -1,8 +1,8 @@
 <template>
 <div id="splashOverlay">
-  <div class="logo">
-    <h1>Film</h1>
-    <h1 class="subH1">Club</h1>
+  <div class="logo" style="font-family: 'magic';">
+    <h1 style="font-family: 'magic';">Film</h1>
+    <h1 class="subH1" style="font-family: 'magic';">Club</h1>
     <div class="loader-centre">
       <div class="loader-loader"></div>
     </div>

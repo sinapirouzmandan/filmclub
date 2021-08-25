@@ -41,6 +41,10 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: "profile",
+  metaInfo: {
+    title: 'Profile',
+    titleTemplate: '%s | FilmClub'
+  },
   components: {
     tumbPost,
     accountStatus, accountBio,
