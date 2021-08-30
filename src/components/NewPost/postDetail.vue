@@ -1,27 +1,27 @@
 <template>
   <div class="writeBox">
-    <newPostTools :isLoading="isSaving" @saveAsDraft="saveDraft()" @sendThePost="sharePost()"/>
+    <newPostTools @sendThePost="sharePost()" @saveAsDraft="saveDraft()" :isLoading="isSaving"/>
     <div>
       <croppa
-          v-model="croppaData"
+          :width="browserWidth"
+          placeholder=""
           :height="220"
+          accept="image/*"
           :prevent-white-space="true"
           :remove-button-size="25"
-          :width="browserWidth"
-          accept="image/*"
-          placeholder=""
           remove-button-color="black"
+          v-model="croppaData"
       />
       <vs-button
+          class="specifyHeaderBtn"
           v-if="!file"
           :active="true"
-          class="specifyHeaderBtn"
           color="#000"
           flat
       >
         specify Post header image
       </vs-button>
-      <svg aria-hidden="true" class="changePostHeader" fill="#5c5c5c"
+      <svg fill="#5c5c5c" aria-hidden="true" class="changePostHeader"
            viewBox="0 0 24 24">
         <g>
           <path
@@ -46,29 +46,27 @@
         Search
       </vs-button>
     </div>
-    <div v-if="post.title != ''" @click="post.title=false; post.imdb_id=null">
-      <h1 style="margin-top: 4rem;">{{ post.title }}<span class="iconify" data-icon="mdi:close"
-                                                          style="color:red;"></span></h1>
+    <div  @click="post.title=false; post.imdb_id=null" v-if="post.title != ''">
+      <h1 style="margin-top: 4rem;">{{ post.title }}<span class="iconify" data-icon="mdi:close" style="color:red;"></span> </h1>
     </div>
     <div class="rating">
       <vs-row>
       </vs-row>
-      <vs-input v-if="post.title != ''" v-model="score" :state="state" danger icon-after
-                label-placeholder="My score to : "
+      <vs-input v-if="post.title != ''" v-model="score" :state="state" danger icon-after label-placeholder="My score to : "
                 type="number" warn @change="checkRate()">
         <template #icon>
           /10
         </template>
       </vs-input>
     </div>
-    <div v-if="post.title != ''" class="hashtags">
+    <div class="hashtags" v-if="post.title != ''">
       <div class="hashtag_item">
-        <vs-checkbox v-model="post.critic" primary>
+        <vs-checkbox primary v-model="post.critic">
           #critic
         </vs-checkbox>
       </div>
       <div class="hashtag_item">
-        <vs-checkbox v-model="post.spoiler" danger>
+        <vs-checkbox danger v-model="post.spoiler">
           #spoilers
         </vs-checkbox>
       </div>
@@ -84,9 +82,9 @@
         </h4>
       </template>
       <vs-row>
-        <vs-col v-for="(option,index) in searchListMoviesList[0]" :key="index" lg="3" sm="4" xs="6">
+        <vs-col v-for="(option,index) in searchListMoviesList['0']" :key="index" lg="3" sm="4" xs="6">
           <div class="chooseMov">
-            <img v-lazy="'https://image.tmdb.org/t/p/w300' + option.poster_path" :alt="option.Title" @click="nextPage(option)">
+            <img v-lazy="option.Poster" :alt="option.Title" @click="nextPage(option)">
           </div>
         </vs-col>
       </vs-row>
@@ -146,8 +144,8 @@ export default {
       this.$store.dispatch('getSearchList', this.searchMov)
     },
     nextPage(movie) {
-      this.post.imdb_id = movie.id
-      this.post.title = movie.title
+      this.post.imdb_id = movie.imdbID
+      this.post.title = movie.Title
       this.active = false
       this.editor.caret.setToFirstBlock('end', 0);
     },
@@ -235,7 +233,7 @@ export default {
         }
         this.editor.save().then((outputData) => {
           draftData.body = outputData
-          draftData.title = this.post.title
+          draftData.title= this.post.title
           draftData.imdb_id = this.post.imdb_id
           localStorage.setItem('draftPost', JSON.stringify(draftData))
           this.$router.back()
@@ -250,7 +248,8 @@ export default {
           })
           this.$store.commit('changeErrMsg', null)
         });
-      } else {
+      }
+      else {
         this.$vs.notification({
           duration: 3000,
           progress: 'auto',
@@ -270,7 +269,8 @@ export default {
     browserWidth() {
       if (window.innerWidth < 500) {
         return window.innerWidth
-      } else {
+      }
+      else {
         return 500
       }
     }
@@ -304,7 +304,8 @@ export default {
         }
       })
       localStorage.removeItem('draftPost')
-    } else {
+    }
+    else {
       this.editor = new EditorJS({
         holder: 'editor',
         placeholder: 'Write here ...',
@@ -412,63 +413,53 @@ h1 {
 h4 {
   color: #c4baba;
 }
-
-#headerSelected {
-  width: 100%;
-  height: 100%;
+#headerSelected{
+  width:100%;
+  height:100%;
   object-fit: cover;
 }
-
-#editor {
+#editor{
   font-family: Yekan;
   font-size: 18px;
-  line-height: 2;
+  line-height:2;
   text-decoration: none;
 }
-
 .writeBox >>> .ce-header {
   font-size: 20px;
   font-weight: 200;
 }
-
 .writeBox >>> .ce-toolbar__settings-btn {
   width: 20px;
   height: 20px;
   background-color: white;
 }
-
 p {
   font-size: 50px;
 }
-
 .hashtags {
   margin-top: 4rem;
 }
-
-.hashtag_item {
+.hashtag_item{
   margin-right: 5%;
   flex-grow: 3;
   display: inline-block;
   text-align: center;
 }
-
-.changePostHeader {
+.changePostHeader{
   width: 40px;
-  height: 40px;
+  height:40px;
   position: absolute;
   top: 130px;
-  right: 45%;
+  right:45%;
 }
-
 .croppa-container {
   background: linear-gradient(to bottom right, #efe7c7, #fff);
-  width: 100vw;
+  width:100vw;
   max-width: 500px;
   height: 220px;
   margin: 45px auto 0;
 }
-
-.writeBox >>> .icon-remove {
+.writeBox >>> .icon-remove{
   margin-right: 15px;
   margin-top: 10px;
 }

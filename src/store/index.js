@@ -458,11 +458,11 @@ export default new Vuex.Store({
                     commit('loadImdbIds', response.data.list)
                     if (response.data.list.length === 0) {
                         // ---------------- if watch list is empty we add godfather for ex
-                        state.watchListMoviesIDs.push('238')
+                        state.watchListMoviesIDs.push('tt0903747')
                     }
                 }).catch(function (error) {
                     errors += 1
-                    clientDB.getWatchList().then((result) => {
+                    clientDB.getWatchList().then((result)=>{
                         state.watchListMoviesList = result
                     })
                     if (!error.response) {
@@ -476,8 +476,11 @@ export default new Vuex.Store({
                 for (id in state.watchListMoviesIDs) {
                     const options = {
                         method: 'GET',
-                        url: 'https://api.themoviedb.org/3/movie/' + state.watchListMoviesIDs[id]
-                        + '?api_key=e7315115ab850a2d868d24e34defade3&language=en-US'
+                        url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + state.watchListMoviesIDs[id],
+                        headers: {
+                            'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
+                            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
+                        }
                     };
                     await axios.request(options).then(function (response) {
                         watchListPosts.push(response.data);
@@ -491,8 +494,9 @@ export default new Vuex.Store({
                     });
                     if (errors === 0) {
                         await clientDB.putWatchList(watchListPosts)
-                    } else {
-                        clientDB.getWatchList().then((result) => {
+                    }
+                    else {
+                        clientDB.getWatchList().then((result)=>{
                             state.watchListMoviesList = result
                         })
                     }
@@ -514,14 +518,18 @@ export default new Vuex.Store({
              */
             const options = {
                 method: 'GET',
-                url: 'https://api.themoviedb.org/3/search/movie?api_key=e7315115ab850a2d868d24e34defade3&language=en-US&page=1&include_adult=true',
-                params: {query: search}
+                url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
+                params: {s: search, page: '1', r: 'json'},
+                headers: {
+                    'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
+                    'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com'
+                }
             };
 
             await axios.request(options).then(function (response) {
-                let res = response.data.results
+                let res = response.data.Search
                 res = res.filter((mov) => {
-                    return mov.poster_path != null
+                    return mov.Poster !== "N/A"
                 })
                 searchListPosts.push(res)
             }).catch(function (error) {

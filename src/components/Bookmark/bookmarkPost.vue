@@ -6,15 +6,15 @@
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
             <div class="B-movie_header">
-              <img :alt="post.title" :src="'https://image.tmdb.org/t/p/w400' + post.poster_path" class="B-locandina"/>
+              <img :src="post.poster" :alt="post.title" class="B-locandina"/>
               <h1>{{ post.title }}</h1>
-              <span class="B-minutes">{{ post.release_date }}</span>
-              <p class="B-type">{{ post.overview }}</p>
+              <span class="B-minutes">{{ post.length }}</span>
+              <p class="B-type">{{ post.plot }}</p>
               <br>
               <i class="iconify" data-icon="bx:bxl-imdb" data-inline="true"
                  style="font-size: 40px; color: rgba(0, 0, 0, 0.5);"></i>
               <p style="display: inline-block; position: relative; bottom: 10px; left:7px; color: rgba(0, 0, 0, 0.7);">
-                {{ post.vote_average }} / 10</p>
+                {{ post.rating }} / 10</p>
             </div>
             <!-- -----------------        ///      --------------------- -->
 
@@ -28,7 +28,7 @@
           <!-- -----------------        ///       --------------------- -->
 
           <!-- -----------------        post background        --------------------- -->
-          <div :style="{background: `url('https://image.tmdb.org/t/p/w400${post.poster_path}')`}" class="B-blur_back B-bright_back"></div>
+          <div :style="{background: `url(${post.poster})`}" class="B-blur_back B-bright_back"></div>
           <!-- -----------------        ///        --------------------- -->
         </div>
       </vs-col>
@@ -41,7 +41,6 @@ import loading from "../loading";
 import {mapActions, mapState} from 'vuex'
 import swal from 'sweetalert'
 import PullToRefresh from "pulltorefreshjs";
-
 export default {
   name: "bookmarkPost",
   data() {
@@ -79,7 +78,7 @@ export default {
       onRefresh() {
         this.isLoaded = false
         self.$store.commit('toggleWatchListLoaded', false)
-        self.$store.dispatch('getMoviesList').then(() => {
+        self.$store.dispatch('getMoviesList').then(()=>{
           this.isLoaded = true
         })
       }
@@ -126,7 +125,7 @@ export default {
 
 .B-movie_card .B-info_section .B-movie_header h1 {
   color: black;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .B-movie_card .B-info_section .B-movie_header h4 {
@@ -146,9 +145,8 @@ export default {
 
 .B-movie_card .B-info_section .B-movie_header .B-type {
   display: inline-block;
-  color: #323232;
+  color: #3d3c3c;
   margin-left: 10px;
-  font-weight: bold;
 }
 
 .B-movie_card .B-info_section .B-movie_header .B-locandina {
@@ -231,10 +229,9 @@ export default {
   }
 
   .B-info_section {
-    background-color: rgba(255, 255, 255, 0.42);
+    background-color: rgba(255, 255, 255, 0.3);
     display: inline-grid;
   }
-
   .B-movie_card .B-info_section .B-movie_header h1 {
     font-size: 20px;
   }
