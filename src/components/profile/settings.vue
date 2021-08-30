@@ -23,13 +23,14 @@
           <!--            </template>-->
           <!--          </vs-switch>-->
         </vs-sidebar-item>
-        <div  @click="update()">
-        <vs-sidebar-item id="update">
-          <template #icon>
-            <i class="iconify" data-icon="bx:bx-cloud-snow"></i>
-          </template>
-          update
-        </vs-sidebar-item></div>
+        <div @click="update()">
+          <vs-sidebar-item id="update">
+            <template #icon>
+              <i class="iconify" data-icon="bx:bx-cloud-snow"></i>
+            </template>
+            update
+          </vs-sidebar-item>
+        </div>
         <vs-sidebar-item id="download">
           <template #icon>
             <i
@@ -159,8 +160,8 @@ export default {
         }
       });
     },
-    update(){
-    window.location.reload();
+    update() {
+      window.location.reload();
     },
     downloadTab() {
       window.open('https://download.filmclub.top', '_blank');

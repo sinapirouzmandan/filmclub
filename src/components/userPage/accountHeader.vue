@@ -1,6 +1,6 @@
 <template>
   <div id="top" class="topHeader">
-    <vs-dialog  blur v-model="reportActive">
+    <vs-dialog v-model="reportActive" blur>
       <template #header>
         <h4 class="not-margin">
           Report A User
@@ -19,7 +19,7 @@
         </li>
       </ul>
     </vs-dialog>
-    <vs-dialog blur v-model="reportPostOrComment">
+    <vs-dialog v-model="reportPostOrComment" blur>
       <template #header>
         <h5 class="not-margin">
           Report a post or comment
@@ -27,14 +27,15 @@
       </template>
       <ul>
         <li>
-          <p class="reportTxt">If you want to report a post or comment go to the post and select report for the specific post.</p>
+          <p class="reportTxt">If you want to report a post or comment go to the post and select report for the specific
+            post.</p>
         </li>
         <li>
           <p class="reportTxt">Also you can report any comment by selecting the comment and choosing report.</p>
         </li>
       </ul>
     </vs-dialog>
-    <vs-dialog blur v-model="reportAccount">
+    <vs-dialog v-model="reportAccount" blur>
       <template #header>
         <h4 class="not-margin">
           Why are you reporting this account
@@ -169,9 +170,9 @@ export default {
   },
   methods: {
     reportUser(type) {
-      this.reportActive=false
-      this.reportPostOrComment=false
-      this.reportAccount=false
+      this.reportActive = false
+      this.reportPostOrComment = false
+      this.reportAccount = false
       const report = {
         content_type: 'Account',
         refrence: this.$route.params.user,
@@ -285,6 +286,7 @@ export default {
   background-color: #0a0d0e;
   object-fit: cover;
 }
+
 .username {
   margin-top: 15px;
   width: 100%;
@@ -298,15 +300,19 @@ export default {
 .username p {
   width: 100%;
 }
+
 .avatars {
   margin-top: 50px;
 }
+
 .editProfile {
   margin-top: 60px;
 }
+
 .backAvatar {
   top: 0;
 }
+
 .avatar {
   width: 90px;
   height: 90px;
@@ -316,24 +322,27 @@ export default {
 .followBtn {
   background-color: rgba(70, 126, 246, 0.22);
 }
+
 .report {
   position: absolute;
   right: 2rem;
-  top:1rem;
+  top: 1rem;
   font-size: 27px;
   background-color: rgba(163, 163, 163, 0.45);
   padding: 2px;
-  width:27px;
+  width: 27px;
   height: 27px;
   border-radius: 50%;
 }
-.reportItem{
-  width:100%;
-  height:40px;
+
+.reportItem {
+  width: 100%;
+  height: 40px;
   color: #d9d9d9;
   text-align: left;
 }
-.reportTxt{
+
+.reportTxt {
   color: #d9d9d9;
   text-align: left;
   font-size: 14px;

@@ -1,7 +1,7 @@
 <template>
   <div class="bodyMargin">
     <div class="headerH2">
-      <vs-avatar badge badge-color="success" size="70" style="margin: 0 auto;" circle>
+      <vs-avatar badge badge-color="success" circle size="70" style="margin: 0 auto;">
         <img :src="userAvatar" alt="avatar" class="profileImg">
         <template #badge>
           {{ watchListLengthCalc }}
@@ -10,7 +10,7 @@
       <h2 style="display: inline-block;">watch list</h2>
     </div>
     <hr>
-      <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
+    <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
     <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{ endOrLoad }}</p>
     <vs-button
         circle
@@ -54,7 +54,7 @@
       <vs-row>
         <vs-col v-for="(option,index) in searchListMoviesList['0']" :key="index" lg="3" sm="4" xs="6">
           <div class="chooseMov">
-            <img v-lazy="option.Poster" :alt="option.Title" @click="addItem(option.imdbID)">
+            <img v-lazy="'https://image.tmdb.org/t/p/w300' + option.poster_path" :alt="option.Title" @click="addItem(option.id)">
           </div>
         </vs-col>
       </vs-row>
@@ -117,7 +117,7 @@ export default {
 }
 </script>
 <style>
-.ptr--ptr{
+.ptr--ptr {
   background-color: white;
 }
 </style>

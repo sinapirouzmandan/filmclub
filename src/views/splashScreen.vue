@@ -1,13 +1,13 @@
 <template>
-<div id="splashOverlay">
-  <div class="logo" style="font-family: 'magic';">
-    <h1 style="font-family: 'magic';">Film</h1>
-    <h1 class="subH1" style="font-family: 'magic';">Club</h1>
-    <div class="loader-centre">
-      <div class="loader-loader"></div>
+  <div id="splashOverlay">
+    <div class="logo" style="font-family: 'magic';">
+      <h1 style="font-family: 'magic';">Film</h1>
+      <h1 class="subH1" style="font-family: 'magic';">Club</h1>
+      <div class="loader-centre">
+        <div class="loader-loader"></div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -22,32 +22,36 @@ export default {
 <style scoped>
 #splashOverlay {
   position: fixed;
-  top:0;
-  right:0;
-  width:100%;
-  height:100vh;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
   background-color: black;
   display: flex;
   align-items: center;
   justify-items: center;
   justify-content: center;
-  font-family: magic,serif;
+  font-family: magic, serif;
   z-index: 9999999;
 }
+
 * {
   outline-width: 0;
 }
+
 h1 {
   text-align: center;
 }
+
 .subH1 {
   margin-top: -1rem;
 }
+
 .loader-centre {
   height: 50px;
   width: 100%;
   display: inline-block;
- display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -62,9 +66,11 @@ h1 {
   border-radius: 50%;
   animation: spin 0.5s linear infinite;
 }
-.logo{
+
+.logo {
   margin-top: -5rem;
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

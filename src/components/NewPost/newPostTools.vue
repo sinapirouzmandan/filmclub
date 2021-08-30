@@ -1,33 +1,33 @@
 <template>
   <div class="tools">
     <div class="top-tools">
-          <div @click="back" id="backDiv">
-            <i class='iconify close' data-icon="mdi:close"></i>
-          </div>
+      <div id="backDiv" @click="back">
+        <i class='iconify close' data-icon="mdi:close"></i>
+      </div>
       <div class="space"></div>
       <div class="buttons">
         <vs-button
-            @click="$emit('saveAsDraft')"
             animation-type="vertical"
             class="sendPost"
             color="#999898"
             flat
             gradient
+            @click="$emit('saveAsDraft')"
         >
           draft
         </vs-button>
-          <vs-button
-              @click="isLoading === false ? $emit('sendThePost') : console.log('wait')"
-              animation-type="vertical"
-              class="sendPost"
-              flat
-              :loading="isLoading"
-              color="#5b3cc4"
-              gradient
-              id="saveBtn"
-          >
-            share
-          </vs-button>
+        <vs-button
+            id="saveBtn"
+            :loading="isLoading"
+            animation-type="vertical"
+            class="sendPost"
+            color="#5b3cc4"
+            flat
+            gradient
+            @click="isLoading === false ? $emit('sendThePost') : console.log('wait')"
+        >
+          share
+        </vs-button>
       </div>
     </div>
   </div>
@@ -86,22 +86,25 @@ export default {
   float: right;
   margin-right: 15%;
   margin-top: 7px;
-  width:50%;
+  width: 50%;
 }
-#saveBtn{
+
+#saveBtn {
   float: right;
   position: relative;
-  right:0;
+  right: 0;
 }
-.buttons{
-  width:45%;
+
+.buttons {
+  width: 45%;
   background-color: #1e2023;
   display: flex;
   position: absolute;
-  right:0;
+  right: 0;
   float: right;
 }
-.space{
-  width:45%;
+
+.space {
+  width: 45%;
 }
 </style>

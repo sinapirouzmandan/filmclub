@@ -5,13 +5,14 @@ import qs from 'querystring'
 import router from "../router";
 import swal from 'sweetalert'
 import * as clientDB from './clientDB'
+
 let botPattern = "(googlebot/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
 let re = new RegExp(botPattern, 'i');
 let userAgent = navigator.userAgent;
 if (re.test(userAgent)) {
     axios.interceptors.request.use(function (config) {
         const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpib3QiLCJlbWFpbCI6ImJvdEBib3QuYm90IiwibmFtZSI6ImJvdCBhY2Nlc3MiLCJpYXQiOjE2Mjk0Nzk2OTl9.L2oNitBKRLt-vZkkSpHV1vVPZYpg3CA4pT7xYv5xlq4';
-        config.headers.authorization =  token;
+        config.headers.authorization = token;
         return config;
     });
 }
@@ -59,7 +60,7 @@ export default new Vuex.Store({
         userFollowers: null,
         userFollowings: null,
         // followers and followings
-        followers:[],
+        followers: [],
         followings: [],
         userPosts: [],
         //single post
@@ -183,8 +184,7 @@ export default new Vuex.Store({
             let userAgent = navigator.userAgent;
             if (re.test(userAgent)) {
                 state.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpib3QiLCJlbWFpbCI6ImJvdEBib3QuYm90IiwibmFtZSI6ImJvdCBhY2Nlc3MiLCJpYXQiOjE2Mjk0Nzk2OTl9.L2oNitBKRLt-vZkkSpHV1vVPZYpg3CA4pT7xYv5xlq4'
-            }
-            else if (state.token == null) {
+            } else if (state.token == null) {
                 if (localStorage.getItem('token') !== null || localStorage.getItem('token') !== 'null') {
                     state.token = localStorage.getItem('token')
                 }
@@ -231,46 +231,46 @@ export default new Vuex.Store({
             }))
             state.notifications = [...new Map(state.notifications.map(item => [item["commiter"] + item["message"], item])).values()]
         },
-        fetchFollowers(state,payload) {
+        fetchFollowers(state, payload) {
             state.followers = payload
         },
-        fetchFollowings (state,payload) {
+        fetchFollowings(state, payload) {
             state.followings = payload
         },
-        fetchUserFollowers(state,payload) {
+        fetchUserFollowers(state, payload) {
             state.userFollowers = payload
         },
-        fetchUserFollowings (state,payload) {
+        fetchUserFollowings(state, payload) {
             state.userFollowings = payload
         },
         // ---------------- List of posts, follower and following counters
-        fetchStatitics (state,payload) {
+        fetchStatitics(state, payload) {
             state.statitics.followings = payload.following
             state.statitics.followers = payload.followers
             state.statitics.posts = payload.posts
         },
-        fetchMyPosts (state,payload) {
+        fetchMyPosts(state, payload) {
             state.isPostsLoaded = true
-                state.myPosts = payload.sort((function (a, b) {
-                    return new Date(b.createdAt) - new Date(a.createdAt);
-                }))
+            state.myPosts = payload.sort((function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }))
         },
-        toggleMyPostsLoaded (state,payload) {
+        toggleMyPostsLoaded(state, payload) {
             state.isPostsLoaded = payload
         },
-        toggleHomeSavedPos (state,payload) {
+        toggleHomeSavedPos(state, payload) {
             state.savedPos = payload
         },
-        homePageNumberPlus(state){
+        homePageNumberPlus(state) {
             state.homePageNumber += 1
         },
-        homePageReverseNumberPlus(state){
+        homePageReverseNumberPlus(state) {
             state.homeReversePageNumber += 1
         },
-        fetchHomePostsFromCache (state,payload) {
+        fetchHomePostsFromCache(state, payload) {
             state.homePosts.push(...payload)
         },
-        updateCachePosts (state,payload) {
+        updateCachePosts(state, payload) {
             // payload.forEach((post) =>{
             //     let index = state.homePosts.findIndex((homePost) => homePost.id === post.id)
             //     console.log("index" + index)
@@ -278,20 +278,20 @@ export default new Vuex.Store({
             //     state.homePosts[index]['comments'] = post.comments
             //     state.homePosts[index]['isLiked'] = post.isLiked
             // })
-            state.homePosts.forEach((post)=>{
-                let index = payload.findIndex((payloadPost)=> payloadPost.id === post.id)
+            state.homePosts.forEach((post) => {
+                let index = payload.findIndex((payloadPost) => payloadPost.id === post.id)
                 post.likes = payload[index]['likes']
-                post.comments =   payload[index]['comments']
+                post.comments = payload[index]['comments']
                 post.isLiked = payload[index]['isLiked']
             })
         },
-        fetchUserPosts (state,payload) {
+        fetchUserPosts(state, payload) {
             state.userPosts = []
             state.userPosts = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
         },
-        fetchSinglePost (state,payload) {
+        fetchSinglePost(state, payload) {
             payload.post.body = JSON.parse(payload.post.body)
             payload.post.username = payload.username
             payload.post.avatar = payload.avatar
@@ -300,13 +300,13 @@ export default new Vuex.Store({
             payload.post.isLiked = payload.isLiked
             state.singlePost = payload.post
         },
-        fetchHomePosts (state,payload) {
+        fetchHomePosts(state, payload) {
             // ---------------- sort new packet consist of 10 posts based on date
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
             // ---------------- Check each post if  it needs a ^full post^ button
-            payload.forEach((post)=>{
+            payload.forEach((post) => {
                 let paragraph = ''
                 let paragraphIsSet = false
                 let needFullPost = false
@@ -314,21 +314,19 @@ export default new Vuex.Store({
                 let allTxtLen = 0
                 let generalText = ''
                 post.body = JSON.parse(post.body)
-                post.body.forEach((body)=>{
+                post.body.forEach((body) => {
                     if (body.type === 'paragraph') {
                         if (!paragraphIsSet) {
                             paragraph = body.data.text
                             paragraphIsSet = true
                             allTxtLen += body.data.text.length
-                            generalText +=  "\n" + body.data.text
-                        }
-                        else {
+                            generalText += "\n" + body.data.text
+                        } else {
                             needFullPost = true
                             allTxtLen += body.data.text.length
                             generalText += "\n" + body.data.text
                         }
-                    }
-                    else if (body.type === 'header' || body.type === 'image'){
+                    } else if (body.type === 'header' || body.type === 'image') {
                         needFullPost = true
                         hasImageOrHeader = true
                     }
@@ -336,8 +334,7 @@ export default new Vuex.Store({
                 if (allTxtLen < 300 && !hasImageOrHeader) {
                     needFullPost = false
                     paragraph = generalText
-                }
-                else if(needFullPost) {
+                } else if (needFullPost) {
                     paragraph += '...'
                 }
                 post.fullPostBtn = needFullPost
@@ -348,13 +345,13 @@ export default new Vuex.Store({
             state.homePosts.unshift(...payload)
             state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
         },
-        fetchOlderHomePosts (state,payload) {
+        fetchOlderHomePosts(state, payload) {
             // ---------------- sort new packet consist of 10 posts based on date
             payload = payload.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
             // ---------------- Check each post if  it needs a ^full post^ button
-            payload.forEach((post)=>{
+            payload.forEach((post) => {
                 let paragraph = ''
                 let paragraphIsSet = false
                 let needFullPost = false
@@ -362,21 +359,19 @@ export default new Vuex.Store({
                 let allTxtLen = 0
                 let generalText = ''
                 post.body = JSON.parse(post.body)
-                post.body.forEach((body)=>{
+                post.body.forEach((body) => {
                     if (body.type === 'paragraph') {
                         if (!paragraphIsSet) {
                             paragraph = body.data.text
                             paragraphIsSet = true
                             allTxtLen += body.data.text.length
-                            generalText +=  "\n" + body.data.text
-                        }
-                        else {
+                            generalText += "\n" + body.data.text
+                        } else {
                             needFullPost = true
                             allTxtLen += body.data.text.length
                             generalText += "\n" + body.data.text
                         }
-                    }
-                    else if (body.type === 'header' || body.type === 'image'){
+                    } else if (body.type === 'header' || body.type === 'image') {
                         needFullPost = true
                         hasImageOrHeader = true
                     }
@@ -384,8 +379,7 @@ export default new Vuex.Store({
                 if (allTxtLen < 300 && !hasImageOrHeader) {
                     needFullPost = false
                     paragraph = generalText
-                }
-                else if(needFullPost) {
+                } else if (needFullPost) {
                     paragraph += '...'
                 }
                 post.fullPostBtn = needFullPost
@@ -396,42 +390,39 @@ export default new Vuex.Store({
             state.homePosts.push(...payload)
             state.homePosts = [...new Map(state.homePosts.map(item => [item["id"], item])).values()]
         },
-        fetchPostComments (state,payload) {
+        fetchPostComments(state, payload) {
             payload.docs = payload.docs.sort((function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             }))
             const now = new Date();
             state.hasNextPage = payload.hasNextPage
-            payload.docs.forEach((comment)=>{
+            payload.docs.forEach((comment) => {
                 let commentDate = new Date(comment.createdAt);
                 let passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60 / 24)
                 if (passed > 0) {
                     comment.date = passed + ' days'
-                }
-                else {
+                } else {
                     passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60 / 60)
                     if (passed > 0) {
                         comment.date = passed + ' hours'
-                    }
-                    else {
+                    } else {
                         passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000 / 60)
                         if (passed > 0) {
                             comment.date = passed + ' minutes'
-                        }
-                        else {
+                        } else {
                             passed = Math.floor((now.getTime() - commentDate.getTime()) / 1000)
                             comment.date = passed + ' seconds'
                         }
                     }
                 }
-                comment.child =[]
+                comment.child = []
                 state.postComments.push(comment)
                 state.postComments = [...new Map(state.postComments.map(item => [item["_id"], item])).values()]
             })
         },
         removeDeletedPostFromHome(state, postID) {
             state.homePosts = state.homePosts.filter(post => post.id !== postID)
-            clientDB.putHomePosts(state.homePosts).catch(()=>{
+            clientDB.putHomePosts(state.homePosts).catch(() => {
                 console.log("can't access local DB")
             })
         },
@@ -467,11 +458,11 @@ export default new Vuex.Store({
                     commit('loadImdbIds', response.data.list)
                     if (response.data.list.length === 0) {
                         // ---------------- if watch list is empty we add godfather for ex
-                        state.watchListMoviesIDs.push('tt0068646')
+                        state.watchListMoviesIDs.push('238')
                     }
                 }).catch(function (error) {
                     errors += 1
-                    clientDB.getWatchList().then((result)=>{
+                    clientDB.getWatchList().then((result) => {
                         state.watchListMoviesList = result
                     })
                     if (!error.response) {
@@ -485,11 +476,8 @@ export default new Vuex.Store({
                 for (id in state.watchListMoviesIDs) {
                     const options = {
                         method: 'GET',
-                        url: 'https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/' + state.watchListMoviesIDs[id],
-                        headers: {
-                            'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
-                            'x-rapidapi-host': 'imdb-internet-movie-database-unofficial.p.rapidapi.com'
-                        }
+                        url: 'https://api.themoviedb.org/3/movie/' + state.watchListMoviesIDs[id]
+                        + '?api_key=e7315115ab850a2d868d24e34defade3&language=en-US'
                     };
                     await axios.request(options).then(function (response) {
                         watchListPosts.push(response.data);
@@ -503,9 +491,8 @@ export default new Vuex.Store({
                     });
                     if (errors === 0) {
                         await clientDB.putWatchList(watchListPosts)
-                    }
-                    else {
-                        clientDB.getWatchList().then((result)=>{
+                    } else {
+                        clientDB.getWatchList().then((result) => {
                             state.watchListMoviesList = result
                         })
                     }
@@ -527,18 +514,14 @@ export default new Vuex.Store({
              */
             const options = {
                 method: 'GET',
-                url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
-                params: {s: search, page: '1', r: 'json'},
-                headers: {
-                    'x-rapidapi-key': '6bca954daemshef1d69288a7320cp192bb1jsnbc1d047ddea8',
-                    'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com'
-                }
+                url: 'https://api.themoviedb.org/3/search/movie?api_key=e7315115ab850a2d868d24e34defade3&language=en-US&page=1&include_adult=true',
+                params: {query: search}
             };
 
             await axios.request(options).then(function (response) {
-                let res = response.data.Search
+                let res = response.data.results
                 res = res.filter((mov) => {
-                    return mov.Poster !== "N/A"
+                    return mov.poster_path != null
                 })
                 searchListPosts.push(res)
             }).catch(function (error) {
@@ -648,7 +631,7 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async getUserProfile({commit, state,dispatch}) {
+        async getUserProfile({commit, state, dispatch}) {
             /**
              * api for getting user, it self data
              * including :
@@ -673,9 +656,9 @@ export default new Vuex.Store({
                     userInf = response.data
                     commit('toggleProfileLoaded', true)
                     NoErr = true
-                    state.version +=1
+                    state.version += 1
                 }).catch(function (error) {
-                    clientDB.getUser().then((result)=>{
+                    clientDB.getUser().then((result) => {
                         state.userProfile = result
                     })
                     if (!error.response) {
@@ -686,14 +669,13 @@ export default new Vuex.Store({
                         let userAgent = navigator.userAgent;
                         if (re.test(userAgent)) {
                             dispatch('botLogin')
-                        }
-                        else {
+                        } else {
                             commit('setToken', null)
                             window.location.reload()
                         }
                     }
                 });
-                if (NoErr){
+                if (NoErr) {
                     await clientDB.putUserInfo(userInf)
                 }
                 commit('fetchProfile', userInf)
@@ -751,7 +733,7 @@ export default new Vuex.Store({
                 })
             };
             await axios.request(options).then(function (response) {
-                if (response.data.message === 'Item removed successfully!'){
+                if (response.data.message === 'Item removed successfully!') {
                     commit('removeWatchListPost', id)
                 }
                 commit('changeErrMsg', response.data.message)
@@ -793,15 +775,15 @@ export default new Vuex.Store({
              * movies and series
              * @type {{method: string, url: string}}
              */
-                const options = {
-                    method: 'GET',
-                    url: `${state.baseURl}/boxoffice`
-                };
-                await axios.request(options).then(function (response) {
-                    commit('fetchBoxOffice', response.data.Post)
-                }).catch(function (error) {
-                    dispatch('errorHandler', error)
-                });
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/boxoffice`
+            };
+            await axios.request(options).then(function (response) {
+                commit('fetchBoxOffice', response.data.Post)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
         async getUserById({commit, state, dispatch}, user) {
             let userInfo = []
@@ -837,10 +819,10 @@ export default new Vuex.Store({
                     'authorization': `Bearer ${state.token}`
                 }
             };
-            await axios.request(options).then(()=>{
+            await axios.request(options).then(() => {
                 commit('changeErrMsg', null)
             }).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
         async searchUsers({state, dispatch, commit}, username) {
@@ -858,7 +840,7 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchSearchUsers', response.data)
             }).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
         async getFollowStatus({state, dispatch}, username) {
@@ -879,7 +861,7 @@ export default new Vuex.Store({
                 await axios.request(options).then((response) => {
                     state.followStatus = response.data.isFollowed
                 }).catch(function (error) {
-                        dispatch('errorHandler', error)
+                    dispatch('errorHandler', error)
                 });
             }
         },
@@ -894,7 +876,7 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchNotifications', response.data)
             }).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
         async updateProfilePhoto({state, dispatch, commit}, packet) {
@@ -915,7 +897,7 @@ export default new Vuex.Store({
                 commit('toggleProfileLoaded', false)
                 dispatch('getUserProfile')
             }).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
         async setNotificationsSeen({state, dispatch}) {
@@ -927,10 +909,10 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
-        async createNewPost ({state, dispatch}, post) {
+        async createNewPost({state, dispatch}, post) {
             state.isPostsLoaded = false
             const options = {
                 method: 'POST',
@@ -942,7 +924,7 @@ export default new Vuex.Store({
                 }
             };
             await axios.request(options).catch(function (error) {
-                    dispatch('errorHandler', error)
+                dispatch('errorHandler', error)
             });
         },
         async getFollowers({state, dispatch, commit}) {
@@ -977,33 +959,33 @@ export default new Vuex.Store({
                 });
             }
         },
-        async getUserFollowers({state, dispatch, commit},userId) {
-                const options = {
-                    method: 'GET',
-                    url: `${state.baseURl}/users/userfollowers/${userId}`,
-                    headers: {
-                        'authorization': `Bearer ${state.token}`
-                    }
-                };
-                await axios.request(options).then((response) => {
-                    commit('fetchUserFollowers', response.data.followers)
-                }).catch(function (error) {
-                    dispatch('errorHandler', error)
-                });
+        async getUserFollowers({state, dispatch, commit}, userId) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/users/userfollowers/${userId}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response) => {
+                commit('fetchUserFollowers', response.data.followers)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
-        async getUserFollowings({state, dispatch, commit},userId) {
-                const options = {
-                    method: 'GET',
-                    url: `${state.baseURl}/users/userfollowings/${userId}`,
-                    headers: {
-                        'authorization': `Bearer ${state.token}`
-                    }
-                };
-                await axios.request(options).then((response) => {
-                    commit('fetchUserFollowings', response.data.followings)
-                }).catch(function (error) {
-                    dispatch('errorHandler', error)
-                });
+        async getUserFollowings({state, dispatch, commit}, userId) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/users/userfollowings/${userId}`,
+                headers: {
+                    'authorization': `Bearer ${state.token}`
+                }
+            };
+            await axios.request(options).then((response) => {
+                commit('fetchUserFollowings', response.data.followings)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
         async getCountsInProfile({state, dispatch, commit}) {
             /**
@@ -1024,7 +1006,7 @@ export default new Vuex.Store({
                 });
             }
         },
-        async getMyPosts ({state, dispatch, commit}) {
+        async getMyPosts({state, dispatch, commit}) {
             if (!(state.isPostsLoaded)) {
                 if (state.token) {
                     const options = {
@@ -1039,25 +1021,25 @@ export default new Vuex.Store({
                         clientDB.putUserPosts(response.data.posts)
                     }).catch(function (error) {
                         dispatch('errorHandler', error)
-                        clientDB.getUserPosts().then((result)=>{
+                        clientDB.getUserPosts().then((result) => {
                             state.myPosts = result
                         })
                     });
                 }
             }
         },
-        async getUserPosts ({state, dispatch, commit}, username) {
-                    const options = {
-                        method: 'GET',
-                        url: `${state.baseURl}/posts/posts/${username}`
-                    };
-                    await axios.request(options).then((response) => {
-                        commit('fetchUserPosts', response.data.posts)
-                    }).catch(function (error) {
-                        dispatch('errorHandler', error)
-                    });
+        async getUserPosts({state, dispatch, commit}, username) {
+            const options = {
+                method: 'GET',
+                url: `${state.baseURl}/posts/posts/${username}`
+            };
+            await axios.request(options).then((response) => {
+                commit('fetchUserPosts', response.data.posts)
+            }).catch(function (error) {
+                dispatch('errorHandler', error)
+            });
         },
-        async getSinglePost ({state, dispatch, commit}, id) {
+        async getSinglePost({state, dispatch, commit}, id) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/single/${id}`,
@@ -1068,21 +1050,21 @@ export default new Vuex.Store({
             await axios.request(options).then((response) => {
                 commit('fetchSinglePost', response.data)
             }).catch(function (error) {
-                if (error.response.status === 404){
+                if (error.response.status === 404) {
                     commit('removeDeletedPostFromHome', id)
                     router.push('/postNotFound')
                 }
                 dispatch('errorHandler', error)
             });
         },
-        async toggleLike ({state, dispatch}, post_id) {
+        async toggleLike({state, dispatch}, post_id) {
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/posts/like`,
                 headers: {
                     'authorization': `Bearer ${state.token}`
                 },
-                data:{
+                data: {
                     post_id: post_id
                 }
             };
@@ -1090,14 +1072,13 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async getHomePosts ({state, dispatch, commit}, homeObj) {
+        async getHomePosts({state, dispatch, commit}, homeObj) {
             let oneWeekAgo = ''
             if (!homeObj.date) {
                 await dispatch('getDateFromServer')
                 oneWeekAgo = state.lastDateFromServer
-            }
-            else {
-                oneWeekAgo  = '2021-07-09T15:19:28.750Z'
+            } else {
+                oneWeekAgo = '2021-07-09T15:19:28.750Z'
             }
             const options = {
                 method: 'GET',
@@ -1105,19 +1086,19 @@ export default new Vuex.Store({
                 headers: {
                     'authorization': `Bearer ${state.token}`
                 },
-                params:{
+                params: {
                     first_date: homeObj.date ? homeObj.date : oneWeekAgo
                 }
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 commit('fetchHomePosts', response.data.docs)
                 state.homeHasNextPage = response.data.hasNextPage
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async getOlderHomePosts ({state, dispatch, commit}, homeObj) {
-            if (!state.homeReversePageDate){
+        async getOlderHomePosts({state, dispatch, commit}, homeObj) {
+            if (!state.homeReversePageDate) {
                 state.homeReversePageDate = homeObj.date
                 console.log('change')
             }
@@ -1132,16 +1113,16 @@ export default new Vuex.Store({
                 }
             };
             if (state.homeHasPrevPage) {
-            await axios.request(options).then((response) => {
-                commit('fetchOlderHomePosts', response.data.docs)
-                state.homeHasPrevPage = response.data.hasNextPage
-                commit('homePageReverseNumberPlus')
-            }).catch(function (error) {
-                dispatch('errorHandler', error)
-            });
-        }
+                await axios.request(options).then((response) => {
+                    commit('fetchOlderHomePosts', response.data.docs)
+                    state.homeHasPrevPage = response.data.hasNextPage
+                    commit('homePageReverseNumberPlus')
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
         },
-        async refreshCachePostsStatus ({state, dispatch, commit}, postIDs) {
+        async refreshCachePostsStatus({state, dispatch, commit}, postIDs) {
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/posts/refresh_cache`,
@@ -1152,13 +1133,13 @@ export default new Vuex.Store({
                     posts: JSON.stringify(postIDs)
                 }
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 commit('updateCachePosts', response.data.updates)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async getPostComments ({state, dispatch, commit}, getObj) {
+        async getPostComments({state, dispatch, commit}, getObj) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/comments/post/${getObj.postID}/${getObj.page}`,
@@ -1169,13 +1150,13 @@ export default new Vuex.Store({
             if (getObj.page === 1) {
                 state.postComments = []
             }
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 commit('fetchPostComments', response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async updatePost ({state, dispatch},updateObj) {
+        async updatePost({state, dispatch}, updateObj) {
             const options = {
                 method: 'PUT',
                 url: `${state.baseURl}/posts/edit`,
@@ -1187,18 +1168,18 @@ export default new Vuex.Store({
                     postID: updateObj.postID,
                     body: JSON.stringify(updateObj.body.blocks),
                     reason: updateObj.reason,
-                    target:updateObj.target,
+                    target: updateObj.target,
                     spoiler: updateObj.spoiler,
                     critic: updateObj.critic
                 })
             };
-            await axios.request(options).then(()=>{
+            await axios.request(options).then(() => {
                 // console.log(response.data.message)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async deleteAPost ({state, dispatch, commit},delObj) {
+        async deleteAPost({state, dispatch, commit}, delObj) {
             const options = {
                 method: 'DELETE',
                 url: `${state.baseURl}/posts/delete`,
@@ -1209,17 +1190,17 @@ export default new Vuex.Store({
                 data: qs.stringify({
                     postID: delObj.postID,
                     reason: delObj.reason,
-                    target:delObj.target,
+                    target: delObj.target,
                 })
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 commit('changeErrMsg', response.data.message)
                 state.isPostsLoaded = false
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async addNewComment ({state, dispatch},comment) {
+        async addNewComment({state, dispatch}, comment) {
             if (comment.parent) {
                 let options = {
                     method: 'POST',
@@ -1234,16 +1215,16 @@ export default new Vuex.Store({
                         parent: comment.parent
                     })
                 };
-                await axios.request(options).then((response)=>{
-                    state.postComments.forEach((item)=>{
+                await axios.request(options).then((response) => {
+                    state.postComments.forEach((item) => {
                         if (item._id === comment.upperParent) {
                             item.child.unshift({
-                                _id:  response.data.comment.id,
+                                _id: response.data.comment.id,
                                 content: response.data.comment.content,
-                                user:response.data.comment.user,
+                                user: response.data.comment.user,
                                 createdAt: new Date(),
                                 specialID: comment.spacialID,
-                                userId:{
+                                userId: {
                                     avatar: state.userProfile.avatar,
                                     username: state.userProfile.username
                                 },
@@ -1254,8 +1235,7 @@ export default new Vuex.Store({
                 }).catch(function (error) {
                     dispatch('errorHandler', error)
                 });
-            }
-            else {
+            } else {
                 let options = {
                     method: 'POST',
                     url: `${state.baseURl}/posts/comment`,
@@ -1268,14 +1248,14 @@ export default new Vuex.Store({
                         post_id: comment.postID,
                     })
                 };
-                await axios.request(options).then((response)=>{
+                await axios.request(options).then((response) => {
                     state.postComments.unshift({
-                        _id:  response.data.comment.id,
+                        _id: response.data.comment.id,
                         content: response.data.comment.content,
-                        user:response.data.comment.user,
+                        user: response.data.comment.user,
                         createdAt: new Date(),
                         specialID: comment.spacialID,
-                        userId:{
+                        userId: {
                             avatar: state.userProfile.avatar
                         },
                         child: []
@@ -1285,7 +1265,7 @@ export default new Vuex.Store({
                 });
             }
         },
-        async getCommentsByParent ({state, dispatch},parent) {
+        async getCommentsByParent({state, dispatch}, parent) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/comments/parent/${parent.parent}`,
@@ -1294,17 +1274,16 @@ export default new Vuex.Store({
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
             };
-            await axios.request(options).then((response)=>{
-                state.postComments.forEach((item)=>{
+            await axios.request(options).then((response) => {
+                state.postComments.forEach((item) => {
                     if (item._id === parent.upperParent) {
-                        response.data.comments.forEach((commentItem)=>{
+                        response.data.comments.forEach((commentItem) => {
                             item.child.push(commentItem)
                         })
-                    }
-                    else {
-                        item.child.forEach((subComment)=>{
+                    } else {
+                        item.child.forEach((subComment) => {
                             if (subComment._id === parent.parent) {
-                                response.data.comments.forEach((commentItem)=>{
+                                response.data.comments.forEach((commentItem) => {
                                     item.child.push(commentItem)
                                 })
                             }
@@ -1315,7 +1294,7 @@ export default new Vuex.Store({
                 dispatch('errorHandler', error)
             });
         },
-        async deleteAComment ({state, dispatch},id) {
+        async deleteAComment({state, dispatch}, id) {
             /**
              * Delete comment will be available for two groups
              * 1 -  reviewers can delete every single comment
@@ -1334,13 +1313,13 @@ export default new Vuex.Store({
                     commentID: id
                 })
             };
-            await axios.request(options).then(()=>{
+            await axios.request(options).then(() => {
                 // console.log(response.data)
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async getLikersList ({state, dispatch},id) {
+        async getLikersList({state, dispatch}, id) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/posts/likes/users/${id}`,
@@ -1349,13 +1328,13 @@ export default new Vuex.Store({
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 state.likers = response.data.users
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async report ({state, dispatch},report) {
+        async report({state, dispatch}, report) {
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/reports`,
@@ -1369,35 +1348,16 @@ export default new Vuex.Store({
                     type: report.type
                 })
             };
-            await axios.request(options).then(()=>{
-                state.errMassage=null
+            await axios.request(options).then(() => {
+                state.errMassage = null
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
         },
-        async subscribeToNajva ({state, dispatch},token) {
+        async subscribeToNajva({state, dispatch}, token) {
             const options = {
                 method: 'POST',
                 url: `${state.baseURl}/push/web`,
-                headers: {
-                    'authorization': `Bearer ${state.token}`,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    subscription: token,
-                })
-            };
-            await axios.request(options).then(()=>{
-                localStorage.setItem('filmclub-najva', token)
-            }).catch(function (error) {
-                dispatch('errorHandler', error)
-            });
-        },
-        async subscribeToNajvaApp ({state, dispatch},token) {
-            if (token !== null && token !== 'null' && token !== '') {
-            const options = {
-                method: 'POST',
-                url: `${state.baseURl}/push/app`,
                 headers: {
                     'authorization': `Bearer ${state.token}`,
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -1411,9 +1371,28 @@ export default new Vuex.Store({
             }).catch(function (error) {
                 dispatch('errorHandler', error)
             });
-        }
         },
-        async getDateFromServer ({state}) {
+        async subscribeToNajvaApp({state, dispatch}, token) {
+            if (token !== null && token !== 'null' && token !== '') {
+                const options = {
+                    method: 'POST',
+                    url: `${state.baseURl}/push/app`,
+                    headers: {
+                        'authorization': `Bearer ${state.token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: qs.stringify({
+                        subscription: token,
+                    })
+                };
+                await axios.request(options).then(() => {
+                    localStorage.setItem('filmclub-najva', token)
+                }).catch(function (error) {
+                    dispatch('errorHandler', error)
+                });
+            }
+        },
+        async getDateFromServer({state}) {
             const options = {
                 method: 'GET',
                 url: `${state.baseURl}/users/lastDate`,
@@ -1422,14 +1401,14 @@ export default new Vuex.Store({
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             };
-            await axios.request(options).then((response)=>{
+            await axios.request(options).then((response) => {
                 state.lastDateFromServer = response.data.date
             }).catch(function () {
                 console.log('first time sign in')
                 state.lastDateFromServer = '2021-07-09T15:19:28.750Z'
             });
         },
-        async setDateFromServer ({state}, date) {
+        async setDateFromServer({state}, date) {
             const options = {
                 method: 'PUT',
                 url: `${state.baseURl}/users/lastDate`,

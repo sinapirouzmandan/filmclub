@@ -129,7 +129,7 @@ export default {
   float: left;
   margin-right: 20px;
   height: 120px;
-  width:40vw;
+  width: 40vw;
   max-width: 200px;
   object-fit: cover;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.5);
@@ -177,7 +177,7 @@ export default {
     background-position: 50% 50% !important;
   }
 
-  .B-movie_header1 h1{
+  .B-movie_header1 h1 {
     width: 100%;
   }
 

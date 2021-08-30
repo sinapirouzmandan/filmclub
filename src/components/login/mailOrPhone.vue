@@ -4,7 +4,8 @@
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
       <!-- -----------------        Email        --------------------- -->
-      <vs-input v-model="user.email" border label-placeholder="Email Address" required @change="user.email = user.email.replace(/\s/g, '');">
+      <vs-input v-model="user.email" border label-placeholder="Email Address" required
+                @change="user.email = user.email.replace(/\s/g, '');">
         <template #icon>
           <i class='iconify' data-icon="mdi:contacts"></i>
         </template>
@@ -31,33 +32,34 @@
     <div class="privacy" @click="active=true">
       <span>Privacy policy</span>
     </div>
-    <vs-dialog scroll overflow-hidden auto-width v-model="active" class="white">
+    <vs-dialog v-model="active" auto-width class="white" overflow-hidden scroll>
       <template #header>
         <h3 class="white">
           Privacy Policy
         </h3>
       </template>
       <vs-button flat style="margin: 0 auto" @click="persian=true">Show Persian</vs-button>
-      <div class="con-content" v-show="!persian">
+      <div v-show="!persian" class="con-content">
         <h4 class="white">
           Information We Collect
         </h4>
         <p class="white left">
-          Film Club must receive or collect some information to operate, provide, improve, understand, customize, support, and market our Services, including when you install, access, or use our Services.
+          Film Club must receive or collect some information to operate, provide, improve, understand, customize,
+          support, and market our Services, including when you install, access, or use our Services.
         </p>
         <p class="white left">
           The types of information we receive and collect depend on how you use our Services.
         </p>
-          <p class="white left">
-            We require certain information to deliver our Services and without this we will not be able to provide
-            our Services to you.
-          </p>
-<p class="white left">
-  For example, you must provide your Email address to create an account to use our
-  Services.
-</p>
+        <p class="white left">
+          We require certain information to deliver our Services and without this we will not be able to provide
+          our Services to you.
+        </p>
+        <p class="white left">
+          For example, you must provide your Email address to create an account to use our
+          Services.
+        </p>
 
-<p class="white left">          Information You Provide :</p>
+        <p class="white left"> Information You Provide :</p>
 
         <ul>
           <li class="left white">
@@ -85,7 +87,8 @@
         <h4 class="white">
           How We Use Information
         </h4>
-        <p class="white left">We use information we have (subject to choices you make and applicable law) to operate, provide, improve, understand, customise,
+        <p class="white left">We use information we have (subject to choices you make and applicable law) to operate,
+          provide, improve, understand, customise,
           support, and market our Services. Here's how:</p>
         <ul class="white left">
           <li><b>Our services</b> We use information we have to operate and provide our Services,
@@ -94,7 +97,8 @@
             We also use information we have to understand how people use our Services;
             evaluate and improve our Services; research, develop, and test new services and features;
             and conduct troubleshooting activities. We also use your information to respond to you when
-            you contact us.</li>
+            you contact us.
+          </li>
           <li>
             <b>Third-Party Banner Ads.</b> We still do not allow third-party banner ads on our Services.
             We have no intention to introduce them, but if we ever do,
@@ -105,7 +109,7 @@
           Your data safety
         </h4>
         <p class="white left">We care about care data privacy and because of that we use ssl for a safe
-        communication and crypt all passwords with an string strategy
+          communication and crypt all passwords with an string strategy
         </p>
         <h4 class="white">
           Contact us
@@ -113,12 +117,13 @@
         <p class="white">If you face any problems in any use of our service or you have any questions contact us at:</p>
         <p class="white">support@filmclub.top</p>
       </div>
-      <div class="con-content fontIr" v-show="persian">
+      <div v-show="persian" class="con-content fontIr">
         <h4 class="white">
           چه اطلاعاتی جمع آوری می‌شود
         </h4>
         <p class="white right">
-          فیلم کلاب برای بهره برداری ، ارائه ، بهبود ، درک ، شخصی سازی ، پشتیبانی و بازاریابی خدمات  ، از جمله هنگام نصب ،برای دسترسی یا استفاده از خدمات ، باید برخی از اطلاعات را دریافت یا جمع آوری کند.
+          فیلم کلاب برای بهره برداری ، ارائه ، بهبود ، درک ، شخصی سازی ، پشتیبانی و بازاریابی خدمات ، از جمله هنگام نصب
+          ،برای دسترسی یا استفاده از خدمات ، باید برخی از اطلاعات را دریافت یا جمع آوری کند.
         </p>
         <p class="white right">
           انواع اطلاعاتی که دریافت و جمع آوری می کنیم به نحوه استفاده شما از خدمات ما بستگی دارد.
@@ -127,16 +132,16 @@
           ما برای ارائه خدمات خود به اطلاعات خاصی نیاز داریم و بدون اینها قادر به ارائه خدمات به شما نخواهیم بود
         </p>
         <p class="white right">
-          به عنوان مثال ، شما باید آدرس ایمیل خود را برای ایجاد یک حساب کاربری برای استفاده از خدمات  ما ارائه دهید
+          به عنوان مثال ، شما باید آدرس ایمیل خود را برای ایجاد یک حساب کاربری برای استفاده از خدمات ما ارائه دهید
         </p>
 
-        <p class="white right">       :   اطلاعاتی که شما ارائه می دهید</p>
+        <p class="white right"> : اطلاعاتی که شما ارائه می دهید</p>
 
         <ul dir="rtl">
-          <li class="right white" >
+          <li class="right white">
             <b>
               اطلاعات حساب شما
-            :
+              :
             </b>
             شما باید آدرس ایمیل و اطلاعات اولیه خود را ارائه دهید
             (از جمله نام نمایه به انتخاب خود و نام کامل شما) برای ایجاد حساب کاربری فیلم کلاب.
@@ -159,14 +164,15 @@
           این شامل اطلاعات مربوط به فعالیت شما
           ( IP ، مکان ،
           زمان بازدید و غیره)
-          و همچنین این داده ها  شامل اطلاعات مربوط به
+          و همچنین این داده ها شامل اطلاعات مربوط به
           زمان استفاده از سرویس نیز می باشد
         </p>
         <h4 class="white">
           نحوه استفاده ما از اطلاعات
         </h4>
-        <p class="white right">ما برای عملکرد ، ارائه ، بهبود ، درک ، سفارشی کردن ، از اطلاعاتی که داریم (مشروط به انتخاب شما و قانون قابل اجرا) استفاده می کنیم.
-            نحوه اجرا به صورت زیر است
+        <p class="white right">ما برای عملکرد ، ارائه ، بهبود ، درک ، سفارشی کردن ، از اطلاعاتی که داریم (مشروط به
+          انتخاب شما و قانون قابل اجرا) استفاده می کنیم.
+          نحوه اجرا به صورت زیر است
         </p>
         <ul class="white right" dir="rtl">
           <li><b>خدمات ما</b> ما از اطلاعاتی که برای کارکردن و ارائه خدمات خود داریم ، استفاده می کنیم ،
@@ -174,8 +180,8 @@
             و بهبود ، اصلاح و شخصی سازی خدمات ما.
             ما همچنین از اطلاعاتی استفاده می کنیم که باید بفهمیم مردم چگونه از خدمات ما استفاده می کنند.
             خدمات ما را ارزیابی و بهبود می بخشند. تحقیق ، توسعه و آزمایش خدمات و ویژگی های جدید ؛
-            و فعالیت های عیب یابی را انجام می دهیم. ما همچنین از اطلاعات شما برای پاسخگویی به شما  می کنیم
-            </li>
+            و فعالیت های عیب یابی را انجام می دهیم. ما همچنین از اطلاعات شما برای پاسخگویی به شما می کنیم
+          </li>
           <li>
             <b>تبلیغات بنر شخص ثالث.</b> ما هنوز تبلیغات بنر شخص ثالث را در سرویس های خود مجاز نمی دانیم.
             اما اگر تصمیمات عوض گردد این شرایط حریم خصوصی را تغییر می دهیم و به اطلاع شما می رسانیم
@@ -328,27 +334,33 @@ export default {
 h2 {
   margin-bottom: 1.5rem;
 }
-.privacy{
-  font-size:14px;
-  width:100%;
+
+.privacy {
+  font-size: 14px;
+  width: 100%;
   text-align: center;
   color: #aaaaaa;
-  margin-top:2rem;
+  margin-top: 2rem;
 }
-.white{
+
+.white {
   color: #b6b6b6;
 }
-.privacy p{
+
+.privacy p {
   color: white;
 }
-.left{
+
+.left {
   text-align: left;
 }
-.right{
+
+.right {
   text-align: right;
   line-height: 2;
 }
-.fontIr{
+
+.fontIr {
   font-family: Yekan;
 }
 </style>

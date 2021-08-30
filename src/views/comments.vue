@@ -1,92 +1,104 @@
 <template>
-<div id="container">
-  <div class="header">
-    <div class="back" @click="$router.push(`/post/post/${$route.params.postID}`)">
-      <i class="iconify" data-icon="bx:bx-arrow-back"></i>
-    </div>
-    <span id="commentHeader">Comments</span>
-    <div class="delete" v-if="selectedOne !== false&& !canReport" @click="deleteComment">
-      <i class="iconify" data-icon="mdi:trash-can-outline"></i>
-    </div>
-    <div class="close" @click="selectComment(selectedOne)"  v-if="selectedOne !== false && !canReport">
-      <i class="iconify" data-icon="mdi:close"></i>
-    </div>
-    <div class="close" @click="selectComment(lastSelectedForReport)"  v-if="canReport">
-      <i class="iconify" data-icon="mdi:close"></i>
-    </div>
-    <div class="delete" v-if="canReport" @click="reportComment(0)">
-      <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
-    </div>
-  </div>
-  <loading v-if="isLoading"/>
-  <div class="singleComment hasChild" v-for="(comment) in postComments" :key="comment._id"  :id="comment.specialID ? comment.specialID : comment._id ">
-    <vs-avatar class="avatar" circle>
-      <img style="object-fit: cover; width:100%; height:100%;" :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar" alt="user avatar">
-    </vs-avatar>
-    <div class="body" v-long-press="500"
-         @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
-      <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{ comment.userId.username }}</span> <span class="yekan" dir="rtl">{{comment.content}} </span></p>
-      <div class="sub">
-        <span class="subTexts">
-          <span>{{comment.createdAt | dateToString}}</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; inputPlaceholder=`reply to ${comment.userId.username}` ; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
-        </span>
-        <br>
-        <div class="replies" @click="loadChilds($event, comment._id, comment._id)" v-if="comment.hasChild">
-          <span>---- view replies</span>
-        </div>
+  <div id="container">
+    <div class="header">
+      <div class="back" @click="$router.push(`/post/post/${$route.params.postID}`)">
+        <i class="iconify" data-icon="bx:bx-arrow-back"></i>
+      </div>
+      <span id="commentHeader">Comments</span>
+      <div v-if="selectedOne !== false&& !canReport" class="delete" @click="deleteComment">
+        <i class="iconify" data-icon="mdi:trash-can-outline"></i>
+      </div>
+      <div v-if="selectedOne !== false && !canReport" class="close" @click="selectComment(selectedOne)">
+        <i class="iconify" data-icon="mdi:close"></i>
+      </div>
+      <div v-if="canReport" class="close" @click="selectComment(lastSelectedForReport)">
+        <i class="iconify" data-icon="mdi:close"></i>
+      </div>
+      <div v-if="canReport" class="delete" @click="reportComment(0)">
+        <i class="iconify" data-icon="mdi:alert-circle-outline"></i>
       </div>
     </div>
-    <div class="singleComment childs hasChild" v-for="(childComment) in comment.child" :key="childComment._id"  :id="childComment.specialID ? childComment.specialID : childComment._id " v-long-press="500"
-         @long-press-start="selectComment(childComment.specialID ? childComment.specialID : childComment._id, comment._id)" >
-      <vs-avatar class="avatar" circle>
-        <img style="object-fit: cover;width:100%; height:100%;" :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar" alt="user avatar">
+    <loading v-if="isLoading"/>
+    <div v-for="(comment) in postComments" :id="comment.specialID ? comment.specialID : comment._id " :key="comment._id"
+         class="singleComment hasChild">
+      <vs-avatar circle class="avatar">
+        <img :src="comment.userId.avatar ? (baseURl +  comment.userId.avatar) : alternativeAvatar"
+             alt="user avatar" style="object-fit: cover; width:100%; height:100%;">
       </vs-avatar>
-      <div class="body">
-        <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{childComment.userId.username}}</span> <span class="yekan" dir="rtl">{{childComment.content}}</span></p>
+      <div v-long-press="500" class="body"
+           @long-press-start="selectComment(comment.specialID ? comment.specialID : comment._id, comment._id)">
+        <p><span class="username" @click="$router.push(`/users/${comment.userId.username}`)">{{
+            comment.userId.username
+          }}</span> <span class="yekan" dir="rtl">{{ comment.content }} </span></p>
         <div class="sub">
         <span class="subTexts">
-          <span>{{childComment.createdAt | dateToString}}</span>
-          <span style="margin-left: 10%; display: inline-block;" @click="reply=true; focusType(); inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
+          <span>{{ comment.createdAt | dateToString }}</span>
+          <span style="margin-left: 10%; display: inline-block;"
+                @click="reply=true; inputPlaceholder=`reply to ${comment.userId.username}` ; parent=comment._id;upperParent=comment._id; focus(comment._id)">reply</span>
         </span>
           <br>
-          <div class="replies" @click="loadChilds($event, childComment._id, comment.id)" v-if="childComment.hasChild">
+          <div v-if="comment.hasChild" class="replies" @click="loadChilds($event, comment._id, comment._id)">
             <span>---- view replies</span>
           </div>
         </div>
       </div>
+      <div v-for="(childComment) in comment.child" :id="childComment.specialID ? childComment.specialID : childComment._id " :key="childComment._id"
+           v-long-press="500" class="singleComment childs hasChild"
+           @long-press-start="selectComment(childComment.specialID ? childComment.specialID : childComment._id, comment._id)">
+        <vs-avatar circle class="avatar">
+          <img :src="childComment.userId.avatar ? (baseURl +  childComment.userId.avatar) : alternativeAvatar"
+               alt="user avatar"
+               style="object-fit: cover;width:100%; height:100%;">
+        </vs-avatar>
+        <div class="body">
+          <p><span class="username"
+                   @click="$router.push(`/users/${comment.userId.username}`)">{{ childComment.userId.username }}</span>
+            <span class="yekan" dir="rtl">{{ childComment.content }}</span></p>
+          <div class="sub">
+        <span class="subTexts">
+          <span>{{ childComment.createdAt | dateToString }}</span>
+          <span style="margin-left: 10%; display: inline-block;"
+                @click="reply=true; focusType(); inputPlaceholder=`reply to ${childComment.userId.username}`; parent=childComment._id; upperParent=comment._id; focus(comment._id)">reply</span>
+        </span>
+            <br>
+            <div v-if="childComment.hasChild" class="replies" @click="loadChilds($event, childComment._id, comment.id)">
+              <span>---- view replies</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="addNewComment" @keypress.enter="postComment">
+      <div @click="postComment()">
+        <vs-avatar circle size="40" style="margin-left: 0.5rem;">
+          <img :src="userProfile.avatar ? baseURl + userProfile.avatar : alternativeAvatar" alt="user avatar"
+               style="width:100%; height:100%; object-fit: cover;">
+        </vs-avatar>
+      </div>
+      <vs-input id="commentInput" v-model="commentText" :placeholder="inputPlaceholder" border dir="right"/>
+      <span class="sendBtn" @click="postComment()">Post</span>
     </div>
   </div>
-  <div class="addNewComment" @keypress.enter="postComment">
-    <div @click="postComment()">
-      <vs-avatar circle size="40" style="margin-left: 0.5rem;">
-        <img :src="userProfile.avatar ? baseURl + userProfile.avatar : alternativeAvatar" alt="user avatar"
-        style="width:100%; height:100%; object-fit: cover;">
-      </vs-avatar>
-    </div>
-    <vs-input border v-model="commentText" :placeholder="inputPlaceholder" id="commentInput"  dir="right"/>
-    <span class="sendBtn" @click="postComment()">Post</span>
-  </div>
-</div>
 </template>
 
 <script>
 import {mapActions, mapState} from 'vuex'
 import LongPress from 'vue-directive-long-press'
 import loading from '../components/loading'
+
 export default {
   name: "comments",
   metaInfo: {
     title: 'Comments',
     titleTemplate: '%s | FilmClub'
   },
-  components:{
+  components: {
     loading
   },
   directives: {
     'long-press': LongPress
   },
-  data(){
+  data() {
     return {
       isLoading: false,
       commentText: '',
@@ -157,7 +169,7 @@ export default {
         } else {
           this.unfocus()
           this.selectedOne = false
-          this.reply=false
+          this.reply = false
           this.parent = null
           this.upperParent = null
           this.inputPlaceholder = 'New Comment'
@@ -165,17 +177,15 @@ export default {
       } else if (this.selectedOne) {
         this.unfocus()
         this.selectedOne = false
-      }
-      else {
+      } else {
         if (this.canReport) {
-          this.selectedOne=this.lastSelectedForReport
+          this.selectedOne = this.lastSelectedForReport
           this.unfocus()
-          this.selectedOne=false
-          this.canReport=false
-        }
-        else {
+          this.selectedOne = false
+          this.canReport = false
+        } else {
           document.getElementById(id).style.backgroundColor = 'rgba(172,172,172,0.64)'
-          this.canReport=true
+          this.canReport = true
           this.lastSelectedForReport = id
         }
 
@@ -188,7 +198,7 @@ export default {
       this.deleteID = ''
     },
     getMoreComments() {
-      if (this.hasNextPage){
+      if (this.hasNextPage) {
         window.onscroll = () => {
           let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
           if (bottomOfWindow) {
@@ -224,24 +234,23 @@ export default {
       })
     }
   },
-  computed:{
+  computed: {
     ...mapState(['postComments', 'baseURl', 'alternativeAvatar', 'userProfile', 'hasNextPage']),
   },
   created() {
     this.postID = this.$route.params.postID
     this.isLoading = true
     this.$store.commit('toggleNavbar', false);
-    if(this.$route.params.postID){
+    if (this.$route.params.postID) {
       const getObj = {
         postID: this.postID,
         page: 1
       }
-      this.getPostComments(getObj).then(()=>{
-        this.isLoading =false
+      this.getPostComments(getObj).then(() => {
+        this.isLoading = false
         this.getMoreComments()
       })
-    }
-    else {
+    } else {
       this.$router.push('/')
     }
   },
@@ -258,73 +267,86 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom:1.5rem;
+  margin-bottom: 1.5rem;
 }
+
 .back {
   margin-left: 5vw;
   font-size: 25px;
 }
-.delete{
-  position:absolute;
+
+.delete {
+  position: absolute;
   right: 7vw;
   font-size: 25px;
   text-align: right;
 }
-.close{
-  position:absolute;
+
+.close {
+  position: absolute;
   right: 20vw;
   font-size: 25px;
   text-align: right;
 }
-#commentHeader{
-  margin-left:5vw;
+
+#commentHeader {
+  margin-left: 5vw;
   font-size: 20px;
 }
-.singleComment{
-  width:100%;
-  height:auto;
+
+.singleComment {
+  width: 100%;
+  height: auto;
   box-sizing: border-box;
   padding: 10px 10px;
 }
-.avatar{
+
+.avatar {
   float: left;
 }
-.avatar img{
-  width:40px;
-  height:40px;
+
+.avatar img {
+  width: 40px;
+  height: 40px;
 }
-.body{
-  text-align:left;
-  font-size:15px;
+
+.body {
+  text-align: left;
+  font-size: 15px;
   margin-left: 1rem;
   position: relative;
-  top:-1rem;
+  top: -1rem;
   margin-left: 3.5rem;
 }
-.commentText{
+
+.commentText {
   word-break: break-all;
   direction: rtl;
 }
+
 .username {
   font-weight: bold;
-  text-align:left;
+  text-align: left;
 }
+
 .sub {
-  opacity:0.7;
+  opacity: 0.7;
   font-size: 13px;
-  margin-top:-0.7rem;
+  margin-top: -0.7rem;
 }
+
 .addNewComment {
-  position:fixed;
-  bottom:0;
+  position: fixed;
+  bottom: 0;
   box-sizing: border-box;
-  height:60px;
-  width:100%;
-  background-color:  var(--vs-navs);
+  height: 60px;
+  width: 100%;
+  background-color: var(--vs-navs);
   display: flex;
   align-items: center;
-  z-index:2;
+  z-index: 2;
 }
+
 .addCommentIcon {
   font-size: 18px;
   margin-left: 20px;
@@ -332,36 +354,44 @@ export default {
   border-radius: 50%;
   padding: 7px;
 }
+
 #commentInput {
   margin-left: 10px;
 
 }
-#commentInput>>> .vs-input {
+
+#commentInput >>> .vs-input {
   color: #d5cccc;
   font-size: 15px;
   text-align: right;
   direction: rtl;
-  width:100%;
+  width: 100%;
 }
-.vs-input-parent{
+
+.vs-input-parent {
   width: 65%;
 }
+
 #container {
   padding-bottom: 4rem;
 }
+
 .replies {
   font-size: 14px;
-  opacity:0.5;
+  opacity: 0.5;
   margin-top: 0.5rem;
 }
+
 .childs {
-  margin-left:10%;
-  width:90%;
+  margin-left: 10%;
+  width: 90%;
 }
-.yekan{
-  font-family:Yekan;
+
+.yekan {
+  font-family: Yekan;
 }
-.sendBtn{
+
+.sendBtn {
   font-size: 14px;
   margin-left: 3%;
   color: #6f6fff;

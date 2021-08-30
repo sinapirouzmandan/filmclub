@@ -2,11 +2,11 @@
   <div id="top" class="topHeader">
     <settings/>
     <crop
-        :location="location"
-    v-if="changePro" @close="changePro=false"
-    @profileChange="$emit('profileChange')"/>
-<!--    <input ref="header" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads('header')">-->
-    <div @click="changePro=true; location='header';" class="uploadHeader"></div>
+        v-if="changePro"
+        :location="location" @close="changePro=false"
+        @profileChange="$emit('profileChange')"/>
+    <!--    <input ref="header" accept="image/*" class="uploadHeader" type="file" @change="handleProfileUploads('header')">-->
+    <div class="uploadHeader" @click="changePro=true; location='header';"></div>
     <img :alt="'header photo posted by ' + userProfile.username" :src="userHeader" class="backAvatar">
     <svg aria-hidden="true" class="changeHeader" fill="white" viewBox="0 0 24 24">
       <g>
@@ -24,7 +24,8 @@
             Reviewer
           </template>
         </vs-avatar>
-        <svg :fill="userAvatar == (baseURl + '/public/images/avatar.jpg') ? '#0a0d0e' : 'white'" aria-hidden="true" class="changeProfile"
+        <svg :fill="userAvatar == (baseURl + '/public/images/avatar.jpg') ? '#0a0d0e' : 'white'" aria-hidden="true"
+             class="changeProfile"
              viewBox="0 0 24 24">
           <g>
             <path
@@ -33,7 +34,7 @@
                 d="M12 8.167c-2.68 0-4.86 2.18-4.86 4.86s2.18 4.86 4.86 4.86 4.86-2.18 4.86-4.86-2.18-4.86-4.86-4.86zm2 5.583h-1.25V15c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-1.25H10c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.25V11c0-.414.336-.75.75-.75s.75.336.75.75v1.25H14c.414 0 .75.336.75.75s-.336.75-.75.75z"></path>
           </g>
         </svg>
-        <div class="uploadAvatar" @click="changePro=true; location='avatar';" ></div>
+        <div class="uploadAvatar" @click="changePro=true; location='avatar';"></div>
         <div class="username">
           <h1 style="font-size: 17px;">{{ userProfile.name }}</h1>
           <i v-if="userProfile.username">@{{ userProfile.username }}</i>
@@ -135,17 +136,17 @@ export default {
       }
     },
     getNotif() {
-      if (this.errMassage){
-          this.$vs.notification({
-            duration: 3000,
-            progress: 'auto',
-            border: null,
-            position: 'top-center',
-            color: '#296186',
-            title: this.errMassage,
-          })
-          this.isLoading = false
-          this.$store.commit('changeErrMsg', null)
+      if (this.errMassage) {
+        this.$vs.notification({
+          duration: 3000,
+          progress: 'auto',
+          border: null,
+          position: 'top-center',
+          color: '#296186',
+          title: this.errMassage,
+        })
+        this.isLoading = false
+        this.$store.commit('changeErrMsg', null)
       }
     },
     sendReq() {
@@ -164,18 +165,15 @@ export default {
             color: '#296186',
             title: 'Name and Bio updated successfully',
           })
-        }
-        else if (this.changedBio) {
+        } else if (this.changedBio) {
           this.$store.dispatch('updateBio', this.userProfile.biography);
           this.getNotif()
           this.changedBio = false
-        }
-        else if (this.changedName) {
+        } else if (this.changedName) {
           this.$store.dispatch('updateName', this.userProfile.name)
           this.getNotif()
           this.changedName = false
-        }
-        else if (!(this.changedBio || this.changedName)) {
+        } else if (!(this.changedBio || this.changedName)) {
           this.editPro = false
         }
         this.editPro = false
@@ -215,6 +213,7 @@ export default {
   background-color: #0a0d0e;
   object-fit: cover;
 }
+
 .username {
   margin-top: 15px;
   width: 100%;
@@ -228,17 +227,21 @@ export default {
 .username p {
   width: 100%;
 }
+
 .avatars {
   margin-top: 110px;
 }
+
 .backAvatar {
   top: 50px;
 }
+
 .editProfile {
   position: absolute;
   margin-top: 60px;
   right: 2.5rem;
 }
+
 .input-field >>> .vs-input {
   background-color: #171b1d !important;
   color: #d5cccc;

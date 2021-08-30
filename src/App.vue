@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <transition name="fade">
-    <splashScreen v-if="splashScreenShow"/>
+      <splashScreen v-if="splashScreenShow"/>
     </transition>
     <transition name="slide">
 
-    <router-view/>
+      <router-view/>
     </transition>
     <navbar v-show="showNavbar"></navbar>
   </div>
@@ -14,7 +14,8 @@
 <script>
 import navbar from "./components/navbar";
 import splashScreen from "./views/splashScreen";
-import {mapState, mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
+
 export default {
   name: 'App',
   data() {
@@ -27,34 +28,35 @@ export default {
   computed: {
     ...mapState(['showNavbar', 'splashScreenShow'])
   },
-  methods:{
+  methods: {
     ...mapActions(['subscribeToNajva', 'subscribeToNajvaApp']),
-   readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for(var i=0;i < ca.length;i++) {
-    var c = ca[i];
-    while (c.charAt(0)==' ') c = c.substring(1,c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-  }
-  return null;
-}
+    readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
   },
   mounted() {
-    var self= this
-    window.najvaUserSubscribed = function(najva_user_token){
-        self.subscribeToNajva(najva_user_token)
+    var self = this
+    window.najvaUserSubscribed = function (najva_user_token) {
+      self.subscribeToNajva(najva_user_token)
     }
     this.$vs.setColor('primary', '#5b3cc4')
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.$store.commit('toggleSplashScreen')
-    }
-    else {
-      setTimeout(()=>{
+    } else {
+      setTimeout(() => {
         this.$store.commit('toggleSplashScreen')
-      },3000)
+      }, 3000)
     }
-    setInterval(()=>{ this.$store.dispatch('getNotificationList') }, 120000);
+    setInterval(() => {
+      this.$store.dispatch('getNotificationList')
+    }, 120000);
     try {
       if (this.$route.query['najva-app-token'] && localStorage.getItem('filmclub-najva') !== this.$route.query['najva-app-token']) {
         this.subscribeToNajvaApp(this.$route.query['najva-app-token'])
@@ -62,25 +64,24 @@ export default {
       let self = this
       if (!localStorage.getItem('filmclub-najva')) {
         var open = indexedDB.open("najva-native-subscription-database");
-        open.onerror = function() {
+        open.onerror = function () {
           console.log("Error loading database");
         }
         // eslint-disable-next-line no-unused-vars
-        open.onsuccess = function(event) {
+        open.onsuccess = function (event) {
           var db = open.result;
           var transaction = db.transaction(["token"]);
           var objectStore = transaction.objectStore("token");
           var request = objectStore.get('najva_token');
-          request.onerror = function() {
+          request.onerror = function () {
             console.log('err najva')
           };
-          request.onsuccess = function() {
+          request.onsuccess = function () {
             self.subscribeToNajva(request.result.value)
           };
         }
       }
-    }
-    catch(e) {
+    } catch (e) {
       console.log(e)
     }
 
@@ -112,9 +113,11 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-*{
+
+* {
   font-family: 'Roboto', sans-serif;
 }
+
 @font-face {
   font-family: 'magic';
   font-style: normal;
@@ -123,11 +126,13 @@ export default {
   url('./assets/magic-dafont.woff') format('woff');
   font-display: block;
 }
+
 @font-face {
   font-family: 'Yekan';
   src: url('./assets/yekan.ttf');
   font-weight: normal;
 }
+
 @font-face {
   font-family: 'Nazanin';
   src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
@@ -137,6 +142,7 @@ export default {
   url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
   font-weight: normal;
 }
+
 :root {
   --vs-gray-3: 0, 0, 0 !important;
   --vs-mainback: #1A1A1D;
@@ -146,10 +152,12 @@ export default {
   --vs-main-text: #fff;
   --vs-nav-icons: blue;
 }
+
 .linkified {
   color: #bccdea;
   text-decoration: none;
 }
+
 head, body {
   background-color: var(--vs-mainback);
   margin: 0;
@@ -157,9 +165,11 @@ head, body {
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
+
 .bodyMargin {
   margin: 10px;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -204,13 +214,16 @@ img {
 img {
   color: rgba(0, 0, 0, 0) !important;
 }
+
 .slide-leave-active,
 .slide-enter-active {
   transition: 0.3s;
 }
+
 .slide-enter {
   transform: translate(100%, 0);
 }
+
 .slide-leave-to {
   transform: translate(-100%, 0);
 }
@@ -219,9 +232,11 @@ img {
 .fade-enter-active {
   transition: 0.5s;
 }
+
 .fade-enter {
   opacity: 1;
 }
+
 .fade-leave-to {
   opacity: 0;
 }

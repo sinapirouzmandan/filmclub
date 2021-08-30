@@ -12,11 +12,17 @@
       <i class="iconify" data-icon="mdi:arrow-up-circle-outline"></i>
     </div>
     <loading v-if="isLoading" style="height:30px;"/>
-    <vs-alert v-for="(notification) in notifications" :key="notification.date" :class="notification.isSeen === false ? 'unseen' : ''">
-      <router-link :to="{path: notification.link.props ? (notification.link.url+'/'+notification.link.props) : notification.link.url }" style="text-decoration: none; height:100%; width:100%;">
-      <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
-      <span class="desc">
-    <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter' style="text-decoration: none; font-weight: 700;">@{{ notification.commiter }}</router-link></span> {{ notification.message }}
+    <vs-alert v-for="(notification) in notifications" :key="notification.date"
+              :class="notification.isSeen === false ? 'unseen' : ''">
+      <router-link
+          :to="{path: notification.link.props ? (notification.link.url+'/'+notification.link.props) : notification.link.url }"
+          style="text-decoration: none; height:100%; width:100%;">
+        <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
+        <span class="desc">
+    <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter'
+                                                          style="text-decoration: none; font-weight: 700;">@{{
+        notification.commiter
+      }}</router-link></span> {{ notification.message }}
       </span>
       </router-link>
     </vs-alert>
@@ -29,10 +35,11 @@
 <script>
 import {mapState} from 'vuex'
 import loading from '../components/loading'
+
 export default {
   name: "Notifications",
-  data(){
-    return{
+  data() {
+    return {
       isLoading: false
     }
   },
@@ -41,15 +48,15 @@ export default {
     this.$store.commit('toggleNavbar', true);
     this.loadNotification()
   },
-  components:{loading},
+  components: {loading},
   methods: {
     loadNotification() {
       this.isLoading = true
-      this.$store.dispatch('getNotificationList').then(()=>{
-        this.isLoading=false
+      this.$store.dispatch('getNotificationList').then(() => {
+        this.isLoading = false
         this.$store.dispatch('setNotificationsSeen')
-      }).catch(()=>{
-        this.isLoading=false
+      }).catch(() => {
+        this.isLoading = false
       })
       this.$forceUpdate()
     }
@@ -101,10 +108,12 @@ export default {
 .iconLoad {
   opacity: 0;
 }
-.notif >>> .vs-alert::after{
+
+.notif >>> .vs-alert::after {
   background: rgba(var(--vs-color), 0.2);
 }
-.notif >>> .unseen::after{
+
+.notif >>> .unseen::after {
   background: rgba(var(--vs-color), 1);
 }
 </style>

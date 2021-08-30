@@ -1,11 +1,11 @@
 <template>
   <div class="bodyMargin">
-    <div class="overlayLoad" v-if="isLoading">
+    <div v-if="isLoading" class="overlayLoad">
       <div class="loader">
-      <loading/>
+        <loading/>
       </div>
     </div>
-    <div class="uploadOverlay" v-if="uploadOverlay">
+    <div v-if="uploadOverlay" class="uploadOverlay">
       <div class="loader">
         <loading/>
       </div>
@@ -16,10 +16,9 @@
     <tumb-post/>
 
 
-
     <vs-button
-        circle
         :class="notifIcon"
+        circle
         color="#000"
         floating
         icon
@@ -77,14 +76,13 @@ export default {
     notifIcon() {
       if (!this.notificatonsCalc) {
         return 'notifIcon'
-      }
-      else {
+      } else {
         return 'notifIcon-active'
       }
     }
   },
-  data(){
-    return{
+  data() {
+    return {
       isLoading: true,
       uploadOverlay: false
     }
@@ -111,6 +109,7 @@ body, html {
   box-shadow: none;
   border: 1px solid white;
 }
+
 .notifIcon-active {
   position: absolute;
   z-index: 9;
@@ -121,25 +120,28 @@ body, html {
   box-shadow: none;
   border: 2px solid yellow;
 }
-.overlayLoad{
-  position:fixed;
-  top:0;
-  right:0;
+
+.overlayLoad {
+  position: fixed;
+  top: 0;
+  right: 0;
   background-color: var(--vs-navs);
-  width:100%;
-  height:100vh;
+  width: 100%;
+  height: 100vh;
   z-index: 10;
 }
+
 .loader {
   margin-top: 30vh;
 }
-.uploadOverlay{
-  position:fixed;
-  top:0;
-  right:0;
+
+.uploadOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
   background-color: rgba(135, 135, 135, 0.38);
-  width:100%;
-  height:100vh;
+  width: 100%;
+  height: 100vh;
   z-index: 10;
 }
 </style>

@@ -1,139 +1,136 @@
 import {openDB} from "idb";
-    async  function errorHandler() {
-        alert("We can't access your storage right now. you're post will not be available offline. check if your storage is not full" +
-            "please close the app and open again if you think now you have free storage")
-        localStorage.clear()
-    }
-    async function connectToDB() {
-        try {
-            return openDB('movieDB', 2, {
-                upgrade(db) {
-                    if (!(db.objectStoreNames.contains('watchList'))) {
-                        db.createObjectStore('watchList')
-                    }
-                    if (!(db.objectStoreNames.contains('user'))) {
-                        db.createObjectStore('user')
-                    }
-                    if (!(db.objectStoreNames.contains('myPosts'))) {
-                        db.createObjectStore('myPosts')
-                    }
-                    if (!(db.objectStoreNames.contains('homePosts'))) {
-                        db.createObjectStore('homePosts')
-                    }
+
+async function errorHandler() {
+    alert("We can't access your storage right now. you're post will not be available offline. check if your storage is not full" +
+        "please close the app and open again if you think now you have free storage")
+    localStorage.clear()
+}
+
+async function connectToDB() {
+    try {
+        return openDB('movieDB', 2, {
+            upgrade(db) {
+                if (!(db.objectStoreNames.contains('watchList'))) {
+                    db.createObjectStore('watchList')
                 }
-            });
-        }
-        catch (e){
-            await errorHandler()
-        }
+                if (!(db.objectStoreNames.contains('user'))) {
+                    db.createObjectStore('user')
+                }
+                if (!(db.objectStoreNames.contains('myPosts'))) {
+                    db.createObjectStore('myPosts')
+                }
+                if (!(db.objectStoreNames.contains('homePosts'))) {
+                    db.createObjectStore('homePosts')
+                }
+            }
+        });
+    } catch (e) {
+        await errorHandler()
     }
-    export async function putWatchList(post) {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction(['watchList'], 'readwrite')
-            let store = tx.objectStore('watchList')
+}
 
-            await store.put(post, 0)
-            db.close()
-        }
-        catch (e){
-            await errorHandler()
-        }
+export async function putWatchList(post) {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction(['watchList'], 'readwrite')
+        let store = tx.objectStore('watchList')
+
+        await store.put(post, 0)
+        db.close()
+    } catch (e) {
+        await errorHandler()
     }
+}
 
-    export async function getWatchList() {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction(['watchList'], 'readwrite')
-            let store = tx.objectStore('watchList')
-            let post = []
-            await store.getAll().then((posts) => {
-                post = posts[0]
-            });
-            db.close()
-            return post
-        }
-        catch (e){
-            await errorHandler()
-        }
+export async function getWatchList() {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction(['watchList'], 'readwrite')
+        let store = tx.objectStore('watchList')
+        let post = []
+        await store.getAll().then((posts) => {
+            post = posts[0]
+        });
+        db.close()
+        return post
+    } catch (e) {
+        await errorHandler()
     }
+}
 
-    export async function putUserInfo(user) {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction('user', 'readwrite')
-            let store = tx.objectStore('user')
+export async function putUserInfo(user) {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction('user', 'readwrite')
+        let store = tx.objectStore('user')
 
-            await store.put(user, 0)
-            db.close()
-        }
-        catch (e){
-            await errorHandler()
-        }
+        await store.put(user, 0)
+        db.close()
+    } catch (e) {
+        await errorHandler()
     }
+}
 
-    export async function getUser() {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction(['user'], 'readonly')
-            let store = tx.objectStore('user')
-            let user = {}
-            await store.getAll().then((data) => {
-                user = data[0]
-            });
-            db.close()
-            return user
-        }
-        catch (e){
-            await errorHandler()
-        }
+export async function getUser() {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction(['user'], 'readonly')
+        let store = tx.objectStore('user')
+        let user = {}
+        await store.getAll().then((data) => {
+            user = data[0]
+        });
+        db.close()
+        return user
+    } catch (e) {
+        await errorHandler()
     }
+}
 
-    export async function putUserPosts(posts) {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction('myPosts', 'readwrite')
-            let store = tx.objectStore('myPosts')
+export async function putUserPosts(posts) {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction('myPosts', 'readwrite')
+        let store = tx.objectStore('myPosts')
 
-            await store.put(posts, 0)
-            db.close()
-        }
-        catch (e){
-            await errorHandler()
-        }
+        await store.put(posts, 0)
+        db.close()
+    } catch (e) {
+        await errorHandler()
     }
+}
 
-    export async function getUserPosts() {
-        try {
-            let db = await connectToDB()
-            let tx = db.transaction(['myPosts'], 'readonly')
-            let store = tx.objectStore('myPosts')
-            let posts = {}
-            await store.getAll().then((data) => {
-                posts = data[0]
-            });
-            db.close()
-            return posts
-        }
-        catch (e){
-            await errorHandler()
-        }
+export async function getUserPosts() {
+    try {
+        let db = await connectToDB()
+        let tx = db.transaction(['myPosts'], 'readonly')
+        let store = tx.objectStore('myPosts')
+        let posts = {}
+        await store.getAll().then((data) => {
+            posts = data[0]
+        });
+        db.close()
+        return posts
+    } catch (e) {
+        await errorHandler()
     }
+}
+
 export async function putHomePosts(posts) {
     try {
         let db = await connectToDB()
         let tx = db.transaction('homePosts', 'readwrite')
         let store = tx.objectStore('homePosts')
-        let slicedPosts = posts.slice(0,10).map((post) => {
+        let slicedPosts = posts.slice(0, 10).map((post) => {
             return post;
         });
         await store.put(slicedPosts, 0)
         db.close()
-    }
-    catch (e){
+    } catch (e) {
         await errorHandler()
     }
 }
+
 export async function getHomePostsCache() {
     try {
         let db = await connectToDB()
@@ -145,8 +142,7 @@ export async function getHomePostsCache() {
         });
         db.close()
         return posts
-    }
-    catch (e){
+    } catch (e) {
         await errorHandler()
     }
 }

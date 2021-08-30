@@ -2,18 +2,18 @@
   <div class="container bodyMargin">
     <div v-for="(user, index) in searchedUsers" :key="index">
       <router-link :to="'/users/' + user.username" class="whiteTxt">
-      <div class="user">
-        <div class="divider"></div>
-        <div class="avatar">
-          <img :src="user.avatar ? (baseURl + user.avatar) : alternativeAvatar" alt="avatar" class="usersAvatar"/>
+        <div class="user">
+          <div class="divider"></div>
+          <div class="avatar">
+            <img :src="user.avatar ? (baseURl + user.avatar) : alternativeAvatar" alt="avatar" class="usersAvatar"/>
+          </div>
+          <p>
+            {{ user.username }}
+            <br/>
+            <i class="bio" style="text-align: left">{{ user.biography }} ...</i>
+          </p>
+          <div class="divider bottom"></div>
         </div>
-        <p>
-          {{ user.username }}
-          <br/>
-          <i class="bio" style="text-align: left">{{ user.biography }} ...</i>
-        </p>
-        <div class="divider bottom"></div>
-      </div>
       </router-link>
     </div>
     <loading v-if="isLoading"/>
@@ -87,8 +87,9 @@ export default {
   height: 100%;
   object-fit: cover;
 }
-.whiteTxt{
-  color:white;
+
+.whiteTxt {
+  color: white;
   font-weight: 550;
 }
 </style>

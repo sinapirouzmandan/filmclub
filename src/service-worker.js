@@ -39,8 +39,7 @@ workbox.routing.registerRoute(
 self.addEventListener('fetch', function (event) {
     if (event.request.method === 'GET' && event.request.url.indexOf('cdn.inspectlet.com') !== -1) {
         event.respondWith(fetch(event.request));
-        }
-    else {
+    } else {
         event.respondWith(
             caches.match(event.request).then(function (response) {
                 return response || fetch(event.request);
@@ -48,8 +47,8 @@ self.addEventListener('fetch', function (event) {
         );
     }
 });
-self.addEventListener("message", msg=>{
-    if (msg.data.action == 'skipWaiting'){
+self.addEventListener("message", msg => {
+    if (msg.data.action == 'skipWaiting') {
         self.skipWaiting()
     }
 })

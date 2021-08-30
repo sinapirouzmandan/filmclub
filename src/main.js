@@ -11,30 +11,31 @@ import Croppa from 'vue-croppa'
 import VueMatomo from 'vue-matomo';
 import replaceAllInserter from 'string.prototype.replaceall';
 import VueMeta from 'vue-meta'
+import linkify from 'vue-linkify'
+
 Vue.use(VueMeta)
 replaceAllInserter.shim();
-function generateGuestId(){
+
+function generateGuestId() {
     if (localStorage.getItem("guestID") === null) {
-        const id = 'guest-xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const id = 'guest-xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
         localStorage.setItem('guestID', id)
         return id
-    }
-    else {
+    } else {
         return localStorage.getItem('guestID')
     }
 }
-const userId = ()=>{
+
+const userId = () => {
     if (localStorage.getItem("token") === null) {
         return generateGuestId()
-    }
-    else {
+    } else {
         try {
             return JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['username']
-        }
-        catch {
+        } catch {
             return generateGuestId()
         }
     }
@@ -57,7 +58,7 @@ Vue.use(VueMatomo, {
     domains: '*.filmclub.top',
     preInitActions: []
 });
-import linkify from 'vue-linkify'
+
 Vue.directive('linkified', linkify)
 const loadimage = require('./assets/loading.gif')
 const errorimage = require('./assets/err.gif')
@@ -71,8 +72,7 @@ Vue.filter('truncate', function (text, length, suffix) {
     }
 });
 Vue.filter('sanitize', function (text) {
-    return text.replaceAll('nbsp', ' ').replaceAll('& ;', '').replaceAll('<br>', '\n').
-        replaceAll('script', '').replaceAll('alert', '').replaceAll('&amp;', '&')
+    return text.replaceAll('nbsp', ' ').replaceAll('& ;', '').replaceAll('<br>', '\n').replaceAll('script', '').replaceAll('alert', '').replaceAll('&amp;', '&')
 });
 Vue.filter('dateToString', function (text) {
     const now = new Date()
@@ -82,35 +82,29 @@ Vue.filter('dateToString', function (text) {
         Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60 / 24)
         if (Difference_In_Time > 1) {
             Difference_In_Time += ' days ago'
-        }
-        else {
+        } else {
             Difference_In_Time += ' day ago'
         }
-    }
-    else if(Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
+    } else if (Math.floor(Difference_In_Time / 1000 / 60 / 60) > 0) {
         Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 / 60)
         if (Difference_In_Time > 1) {
             Difference_In_Time += ' hours ago'
-        }
-        else {
+        } else {
             Difference_In_Time += ' hour ago'
         }
-    }
-    else {
-        Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60 )
-        if(Difference_In_Time > 0) {
+    } else {
+        Difference_In_Time = Math.floor(Difference_In_Time / 1000 / 60)
+        if (Difference_In_Time > 0) {
             if (Difference_In_Time > 1) {
                 Difference_In_Time += ' minutes ago'
-            }
-            else {
+            } else {
                 Difference_In_Time += 'minute ago'
             }
-        }
-            else {
+        } else {
             Difference_In_Time = ' Just now'
         }
     }
-        return Difference_In_Time
+    return Difference_In_Time
 });
 Vue.use(VueLazyload, {
     preLoad: 2,

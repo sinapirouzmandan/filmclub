@@ -5,27 +5,27 @@
       <vs-col v-for="(post,index) in myPosts" :key="index" class="tumbContainer" w="6" xs="12">
         <vs-card type="3" @click="$router.push(`/post/${encodeURIComponent(post.title)}/${post.id}`)">
           <template #title>
-            <h3>{{post.title}}</h3>
+            <h3>{{ post.title }}</h3>
           </template>
           <template #img>
             <img v-lazy="post.poster" alt="image">
           </template>
           <template #text>
             <p>
-              {{post.body | sanitize}}
+              {{ post.body | sanitize }}
             </p>
           </template>
           <template #interactions>
             <vs-button danger icon>
               <i class="iconify" data-icon='bx:bxs-heart'></i>
               <span>
-            {{post.likes}}
+            {{ post.likes }}
           </span>
             </vs-button>
             <vs-button class="btn-chat" primary shadow style="color: white">
               <i class="iconify" data-icon='bx:bx-chat'></i>
               <span class="span">
-           {{post.comments}}
+           {{ post.comments }}
         </span>
             </vs-button>
           </template>
@@ -39,22 +39,23 @@
 <script>
 import {mapActions, mapState} from 'vuex'
 import loading from '../loading'
+
 export default {
   name: "tumbPost",
-  data(){
+  data() {
     return {
       isLoading: false
     }
   },
-  methods:{
+  methods: {
     ...mapActions(['getMyPosts'])
   },
-  computed:{
+  computed: {
     ...mapState(['myPosts'])
   },
-  mounted(){
+  mounted() {
     this.isLoading = true
-    this.getMyPosts().then(()=>{
+    this.getMyPosts().then(() => {
       this.isLoading = false
     })
   },

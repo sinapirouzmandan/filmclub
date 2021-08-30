@@ -6,9 +6,8 @@
         <Notifications v-if="!isMobile" :position="position"/>
       </vs-col>
       <vs-col lg="6" sm="12" xs="12">
-          <posts/>
+        <posts/>
       </vs-col>
-
     </vs-row>
     <p style="margin-bottom: 30px; opacity: 0.1; font-size:15px;">end of content ...</p>
   </div>
@@ -18,6 +17,7 @@
 import fixedHead from "../components/Home/fixedHead";
 import singlePost from '../components/Home/singlePost'
 import Notifications from "./Notifications";
+
 export default {
   name: 'Home',
   metaInfo: {
@@ -44,7 +44,7 @@ export default {
     this.$store.commit('toggleNavbar', true);
   },
   mounted() {
-    this.$store.dispatch('getUserProfile').then(()=>{
+    this.$store.dispatch('getUserProfile').then(() => {
       this.$store.dispatch('getNotificationList')
     })
   }

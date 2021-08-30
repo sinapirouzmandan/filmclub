@@ -48,7 +48,7 @@ export default {
     ...mapState(['endOrLoad']),
   },
   mounted() {
-    let self= this
+    let self = this
     PullToRefresh.init({
       mainElement: 'body',
       onRefresh() {

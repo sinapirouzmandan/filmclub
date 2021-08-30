@@ -9,7 +9,7 @@ let botPattern = "(googlebot/|bot|Googlebot-Mobile|Googlebot-Image|Google favico
 let re = new RegExp(botPattern, 'i');
 let userAgent = navigator.userAgent;
 if (re.test(userAgent)) {
-    token= false
+    token = false
 }
 const routes = [
     {
@@ -117,8 +117,7 @@ const router = new VueRouter({
     }
 })
 const originalPush = router.push
-router.push = function push(location, onResolve, onReject)
-{
+router.push = function push(location, onResolve, onReject) {
     if (onResolve || onReject) {
         return originalPush.call(this, location, onResolve, onReject)
     }
@@ -132,7 +131,7 @@ router.push = function push(location, onResolve, onReject)
     })
 }
 
-    router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
     PullToRefresh.destroyAll();
     if ((to.name !== 'login' && to.name !== 'signin') && token && !re.test(userAgent)) next({name: 'login'})
     else if ((to.name === 'login') && !token) {

@@ -27,6 +27,7 @@ export default {
   align-items: center;
   z-index: 99;
 }
+
 .logo h1 {
   font-family: magic, sans-serif;
   margin-top: 30px;
