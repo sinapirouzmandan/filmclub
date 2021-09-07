@@ -15,7 +15,7 @@
     <vs-button
         circle
         class="addNewIcon"
-        color="#5B3CC4"
+        color="#3b5999"
         floating
         gradient
         icon

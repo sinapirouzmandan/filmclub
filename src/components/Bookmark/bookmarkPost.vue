@@ -1,5 +1,7 @@
 <template>
   <div>
+    <download :active-download="activeDownload" @close="activeDownload=false" :selectedMovie="selectedMovie"
+    :selectedMovieID="selectedMovieID" :selectedMovieRate="selectedMovieRate"/>
     <vs-row>
       <vs-col v-for="(post,index) in watchListMoviesList" :key="index" w="12">
         <div id="B-bright" class="B-movie_card">
@@ -20,8 +22,17 @@
 
             <!-- -----------------        post action btn       --------------------- -->
             <div class="B-movie_social">
-              <ul @click="del(post.id)">
-                <li><i class="iconify" data-icon="bx:bxs-trash" style="font-size:30px;"></i></li>
+              <ul>
+                <li>
+                  <div @click="activeDownload = true; selectedMovie=post.title; selectedMovieID=post.id; selectedMovieRate=post.rating">
+                  <i class="iconify borderIC" data-icon="bx:bxs-download" style="font-size:30px; color:#2f2f2f"></i>
+                  </div>
+                </li>
+                <li>
+                  <div @click="del(post.id)">
+                    <i class="iconify borderIC" data-icon="bx:bxs-trash" style="font-size:30px;"></i>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -46,10 +57,16 @@ export default {
   data() {
     return {
       loaded: false,
-      isLoaded: false
+      isLoaded: false,
+      activeDownload: false,
+      selectedMovie: null,
+      selectedMovieID: null,
+      selectedMovieRate:null
     }
   },
-  components: {loading},
+  components: {loading,
+  download: ()=> import ('../download')
+  },
   methods: {
     ...mapActions(['getMoviesList', 'toggleWatchListPost']),
     del(id) {
@@ -247,5 +264,10 @@ export default {
 
 .swal-title {
   color: white !important;
+}
+.borderIC{
+  padding: 6px;
+  border-radius: 50%;
+  border: 1px dashed black;
 }
 </style>

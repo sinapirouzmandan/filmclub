@@ -1,5 +1,7 @@
 <template>
   <div>
+    <download :active-download="activeDownload" @close="activeDownload=false" :selectedMovie="selectedMovie"
+              :selectedMovieID="selectedMovieID" :selectedMovieRate="selectedMovieRate"/>
     <h1>
       Box Office
     </h1>
@@ -7,7 +9,7 @@
     <hr>
     <vs-row>
       <vs-col v-for="(post,index) in boxOfficeList.movies" :key="index" w="12">
-        <div v-if="isMovieLoaded" id="B-bright" class="B-movie_card1">
+        <div v-if="isMovieLoaded" id="B-bright" class="B-movie_card1" @click="activeDownload = true; selectedMovie=post.title; selectedMovieID=post.imdb; selectedMovieRate='boxOffice'">
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
             <div class="B-movie_header1">
@@ -28,7 +30,7 @@
     <hr>
     <vs-row>
       <vs-col v-for="(post,index) in boxOfficeList.series" :key="index" w="12">
-        <div v-if="isSerieLoaded" id="B-bright2" class="B-movie_card1">
+        <div v-if="isSerieLoaded" id="B-bright2" class="B-movie_card1" @click="activeDownload = true; selectedMovie=post.title; selectedMovieID=post.imdb; selectedMovieRate='boxOffice'">
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
             <div class="B-movie_header1">
@@ -57,11 +59,15 @@ export default {
     return {
       loaded: false,
       isMovieLoaded: false,
-      isSerieLoaded: false
+      isSerieLoaded: false,
+      activeDownload:false,
+      selectedMovie:null,
+      selectedMovieID: null,
+      selectedMovieRate: null
     }
   },
   components: {
-    loading
+    loading, download:()=>import('../download')
   },
   methods: {
     ...mapActions(['getBoxOfficeList']),

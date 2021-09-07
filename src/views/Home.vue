@@ -1,6 +1,11 @@
 <template>
   <div class="home bodyMargin">
     <fixedHead/>
+    <vs-dialog v-model="showAd" not-padding auto-width blur>
+      <router-link to="/MyList">
+      <img src="@/assets/download.jpg" alt="download from filmclub" style="width: 100%; max-width: 400px; border-radius: 30px;">
+      </router-link>
+    </vs-dialog>
     <vs-row style="margin-top:3rem;">
       <vs-col lg="6">
         <Notifications v-if="!isMobile" :position="position"/>
@@ -34,6 +39,7 @@ export default {
         top: '3rem',
         maxWidth: '550px'
       },
+      showAd:false
     }
   },
   created() {
@@ -47,6 +53,10 @@ export default {
     this.$store.dispatch('getUserProfile').then(() => {
       this.$store.dispatch('getNotificationList')
     })
+    if(!localStorage.getItem('advertise')){
+      this.showAd=true
+      localStorage.setItem('advertise', '01')
+    }
   }
 }
 </script>

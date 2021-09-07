@@ -142,11 +142,13 @@ export default {
   url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
   font-weight: normal;
 }
-
+.yekan{
+  font-family: Yekan;
+}
 :root {
   --vs-gray-3: 0, 0, 0 !important;
   --vs-mainback: #1A1A1D;
-  --vs-navs: #2c2f33;
+  --vs-navs: #212121;
   --vs-cardback: #121818;
   --vs-buttons: #5B3CC4;
   --vs-main-text: #fff;
@@ -239,5 +241,8 @@ img {
 
 .fade-leave-to {
   opacity: 0;
+}
+.ptr--ptr {
+  background-color: white;
 }
 </style>
