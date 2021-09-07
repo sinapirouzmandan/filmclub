@@ -5,7 +5,7 @@
       <croppa
           :width="browserWidth"
           placeholder=""
-          :height="220"
+          :height="(6/13) * browserWidth"
           accept="image/*"
           :prevent-white-space="true"
           :remove-button-size="25"
@@ -449,15 +449,19 @@ p {
   width: 40px;
   height:40px;
   position: absolute;
-  top: 130px;
-  right:45%;
+  top: 110px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .croppa-container {
-  background: linear-gradient(to bottom right, #efe7c7, #fff);
+  background: #a1a1a1;
   width:100vw;
   max-width: 500px;
-  height: 220px;
+  height: auto;
   margin: 45px auto 0;
+  border: 2px solid black;
 }
 .writeBox >>> .icon-remove{
   margin-right: 15px;

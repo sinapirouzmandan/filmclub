@@ -17,6 +17,7 @@
           accept="image/*"
           placeholder=""
           remove-button-color="black"
+          :quality="0.4"
           @new-image="isValid=true"/>
     </div>
   </div>
@@ -65,11 +66,7 @@ export default {
       if (this.location === 'header') {
         return 0.85 * window.innerWidth
       } else {
-        if (window.innerWidth < 500) {
-          return 0.85 * window.innerWidth
-        } else {
-          return 300
-        }
+        return 250
       }
     }
   },
@@ -96,7 +93,6 @@ export default {
   padding-left: 2rem;
   box-sizing: border-box;
 }
-
 .header {
   font-size: 30px;
 }

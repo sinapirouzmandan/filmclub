@@ -3,7 +3,7 @@
     <div @click="$emit('back')">
       <i class="iconify back" data-icon="mdi:keyboard-backspace"></i>
     </div>
-    <div class="username">
+    <div class="username" @keydown.enter="sendInfo">
       <i class="iconify logoUser" data-icon="bx:bxs-user-circle"></i>
       <h2>username & password</h2>
       <vs-input v-model="user.username" border label-placeholder="username"

@@ -1,7 +1,7 @@
 <template>
   <div class="papa">
     <Head/>
-    <div class="username">
+    <div class="username" @keydown.enter="login">
       <i class="iconify logoUser" data-icon="mdi:movie-roll"></i>
       <h2>Login</h2>
       <vs-input v-model="user.userName" border placeholder="email or username"

@@ -315,6 +315,7 @@ export default {
   background-color: var(--vs-mainback);
   min-height: 200px;
   cursor: pointer;
+  object-fit: contain;
 }
 
 .home >>> .vs-card:hover img {

@@ -1,6 +1,6 @@
 <template>
   <div class="papa">
-    <div class="username">
+    <div class="username" @keydown.enter="sendInfo()">
       <i class="iconify logoUser" data-icon="mdi:mail"></i>
       <h2>Create a new acount</h2>
       <!-- -----------------        Email        --------------------- -->
@@ -26,7 +26,6 @@
         <i class="iconify" data-icon="bx:bx-right-arrow-alt"></i> next
       </vs-button>
     </div>
-
     <router-link style="text-decoration: none;" tag="a" to="/signin"><p class="signIn">I already have an account . sign
       in</p></router-link>
     <div class="privacy" @click="active=true">
