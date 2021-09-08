@@ -17,13 +17,20 @@
       <router-link
           :to="{path: notification.link.props ? (notification.link.url+'/'+notification.link.props) : notification.link.url }"
           style="text-decoration: none; height:100%; width:100%;">
-        <i :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
-        <span class="desc">
+        <div style="display: flex; align-items: center; justify-content: flex-start;">
+        <vs-avatar badge-color="success" circle size="40" v-if="!notification.customNotif">
+          <img :src="notification.avatar ? baseURl + notification.avatar : alternativeAvatar" alt="avatar" style="object-fit: contain; width:40px;">
+        </vs-avatar>
+          <div v-else style="margin-left:20px;">
+        <i  :data-icon="notification.icon" :style="{ color: notification.color }" class="iconify icon"></i>
+          </div>
+        <span class="desc" style="margin-left: 15px;">
     <span v-if="!(notification.customNotif)"><router-link :to='"/users/" + notification.commiter'
                                                           style="text-decoration: none; font-weight: 700;">@{{
         notification.commiter
       }}</router-link></span> {{ notification.message }}
       </span>
+        </div>
       </router-link>
     </vs-alert>
 
@@ -63,7 +70,7 @@ export default {
   },
   props: ['position'],
   computed: {
-    ...mapState(['notifications'])
+    ...mapState(['notifications', 'baseURl', 'alternativeAvatar'])
   }
 }
 </script>
@@ -83,7 +90,6 @@ export default {
   color: white;
   text-align: left;
   margin-top: 4px;
-  margin-left: 15px;
   font-size: 14px;
   font-family: Yekan;
 }
@@ -91,6 +97,7 @@ export default {
 .notif >>> .vs-alert {
   margin-top: 15px;
   height: auto !important;
+  padding: 0 0;
   background-color: transparent;
 }
 
@@ -101,9 +108,6 @@ export default {
   top: 1.4rem;
 }
 
-.desc {
-  margin-right: 100px;
-}
 
 .iconLoad {
   opacity: 0;

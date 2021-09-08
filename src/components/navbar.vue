@@ -120,9 +120,9 @@ export default {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  bottom: 27px;
-  margin-left: 25px;
-  animation: badge 2s linear infinite;
+  bottom: 28px;
+  margin-left: 28px;
+  animation: badge 1s linear infinite;
 }
 
 @keyframes badge {
@@ -130,7 +130,7 @@ export default {
     background-color: var(--vs-navs);
   }
   100% {
-    background-color: white;
+    background-color: #4b77ff;
   }
 }
 </style>

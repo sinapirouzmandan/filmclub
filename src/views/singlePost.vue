@@ -208,12 +208,12 @@ export default {
         {
           vmid: "keyword",
           name: "keyword",
-          content: `${this.singlePost.title}, ${this.singlePost.authorId.username} `,
+          content: `${this.singlePost.title}, ${this.singlePost.username} `,
         },
         {
           vmid: "description",
           name: "description",
-          content: `A movie post about ${this.singlePost.title} movie and written by ${this.singlePost.authorId.username} `,
+          content: `A movie post about ${this.singlePost.title} movie and written by ${this.singlePost.username} `,
         }
       ],
     }

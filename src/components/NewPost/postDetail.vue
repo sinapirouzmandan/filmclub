@@ -5,7 +5,7 @@
       <croppa
           :width="browserWidth"
           placeholder=""
-          :height="(6/13) * browserWidth"
+          :height="(9/16) * browserWidth"
           accept="image/*"
           :prevent-white-space="true"
           :remove-button-size="25"
@@ -449,14 +449,14 @@ p {
   width: 40px;
   height:40px;
   position: absolute;
-  top: 110px;
+  top: 140px;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
 }
 .croppa-container {
-  background: #a1a1a1;
+  background: linear-gradient(180deg, rgb(17, 16, 16) 0%, rgb(3, 2, 64) 100%);
   width:100vw;
   max-width: 500px;
   height: auto;

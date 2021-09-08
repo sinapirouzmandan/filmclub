@@ -214,6 +214,9 @@ export default {
 }
 
 @media screen and (min-width: 768px) {
+  .B-movie_card {
+    height: auto;
+  }
   .B-movie_header {
     width: 65%;
   }
