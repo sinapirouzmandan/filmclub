@@ -10,6 +10,7 @@
       <h2 style="display: inline-block;">watch list</h2>
     </div>
     <hr>
+    <loading v-if="loadingNew"></loading>
     <bookmarkPost @endLoad="endOrLoad = 'End of Content'"/>
     <p style="margin-bottom: 5rem; opacity: 0.5; font-size:15px;">{{ endOrLoad }}</p>
     <vs-button
@@ -27,7 +28,7 @@
     <vs-dialog v-model="active" blur>
       <template #header>
         <h4 class="not-margin">
-          Name of movie
+          Name of movie or series
         </h4>
       </template>
 
@@ -70,6 +71,7 @@
 <script>
 import bookmarkPost from "../components/Bookmark/bookmarkPost";
 import {mapActions, mapGetters, mapState} from 'vuex'
+import loading from "../components/loading";
 
 export default {
   name: "Bookmark",
@@ -78,13 +80,15 @@ export default {
     titleTemplate: '%s | FilmClub'
   },
   components: {
-    bookmarkPost
+    bookmarkPost,
+    loading,
   },
   data() {
     return {
       active: false,
       active2: false,
-      searchMov: ''
+      searchMov: '',
+      loadingNew: false
     }
   },
   created() {
@@ -108,15 +112,20 @@ export default {
     },
     ...mapActions(['toggleWatchListPost', "getMoviesList"]),
     addItem(id) {
+      this.loadingNew=true
       this.toggleWatchListPost(id)
       this.active2 = false;
       this.active = false
-      this.getMoviesList()
+      this.getMoviesList().then(()=>{
+        this.loadingNew=false
+      }).catch(()=>{
+        this.loadingNew=false
+      })
     }
   }
 }
 </script>
-<style>
+<style scoped>
 .ptr--ptr{
   background-color: white;
 }
@@ -143,8 +152,8 @@ hr {
 }
 
 .input-field >>> .vs-input {
-  background-color: #171b1d !important;
-  color: #d5cccc;
+  background-color: var(--vs-inputs) !important;
+  color: #ffffff;
   width: 100%;
 }
 

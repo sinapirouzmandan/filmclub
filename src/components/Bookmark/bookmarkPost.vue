@@ -3,7 +3,7 @@
     <download :active-download="activeDownload" @close="activeDownload=false" :selectedMovie="selectedMovie"
     :selectedMovieID="selectedMovieID" :selectedMovieRate="selectedMovieRate"/>
     <vs-row>
-      <vs-col v-for="(post,index) in watchListMoviesList" :key="index" w="12">
+      <vs-col v-for="post in watchListMoviesList" :key="post.id" w="12">
         <div id="B-bright" class="B-movie_card">
           <div class="B-info_section">
             <!-- -----------------        post header       --------------------- -->
@@ -61,7 +61,7 @@ export default {
       activeDownload: false,
       selectedMovie: null,
       selectedMovieID: null,
-      selectedMovieRate:null
+      selectedMovieRate:null,
     }
   },
   components: {loading,

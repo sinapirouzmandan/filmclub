@@ -1,12 +1,16 @@
 <template>
   <div id="app">
+    <!--  Make a fade transition only applying to splash screen  -->
     <transition name="fade">
       <splashScreen v-if="splashScreenShow"/>
     </transition>
+    <!--  Make a slide transition, applying to all routes -->
     <transition name="slide">
-
       <router-view/>
     </transition>
+<!--    We add bottom navigation in the App.vue because we need it in all routes and -->
+<!--    we hide it with "showNavbar" by toggling it with vuex state in pages like add new-->
+<!--    post that we don't need a navbar.-->
     <navbar v-show="showNavbar"></navbar>
   </div>
 </template>
@@ -30,38 +34,41 @@ export default {
   },
   methods: {
     ...mapActions(['subscribeToNajva', 'subscribeToNajvaApp']),
-    readCookie(name) {
-      var nameEQ = name + "=";
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-      }
-      return null;
-    }
   },
   mounted() {
-    var self = this
+    // we use old function method for najva subscription listener
+    let self = this
     window.najvaUserSubscribed = function (najva_user_token) {
+      // subscribeToNajva is a method inside vuex that sends the najva
+      // token to our server
       self.subscribeToNajva(najva_user_token)
     }
+    // change the vuesax default primary color
     this.$vs.setColor('primary', '#5b3cc4')
+    // Immediately hide splash screen if the app is opening standalone (By TWA or App)
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.$store.commit('toggleSplashScreen')
-    } else {
+    }
+    // Hide splash screen after 3 seconds in non stand alone situations ( Browser )
+    else {
       setTimeout(() => {
         this.$store.commit('toggleSplashScreen')
       }, 3000)
     }
+    // Get notification list within every 2 minutes.
     setInterval(() => {
       this.$store.dispatch('getNotificationList')
     }, 120000);
     try {
+      // In twa app to pass the token to CustomTab we need to check for a parameter named najva-app-token
+      // Then we send this token to the server instantly
       if (this.$route.query['najva-app-token'] && localStorage.getItem('filmclub-najva') !== this.$route.query['najva-app-token']) {
         this.subscribeToNajvaApp(this.$route.query['najva-app-token'])
       }
       let self = this
+      // A situation that may occur is that najva saves the token to IndexedDB but the
+      // OnSubscribe is not automatically called. we check for this in here and if no najva-token
+      // has been sent to server yet, we search the indexedDB for the local token.
       if (!localStorage.getItem('filmclub-najva')) {
         var open = indexedDB.open("najva-native-subscription-database");
         open.onerror = function () {
@@ -91,10 +98,13 @@ export default {
     let re = new RegExp(botPattern, 'i');
     let userAgent = navigator.userAgent;
     if (re.test(userAgent)) {
+      // To have indexing in google we give a premade token to Crawler Bots.
       this.$store.dispatch('botLogin')
     }
+    // When user is opening the app after a while, we need to fetch the token
+    // from browser local storage and save it in a Vuex state.
     this.$store.commit('getTokenFromLocal')
-    //compatibility test
+    //compatibility test for IndexedDB
     let indexedDb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!indexedDb) {
       this.$vs.notification({
@@ -153,8 +163,9 @@ export default {
   --vs-buttons: #5B3CC4;
   --vs-main-text: #fff;
   --vs-nav-icons: blue;
+  --vs-inputs: #2f2f2f;
 }
-
+/* Linkified is a third party library to identify links */
 .linkified {
   color: #bccdea;
   text-decoration: none;
@@ -242,6 +253,7 @@ img {
 .fade-leave-to {
   opacity: 0;
 }
+/* The styling class for scroll to refresh widget */
 .ptr--ptr {
   background-color: white;
 }

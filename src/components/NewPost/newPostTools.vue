@@ -2,9 +2,15 @@
   <div class="tools">
     <div class="top-tools">
       <div id="backDiv" @click="back">
+        <div>
         <i class='iconify close' data-icon="mdi:close"></i>
+        </div>
+        <div style="padding-left: 20px; font-weight: 600;">
+        New Post
+        </div>
       </div>
-      <div class="space"></div>
+      <div class="space">
+      </div>
       <div class="buttons">
         <vs-button
             animation-type="vertical"
@@ -46,6 +52,11 @@ export default {
 </script>
 
 <style scoped>
+#backDiv{
+  margin-left:10px;
+  display: flex;
+  align-items: center;
+}
 .floating-add-image {
   position: fixed;
   bottom: 10%;
@@ -78,8 +89,6 @@ export default {
 .close {
   width: 2rem;
   height: 2rem;
-  margin-top: 0.5rem;
-  margin-left: 1.5rem;
 }
 
 .sendPost {

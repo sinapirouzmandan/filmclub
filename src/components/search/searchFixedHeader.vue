@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="xi-top-head">
-      <vs-input v-model="search" placeholder="UserName" @input="search !='' ? focused() : $emit('unfocused')">
+      <vs-input v-model="search" placeholder="Search users" @input="search !='' ? focused() : $emit('unfocused')">
         <template #icon>
           <i class='iconify' data-icon="bx:bx-search"></i>
         </template>
@@ -45,7 +45,7 @@ export default {
 }
 
 .xi-top-head >>> .vs-input {
-  background-color: var(--vs-cardback) !important;
+  background-color: var(--vs-inputs) !important;
   width: 100%;
   color: white;
 }

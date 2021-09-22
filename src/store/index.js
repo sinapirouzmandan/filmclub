@@ -456,10 +456,6 @@ export default new Vuex.Store({
                 };
                 await axios.request(optionsServer).then(function (response) {
                     commit('loadImdbIds', response.data.list)
-                    if (response.data.list.length === 0) {
-                        // ---------------- if watch list is empty we add godfather for ex
-                        state.watchListMoviesIDs.push('tt0903747')
-                    }
                 }).catch(function (error) {
                     errors += 1
                     clientDB.getWatchList().then((result)=>{

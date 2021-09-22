@@ -1,9 +1,12 @@
 import {openDB} from "idb";
 
 async function errorHandler() {
-    alert("We can't access your storage right now. you're post will not be available offline. check if your storage is not full" +
+    alert("We can't access your storage right now. check if your storage is not full \n" +
         "please close the app and open again if you think now you have free storage")
     localStorage.clear()
+    setTimeout(()=>{
+        window.location.reload()
+    },6000)
 }
 
 async function connectToDB() {
@@ -115,7 +118,13 @@ export async function getUserPosts() {
         await errorHandler()
     }
 }
-
+async function putHomePostsFallBack(posts) {
+    try {
+        localStorage.setItem('HomePosts', posts)
+    } catch (e) {
+        await errorHandler()
+    }
+}
 export async function putHomePosts(posts) {
     try {
         let db = await connectToDB()
@@ -127,10 +136,20 @@ export async function putHomePosts(posts) {
         await store.put(slicedPosts, 0)
         db.close()
     } catch (e) {
+        let slicedPosts = posts.slice(0, 10).map((post) => {
+            return post;
+        });
+        await putHomePostsFallBack(slicedPosts)
+    }
+}
+async function getHomePostsFallBack() {
+    try {
+        let posts = localStorage.getItem('HomePosts')
+        return posts
+    } catch (e) {
         await errorHandler()
     }
 }
-
 export async function getHomePostsCache() {
     try {
         let db = await connectToDB()
@@ -143,6 +162,6 @@ export async function getHomePostsCache() {
         db.close()
         return posts
     } catch (e) {
-        await errorHandler()
+        await getHomePostsFallBack()
     }
 }
