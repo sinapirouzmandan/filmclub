@@ -35,7 +35,7 @@ I led the development of FilmClub, a **Progressive Web App (PWA)** designed for 
 - **Frontend:** Vue.js
 - **Backend:** Express.js
 - **Progressive Web App (PWA):** Fully optimized for mobile users
-- **Android App (TWA):** Deployed via Google Play
+- **Android App (TWA):** Deployed via Bazar
 
 ---
 
