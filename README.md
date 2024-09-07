@@ -28,7 +28,7 @@ I led the development of FilmClub, a **Progressive Web App (PWA)** designed for 
 - **Content Moderation:** Managed user-generated posts and comments with ease.
 - **User Management:** Tools to oversee user interactions and account settings.
 - **Website Statistics:** Monitored platform performance with detailed analytics.
-  
+
 ---
 
 ## ⚙️ Tech Stack
@@ -36,6 +36,21 @@ I led the development of FilmClub, a **Progressive Web App (PWA)** designed for 
 - **Backend:** Express.js
 - **Progressive Web App (PWA):** Fully optimized for mobile users
 - **Android App (TWA):** Deployed via Google Play
+
+---
+
+## 📱 Mobile Screenshots
+
+<p align="center">
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435161.jpg" alt="Mobile Screenshot 1" width="200"/>
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435170.jpg" alt="Mobile Screenshot 2" width="200"/>
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435178.jpg" alt="Mobile Screenshot 3" width="200"/>
+</p>
+<p align="center">
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435187.jpg" alt="Mobile Screenshot 4" width="200"/>
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435196.jpg" alt="Mobile Screenshot 5" width="200"/>
+  <img src="https://github.com/sinapirouzmandan/filmclub/blob/main/gallery/1694084435203.jpg" alt="Mobile Screenshot 6" width="200"/>
+</p>
 
 ---
 
